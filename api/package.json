@@ -16,7 +16,10 @@
   },
   "dependencies": {
     "apollo-server": "^3.4.0",
+    "class-validator": "^0.13.1",
     "dotenv": "^10.0.0",
-    "graphql": "^15.7.1"
+    "graphql": "^15.7.1",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1"
   }
 }
