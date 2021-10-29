@@ -4,8 +4,11 @@
   "description": "red-lion-project",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon build/.",
-    "build": "tsc"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "start": "node build/.",
+    "start:watch": "npm run build && (npm run build:watch & nodemon build/.)"
   },
   "author": "",
   "license": "ISC",
