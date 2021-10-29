@@ -19,6 +19,18 @@ class DeleteRoleInput {
   id!: number
 }
 
+@ArgsType()
+class UpdateRoleInput {
+  @Field(() => Int)
+  id!: number
+
+  @Field()
+  name!: string
+
+  @Field()
+  identifier!: string
+}
+
 @Resolver(Role)
 class RoleResolver {
   @Query(() => [Role])
@@ -39,6 +51,13 @@ class RoleResolver {
     const role = await Role.findOneOrFail({ id })
     await Role.remove(role)
     return role
+  }
+  @Mutation(() => Role)
+  async updateRole(@Args() { id, name, identifier }: UpdateRoleInput) {
+    const role = await Role.findOneOrFail({ id })
+    await Role.update(role, { name, identifier })
+    const updateRole = await Role.findOne({ id })
+    return updateRole
   }
 }
 
