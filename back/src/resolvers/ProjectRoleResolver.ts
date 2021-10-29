@@ -1,8 +1,17 @@
-import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Args, ArgsType, Field, Int,Mutation, Query, Resolver } from "type-graphql";
 
 
 import ProjectRole from "../models/ProjectRole";
-import UpdateProjectRoleInput from "./UpdateProjectRole";
+
+
+@ArgsType()
+class UpdateProjectRoleInput {
+  @Field(() => Int)
+  id!: number;
+
+  @Field()
+  name!: string;
+}
 
 @Resolver(ProjectRole)
 class ProjectRoleResolver {

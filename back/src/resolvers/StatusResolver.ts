@@ -1,8 +1,17 @@
-import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver } from "type-graphql";
 
 
 import Status from "../models/Status";
-import UpdateStatusInput from "./UpdateStatusInput";
+
+
+@ArgsType()
+class UpdateStatusInput {
+  @Field(() => Int)
+  id!: number;
+
+  @Field()
+  name!: string;
+}
 
 @Resolver(Status)
 class StatusResolver {
