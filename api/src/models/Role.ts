@@ -8,11 +8,11 @@ class Role extends BaseEntity {
   @Field(() => ID)
   id!: number
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   name!: string
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   identifier!: string
 }
