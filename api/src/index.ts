@@ -5,7 +5,13 @@ import { ApolloServer } from "apollo-server";
 import { createConnection } from "typeorm";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
+
+
 import ProjectRoleResolver from "./resolvers/ProjectRoleResolver";
+import StatusResolver from "./resolvers/StatusResolver";
+
+
+
 
 dotenv.config();
 
@@ -15,7 +21,7 @@ const runServer = async () => {
     // eslint-disable-next-line no-console
     console.log("Connected to database");
   
-    const schema = await buildSchema({ resolvers: [ProjectRoleResolver] });
+    const schema = await buildSchema({ resolvers: [ProjectRoleResolver, StatusResolver] });
     const server = new ApolloServer({ schema });
   
     // The `listen` method launches a web server.
