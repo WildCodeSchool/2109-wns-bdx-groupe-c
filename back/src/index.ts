@@ -9,6 +9,8 @@ import { buildSchema } from 'type-graphql'
 import ProjectRoleResolver from './resolvers/ProjectRoleResolver'
 import StatusResolver from './resolvers/StatusResolver'
 import RoleResolver from './resolvers/RoleResolver'
+import CommentResolver from './resolvers/CommentResolver'
+import UserResolver from './resolvers/UserResolver'
 
 dotenv.config()
 
@@ -18,7 +20,7 @@ const runServer = async () => {
   console.log('Connected to database')
 
   const schema = await buildSchema({
-    resolvers: [ProjectRoleResolver, StatusResolver, RoleResolver],
+    resolvers: [ProjectRoleResolver, StatusResolver, RoleResolver, CommentResolver, UserResolver],
   })
   const server = new ApolloServer({ schema })
 
