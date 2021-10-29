@@ -49,6 +49,7 @@ var StatusResolver_1 = __importDefault(require("./resolvers/StatusResolver"));
 var RoleResolver_1 = __importDefault(require("./resolvers/RoleResolver"));
 var CommentResolver_1 = __importDefault(require("./resolvers/CommentResolver"));
 var UserResolver_1 = __importDefault(require("./resolvers/UserResolver"));
+var LanguageResolver_1 = __importDefault(require("./resolvers/LanguageResolver"));
 dotenv_1.default.config();
 var runServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     var schema, server;
@@ -62,7 +63,14 @@ var runServer = function () { return __awaiter(void 0, void 0, void 0, function 
                 // eslint-disable-next-line no-console
                 console.log('Connected to database');
                 return [4 /*yield*/, (0, type_graphql_1.buildSchema)({
-                        resolvers: [ProjectRoleResolver_1.default, StatusResolver_1.default, RoleResolver_1.default, CommentResolver_1.default, UserResolver_1.default],
+                        resolvers: [
+                            ProjectRoleResolver_1.default,
+                            StatusResolver_1.default,
+                            RoleResolver_1.default,
+                            CommentResolver_1.default,
+                            UserResolver_1.default,
+                            LanguageResolver_1.default,
+                        ],
                     })];
             case 2:
                 schema = _a.sent();
