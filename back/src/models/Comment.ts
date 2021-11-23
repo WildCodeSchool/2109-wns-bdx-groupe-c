@@ -1,8 +1,9 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType} from "type-graphql";
+import User from "./User";
 import {   BaseEntity,
   Column,
   Entity,
-  PrimaryGeneratedColumn, } from "typeorm";
+  PrimaryGeneratedColumn, ManyToOne  } from "typeorm";
 
 @Entity()
 @ObjectType()
@@ -22,6 +23,10 @@ class Comment extends BaseEntity{
   @Column()
   @Field()
   updatedAt!: Date;
+
+  @ManyToOne(() => User, user => user.comments)
+  @Field(() => User)
+  user!: User;
 }
 
 export default Comment;

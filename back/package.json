@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "build:watch": "tsc -w",
-    "start": "node build/.",
+    "start": "npm run build && (node build/.)",
     "start:watch": "npm run build && (npm run build:watch & nodemon build/.)"
   },
   "author": "",

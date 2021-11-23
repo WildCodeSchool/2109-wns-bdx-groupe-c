@@ -1,66 +1,89 @@
-import { Args, ArgsType, Field, Int, Mutation, Query, Resolver } from "type-graphql";
-
-import User from "../models/User";
+import { Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
+import User from '../models/User'
 
 @ArgsType()
 class CreateUserInput {
   @Field()
-  name!: string;
+  firstName!: string
 
   @Field()
-  email!: string;
+  lastName!: string
+
+  @Field()
+  password!: string
+
+  @Field()
+  email!: string
 }
 
 @ArgsType()
 class DeleteUserInput {
   @Field(() => Int)
-  id!: number;
+  id!: number
 }
-
 
 @ArgsType()
 class UpdateUserInput {
   @Field(() => Int)
-  id!: number;
+  id!: number
 
   @Field({ nullable: true })
-  name?: string;
+  firstName?: string
+
+  @Field({ nullable: true })
+  lastName?: string
+
+  @Field({ nullable: true })
+  email?: string
+
+  @Field({ nullable: true })
+  password?: string
 
 }
-
-
 
 @Resolver(User)
 class UserResolver {
   @Query(() => [User])
   async users() {
-    const users = await User.find();
-    return users;
+    const users = await User.find()
+    return users
   }
 
   @Mutation(() => User)
-  async createUser(@Args() { name, email }: CreateUserInput) {
-    const user = new User();
-    user.name = name;
-    user.email = email;
-    await user.save();
-    return user;
+  async createUser(@Args() { firstName, lastName, email, password }: CreateUserInput) {
+    const user = new User()
+    user.firstName = firstName
+    user.lastName = lastName
+    user.email = email
+    user.password = password
+    user.isActive = true
+    user.createdAt = new Date();
+    user.updatedAt = new Date();
+    await user.save()
+    return user
   }
 
   @Mutation(() => User)
   async deleteUser(@Args() { id }: DeleteUserInput) {
-    const user = await User.findOneOrFail({ id });
-    await User.remove(user);
-    return user;
+    const user = await User.findOneOrFail({ id })
+    await User.update(user, { firstName: '', lastName: '', email: '', isActive: false, updatedAt: new Date() })
+    const updatedUser = await User.findOne({ id })
+    return updatedUser
   }
 
   @Mutation(() => User)
-  async updateUser(@Args() { id, name }: UpdateUserInput) {
-    const user = await User.findOneOrFail({ id });
-    await User.update(user, { name });
-    const updatedUser = await User.findOne({ id });
-    return updatedUser;
+  async updateUser(@Args() { id, firstName, lastName, email, password  }: UpdateUserInput) {
+    const user = await User.findOneOrFail({ id })
+    const updatedProperty: any = {}
+    if (firstName) updatedProperty['firstName'] = firstName
+    if (lastName) updatedProperty['lastName'] = lastName
+    if (email) updatedProperty['email'] = email
+    if (password) updatedProperty['password'] = password
+    updatedProperty['updatedAt'] = new Date()
+    await User.update(user, updatedProperty)
+    const updatedUser = await User.findOne({ id })
+    return updatedUser
   }
 }
 
-export default UserResolver;
+export default UserResolver
