@@ -12,6 +12,7 @@ import RoleResolver from './resolvers/RoleResolver'
 import CommentResolver from './resolvers/CommentResolver'
 import UserResolver from './resolvers/UserResolver'
 import ProjectResolver from './resolvers/ProjectResolver'
+import LanguageResolver from './resolvers/LanguageResolver'
 
 dotenv.config()
 
@@ -21,7 +22,7 @@ const runServer = async () => {
   console.log('Connected to database')
 
   const schema = await buildSchema({
-    resolvers: [ProjectRoleResolver, StatusResolver, RoleResolver, CommentResolver, UserResolver, ProjectResolver],
+    resolvers: [ProjectRoleResolver, StatusResolver, RoleResolver, CommentResolver, UserResolver, ProjectResolver, LanguageResolver],
   })
   const server = new ApolloServer({ schema })
 
