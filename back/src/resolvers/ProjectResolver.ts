@@ -30,6 +30,9 @@ class UpdateProjectInput {
 
   @Field({ nullable: true })
   initialTimeSpent?: string
+
+  @Field({ nullable: true })
+  languageName?: string
 }
 
 @Resolver(Project)
@@ -62,7 +65,7 @@ class ProjectResolver {
 
   @Mutation(() => Project)
   async updateProject(
-    @Args() { id, name, shortText, description, initialTimeSpent }: UpdateProjectInput
+    @Args() { id, name, shortText, description, initialTimeSpent, languageName }: UpdateProjectInput
   ) {
     const project = await Project.findOneOrFail({ id })
     const updatedProperty: any = {}
@@ -70,6 +73,10 @@ class ProjectResolver {
     if (shortText) updatedProperty['shortText'] = shortText
     if (description) updatedProperty['description'] = description
     if (initialTimeSpent) updatedProperty['initialTimeSpent'] = initialTimeSpent
+    if (initialTimeSpent) {
+      const language = await Project.findOne({ name: languageName })
+      updatedProperty['language'] = language
+    }
     updatedProperty['updatedAt'] = new Date()
     await Project.update(project, updatedProperty)
     const updatedProject = await Project.findOneOrFail({ id })

@@ -1,5 +1,14 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm'
+import Language from './Language'
 import User from './User'
 
 @Entity()
@@ -36,6 +45,11 @@ class Project extends BaseEntity {
   @ManyToOne(() => User, user => user.comments)
   @Field(() => User)
   manager!: User
+
+  @ManyToMany(() => Language, {cascade: true})
+  @JoinTable()
+  @Field(() => [Language])
+  languages!: Language[]
 }
 
 export default Project
