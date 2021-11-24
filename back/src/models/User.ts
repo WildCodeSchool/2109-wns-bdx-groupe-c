@@ -32,17 +32,17 @@ class User extends BaseEntity {
   @Field()
   isActive!: boolean
 
-  @Column('datetime')
+  @Column('datetime', { default: () => 'CURRENT_TIMESTAMP' })
   @Field()
   createdAt!: Date
 
-  @Column('datetime')
+  @Column('datetime', { default: () => 'CURRENT_TIMESTAMP' })
   @Field()
   updatedAt!: Date
 
   @ManyToOne(() => Role)
-  @Field(() => Role)
-  role!: Role
+  @Field(() => Role, { nullable: true })
+  role?: Role
 
   @OneToMany(() => Comment, comment => comment.user)
   @Field(() => [Comment])

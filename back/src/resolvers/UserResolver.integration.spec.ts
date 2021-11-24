@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server'
 import { getConnection } from 'typeorm'
 import getApolloServer from '../apollo-server'
-import getDatabaseConnection from '../database-connection'
+import getDatabaseConnection from '../database-connection-test'
 import User from '../models/User'
 
 describe('UserResolver', () => {

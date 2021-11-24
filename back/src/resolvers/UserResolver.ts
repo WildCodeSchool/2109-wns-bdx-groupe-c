@@ -41,6 +41,15 @@ class DeleteUserInput {
 }
 
 @ArgsType()
+class UpdateRoleInput {
+  @Field(() => Int)
+  id!: number
+
+  @Field()
+  roleIdentifier!: string
+}
+
+@ArgsType()
 class UpdateUserInput {
   @Field(() => Int)
   id!: number
@@ -76,8 +85,6 @@ class UserResolver {
     user.isActive = true
     user.createdAt = new Date();
     user.updatedAt = new Date();
-    const roleUser = await Role.findOneOrFail({ identifier: 'user' });
-    user.role = roleUser;
     await user.save()
     return User.findOne({ id: user.id }, { relations: ['projects','comments','role'] })
   }
@@ -87,7 +94,15 @@ class UserResolver {
     const user = await User.findOneOrFail({ id })
     await User.update(user, { firstName: '', lastName: '', email: '', isActive: false, updatedAt: new Date() })
     const updatedUser = await User.findOne({ id })
-    return updatedUser
+    return User.findOne({ id: user.id }, { relations: ['projects','comments','role'] })
+  }
+
+  @Mutation(() => User)
+  async updateRole(@Args() { id, roleIdentifier }: UpdateRoleInput) {
+    const user = await User.findOneOrFail({ id })
+    const role = await Role.findOneOrFail({ identifier: roleIdentifier })
+    await User.update(user, { role, updatedAt: new Date() })
+    return User.findOne({ id: id }, { relations: ['projects','comments','role'] })
   }
 
   @Mutation(() => User)
@@ -100,8 +115,7 @@ class UserResolver {
     if (password) updatedProperty['password'] = await hashPassword(password)
     updatedProperty['updatedAt'] = new Date()
     await User.update(user, updatedProperty)
-    const updatedUser = await User.findOne({ id })
-    return updatedUser
+    return User.findOne({ id: user.id }, { relations: ['projects','comments','role'] })
   }
 }
 
