@@ -5,7 +5,7 @@ import getApolloServer from "./apollo-server";
 import getDatabaseConnection from "./database-connection";
 
 dotenv.config()
-
+// test commentairfe
 const runServer = async () => {
   await getDatabaseConnection("./sqlite.db");
   // eslint-disable-next-line no-console

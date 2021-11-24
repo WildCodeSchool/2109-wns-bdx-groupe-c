@@ -3,20 +3,11 @@ import Role from '../models/Role'
 
 @ArgsType()
 class CreateRoleInput {
-  @Field(() => Int)
-  id!: number
-
   @Field()
   name!: string
 
   @Field()
   identifier!: string
-}
-
-@ArgsType()
-class DeleteRoleInput {
-  @Field(() => Int)
-  id!: number
 }
 
 @Resolver(Role)
@@ -32,12 +23,6 @@ class RoleResolver {
     role.name = name
     role.identifier = identifier
     await role.save()
-    return role
-  }
-  @Mutation(() => Role)
-  async deleteRole(@Args() { id }: DeleteRoleInput) {
-    const role = await Role.findOneOrFail({ id })
-    await Role.remove(role)
     return role
   }
 }
