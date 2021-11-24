@@ -12,31 +12,31 @@ class User extends BaseEntity {
   @Field(() => ID)
   id!: number
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   firstName!: string
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   lastName!: string
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   email!: string
 
-  @Column()
+  @Column('varchar', { length: 255 })
   @Field()
   password!: string
 
-  @Column()
+  @Column('boolean', { default: true })
   @Field()
   isActive!: boolean
 
-  @Column()
+  @Column('datetime')
   @Field()
   createdAt!: Date
 
-  @Column()
+  @Column('datetime')
   @Field()
   updatedAt!: Date
 
