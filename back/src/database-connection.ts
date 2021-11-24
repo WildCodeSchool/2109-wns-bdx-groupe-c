@@ -12,7 +12,10 @@ const getDatabaseConnection = async () => {
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
     port: parseInt(process.env.TYPEORM_PORT || '3306'),
-    ...(process.env.TYPEORM_SOCKETPATH && { socketPath: process.env.TYPEORM_SOCKETPATH }),
+    synchronize: Boolean(process.env.TYPEORM_SYNCHRONIZE),
+    logging: Boolean(process.env.TYPEORM_LOGGING),
+    entities: ['build/models/*.js'],
+    ...(process.env.TYPEORM_SOCKETPATH && { socketPath: process.env.TYPEORM_SOCKETPATH })
   })
 }
 
