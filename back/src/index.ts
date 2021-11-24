@@ -7,7 +7,7 @@ import getDatabaseConnection from "./database-connection";
 dotenv.config()
 // test commentairfe
 const runServer = async () => {
-  await getDatabaseConnection("./sqlite.db");
+  await getDatabaseConnection();
   // eslint-disable-next-line no-console
   console.log("Connected to database");
 
