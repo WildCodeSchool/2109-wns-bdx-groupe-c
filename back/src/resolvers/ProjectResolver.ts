@@ -31,9 +31,15 @@ class UpdateProjectInput {
 
   @Field({ nullable: true })
   initialTimeSpent?: string
+}
 
-  @Field({ nullable: true })
-  languageName?: string
+@ArgsType()
+class UpdateProjectLanguageInput {
+  @Field(() => Int)
+  id!: number
+
+  @Field(() => [Int])
+  languagesId!: number[]
 }
 
 @Resolver(Project)
@@ -66,23 +72,33 @@ class ProjectResolver {
 
   @Mutation(() => Project)
   async updateProject(
-    @Args() { id, name, shortText, description, initialTimeSpent, languageName }: UpdateProjectInput
+    @Args() { id, name, shortText, description, initialTimeSpent }: UpdateProjectInput
   ) {
-    const project = await Project.findOneOrFail({ id }, { relations: ['languages'] })
+    const project = await Project.findOneOrFail({ id })
     const updatedProperty: any = {}
     if (name) updatedProperty['name'] = name
     if (shortText) updatedProperty['shortText'] = shortText
     if (description) updatedProperty['description'] = description
     if (initialTimeSpent) updatedProperty['initialTimeSpent'] = initialTimeSpent
-    if (languageName) {
-      const language = await Language.findOneOrFail({ name: languageName })
-      updatedProperty['languages'] = [...(project.languages || []), language]
-    }
     updatedProperty['updatedAt'] = new Date()
     await Project.update(project, updatedProperty)
-    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages'] })
+    const updatedProject = await Project.findOneOrFail({ id })
     return updatedProject
   }
+
+  @Mutation(() => Project)
+  async updateProjectLanguage(
+    @Args() { id, languagesId }: UpdateProjectLanguageInput
+  ) {
+    const project = await Project.findOneOrFail({ id }, { relations: ['languages'] })
+    const languages = await Language.findByIds(languagesId)
+    project.languages = languages;
+    await project.save();
+    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages'] });
+    return updatedProject
+  }
+
+
 }
 
 export default ProjectResolver
