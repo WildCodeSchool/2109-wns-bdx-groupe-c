@@ -43,8 +43,8 @@ class Project extends BaseEntity {
   updatedAt!: Date
 
   @ManyToOne(() => User, user => user.comments)
-  @Field(() => User)
-  manager!: User
+  @Field(() => User, { nullable: true })
+  manager?: User
 
   @ManyToMany(() => Language, { cascade: true })
   @JoinTable({
