@@ -1,6 +1,7 @@
 import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 
 import Project from '../models/Project'
+import Language from '../models/Language'
 
 @ArgsType()
 class CreateProjectInput {
@@ -39,7 +40,7 @@ class UpdateProjectInput {
 class ProjectResolver {
   @Query(() => [Project])
   async project() {
-    const projects = await Project.find()
+    const projects = await Project.find({ relations: ['languages'] })
     return projects
   }
   @Mutation(() => Project)
@@ -52,7 +53,7 @@ class ProjectResolver {
     project.createdAt = new Date()
     project.updatedAt = new Date()
     await project.save()
-    return project
+    return Project.findOne({ id: project.id }, { relations: ['languages'] })
   }
 
   @Mutation(() => Project)
@@ -67,19 +68,19 @@ class ProjectResolver {
   async updateProject(
     @Args() { id, name, shortText, description, initialTimeSpent, languageName }: UpdateProjectInput
   ) {
-    const project = await Project.findOneOrFail({ id })
+    const project = await Project.findOneOrFail({ id }, { relations: ['languages'] })
     const updatedProperty: any = {}
     if (name) updatedProperty['name'] = name
     if (shortText) updatedProperty['shortText'] = shortText
     if (description) updatedProperty['description'] = description
     if (initialTimeSpent) updatedProperty['initialTimeSpent'] = initialTimeSpent
-    if (initialTimeSpent) {
-      const language = await Project.findOne({ name: languageName })
-      updatedProperty['language'] = language
+    if (languageName) {
+      const language = await Language.findOneOrFail({ name: languageName })
+      updatedProperty['languages'] = [...(project.languages || []), language]
     }
     updatedProperty['updatedAt'] = new Date()
     await Project.update(project, updatedProperty)
-    const updatedProject = await Project.findOneOrFail({ id })
+    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages'] })
     return updatedProject
   }
 }

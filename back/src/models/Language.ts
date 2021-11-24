@@ -12,6 +12,10 @@ class Language extends BaseEntity {
   @Column('varchar', { length: 100 })
   @Field()
   name!: string
+
+  @ManyToMany(() => Project, project => project.languages)
+  @Field(() => [Project])
+  projects!: Project[]
 }
 
 export default Language
