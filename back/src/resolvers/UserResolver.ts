@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import User from '../models/User'
-
+import Role from '../models/Role'
 @ArgsType()
 class CreateUserInput {
   @Field()
@@ -45,7 +45,7 @@ class UpdateUserInput {
 class UserResolver {
   @Query(() => [User])
   async users() {
-    const users = await User.find()
+    const users = await User.find({ relations: ['projects','comments','role'] })
     return users
   }
 
@@ -59,8 +59,10 @@ class UserResolver {
     user.isActive = true
     user.createdAt = new Date();
     user.updatedAt = new Date();
+    const roleUser = await Role.findOneOrFail({ identifier: 'user' });
+    user.role = roleUser;
     await user.save()
-    return user
+    return User.findOne({ id: user.id }, { relations: ['projects','comments','role'] })
   }
 
   @Mutation(() => User)
