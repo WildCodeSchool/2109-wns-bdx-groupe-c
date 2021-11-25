@@ -4,7 +4,7 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOn
 import Comment from './Comment'
 import Project from './Project'
 import Role from './Role'
-
+import Task from './Task'
 @Entity()
 @ObjectType()
 class User extends BaseEntity {
@@ -32,11 +32,11 @@ class User extends BaseEntity {
   @Field()
   isActive!: boolean
 
-  @Column('datetime', { default: () => 'CURRENT_TIMESTAMP' })
+  @Column('datetime')
   @Field()
   createdAt!: Date
 
-  @Column('datetime', { default: () => 'CURRENT_TIMESTAMP' })
+  @Column('datetime')
   @Field()
   updatedAt!: Date
 
@@ -51,6 +51,10 @@ class User extends BaseEntity {
   @OneToMany(() => Project, project => project.manager)
   @Field(() => [Project])
   projects!: Project[]
+
+  @OneToMany(() => Task, task => task.assignee)
+  @Field(() => [Task])
+  tasks?: Task[]
 }
 
 export default User

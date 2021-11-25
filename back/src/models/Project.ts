@@ -53,7 +53,7 @@ class Project extends BaseEntity {
     inverseJoinColumn: { name: 'languageId' },
   })
   @Field(() => [Language])
-  languages!: Language[]
+  languages?: Language[]
 }
 
 export default Project

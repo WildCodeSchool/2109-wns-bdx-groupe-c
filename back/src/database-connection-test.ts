@@ -8,6 +8,7 @@ import Role from "./models/Role";
 import Status from "./models/Status";
 import User from "./models/User";
 import Language from "./models/Language";
+import Task from './models/Task';
 
 export default async (database: string, logging = false) => {
     await createConnection({
@@ -20,7 +21,8 @@ export default async (database: string, logging = false) => {
             Role,
             Status,
             User,
-            Language
+            Language,
+            Task
         ],
         synchronize: true,
         logging,

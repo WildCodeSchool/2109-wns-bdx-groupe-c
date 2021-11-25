@@ -1,8 +1,8 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 import User from './User'
-import Role from './Role'
 import Project from './Project'
+import ProjectRole from './ProjectRole'
 
 @Entity()
 @ObjectType()
@@ -19,9 +19,9 @@ class UserProject extends BaseEntity {
   @Field(() => Project)
   project!: Project
 
-  @ManyToOne(() => Role)
-  @Field(() => Role)
-  role!: Role
+  @ManyToOne(() => ProjectRole)
+  @Field(() => ProjectRole)
+  projectRole!: ProjectRole
 }
 
 export default UserProject
