@@ -43,17 +43,17 @@ class Project extends BaseEntity {
   updatedAt!: Date
 
   @ManyToOne(() => User, user => user.comments)
-  @Field(() => User)
-  manager!: User
+  @Field(() => User, { nullable: true })
+  manager?: User
 
-  @ManyToMany(() => Language, language => language.projects, { cascade: true })
+  @ManyToMany(() => Language, { cascade: true })
   @JoinTable({
     name: 'project_language',
     joinColumn: { name: 'projectId', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'languageId' },
   })
   @Field(() => [Language])
-  languages!: Language[]
+  languages?: Language[]
 }
 
 export default Project

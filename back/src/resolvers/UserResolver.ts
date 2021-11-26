@@ -1,5 +1,23 @@
 import { Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import User from '../models/User'
+import Role from '../models/Role'
+
+const argon2 = require('argon2');
+
+const hashingOptions = {
+  type: argon2.argon2id,
+  memoryCost: 2 ** 16,
+  timeCost: 5,
+  parallelism: 1
+};
+
+const hashPassword = (password: string) => {
+  return argon2.hash(password, hashingOptions);
+};
+
+const verifyPassword = (password: string, hashedPassword: string) => {
+  return argon2.verify(password, hashedPassword, hashingOptions);
+};
 
 @ArgsType()
 class CreateUserInput {
@@ -23,6 +41,15 @@ class DeleteUserInput {
 }
 
 @ArgsType()
+class UpdateRoleInput {
+  @Field(() => Int)
+  id!: number
+
+  @Field()
+  roleIdentifier!: string
+}
+
+@ArgsType()
 class UpdateUserInput {
   @Field(() => Int)
   id!: number
@@ -38,14 +65,13 @@ class UpdateUserInput {
 
   @Field({ nullable: true })
   password?: string
-
 }
 
 @Resolver(User)
 class UserResolver {
   @Query(() => [User])
   async users() {
-    const users = await User.find()
+    const users = await User.find({ relations: ['projects','comments','role','tasks'] })
     return users
   }
 
@@ -55,12 +81,12 @@ class UserResolver {
     user.firstName = firstName
     user.lastName = lastName
     user.email = email
-    user.password = password
+    user.password = await hashPassword(password)
     user.isActive = true
     user.createdAt = new Date();
     user.updatedAt = new Date();
     await user.save()
-    return user
+    return User.findOne({ id: user.id }, { relations: ['projects','comments','role','tasks'] })
   }
 
   @Mutation(() => User)
@@ -68,21 +94,28 @@ class UserResolver {
     const user = await User.findOneOrFail({ id })
     await User.update(user, { firstName: '', lastName: '', email: '', isActive: false, updatedAt: new Date() })
     const updatedUser = await User.findOne({ id })
-    return updatedUser
+    return User.findOne({ id: user.id }, { relations: ['projects','comments','role','tasks'] })
   }
 
   @Mutation(() => User)
-  async updateUser(@Args() { id, firstName, lastName, email, password  }: UpdateUserInput) {
+  async updateRole(@Args() { id, roleIdentifier }: UpdateRoleInput) {
+    const user = await User.findOneOrFail({ id })
+    const role = await Role.findOneOrFail({ identifier: roleIdentifier })
+    await User.update(user, { role, updatedAt: new Date() })
+    return User.findOne({ id: id }, { relations: ['projects','comments','role','tasks'] })
+  }
+
+  @Mutation(() => User)
+  async updateUser(@Args() { id, firstName, lastName, email, password }: UpdateUserInput) {
     const user = await User.findOneOrFail({ id })
     const updatedProperty: any = {}
     if (firstName) updatedProperty['firstName'] = firstName
     if (lastName) updatedProperty['lastName'] = lastName
     if (email) updatedProperty['email'] = email
-    if (password) updatedProperty['password'] = password
+    if (password) updatedProperty['password'] = await hashPassword(password)
     updatedProperty['updatedAt'] = new Date()
     await User.update(user, updatedProperty)
-    const updatedUser = await User.findOne({ id })
-    return updatedUser
+    return User.findOne({ id: user.id }, { relations: ['projects','comments','role','tasks'] })
   }
 }
 

@@ -4,7 +4,7 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOn
 import Comment from './Comment'
 import Project from './Project'
 import Role from './Role'
-
+import Task from './Task'
 @Entity()
 @ObjectType()
 class User extends BaseEntity {
@@ -12,37 +12,37 @@ class User extends BaseEntity {
   @Field(() => ID)
   id!: number
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   firstName!: string
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   lastName!: string
 
-  @Column()
+  @Column('varchar', { length: 100 })
   @Field()
   email!: string
 
-  @Column()
+  @Column('varchar', { length: 255 })
   @Field()
   password!: string
 
-  @Column()
+  @Column('boolean', { default: true })
   @Field()
   isActive!: boolean
 
-  @Column()
+  @Column('datetime')
   @Field()
   createdAt!: Date
 
-  @Column()
+  @Column('datetime')
   @Field()
   updatedAt!: Date
 
   @ManyToOne(() => Role)
-  @Field(() => Role)
-  role!: Role
+  @Field(() => Role, { nullable: true })
+  role?: Role
 
   @OneToMany(() => Comment, comment => comment.user)
   @Field(() => [Comment])
@@ -51,6 +51,10 @@ class User extends BaseEntity {
   @OneToMany(() => Project, project => project.manager)
   @Field(() => [Project])
   projects!: Project[]
+
+  @OneToMany(() => Task, task => task.assignee)
+  @Field(() => [Task])
+  tasks?: Task[]
 }
 
 export default User
