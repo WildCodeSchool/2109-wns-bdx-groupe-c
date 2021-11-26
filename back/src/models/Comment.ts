@@ -1,10 +1,11 @@
 import { Field, ID, ObjectType} from "type-graphql";
-import User from "./User";
 import {   BaseEntity,
   Column,
   Entity,
   PrimaryGeneratedColumn, ManyToOne  } from "typeorm";
 
+  import User from "./User";
+  import Task from "./Task";
 @Entity()
 @ObjectType()
 class Comment extends BaseEntity{
@@ -27,6 +28,11 @@ class Comment extends BaseEntity{
   @ManyToOne(() => User, user => user.comments)
   @Field(() => User)
   user!: User;
+
+
+  @ManyToOne(() => Task, task => task.comments)
+  @Field(() => Task)
+  task!: Task;
 }
 
 export default Comment;

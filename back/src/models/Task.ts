@@ -1,8 +1,9 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm'
 import Project from './Project'
 import Status from './Status'
 import User from './User'
+import Comment from './Comment'
 
 @Entity()
 @ObjectType()
@@ -54,6 +55,11 @@ class Task extends BaseEntity {
   @Column('int')
   @Field()
   spentTime!: number
+
+  @OneToMany(() => Comment, comment => comment.task)
+  @Field(() => [Comment])
+  comments!: Comment[]
+
 
 }
 
