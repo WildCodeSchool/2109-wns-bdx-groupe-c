@@ -3,8 +3,8 @@ import { getConnection } from 'typeorm'
 import getApolloServer from '../apollo-server'
 import getDatabaseConnection from '../database-connection-test'
 
-import Project from '../models/Project'
-import Task from '../models/Task'
+import { projectGenerator } from '../_mock_/projectGenerator'
+import { taskGenetor } from '../_mock_/taskGenerator'
 
 describe('TaskResolverResolver', () => {
   let server: ApolloServer
@@ -52,38 +52,9 @@ describe('TaskResolverResolver', () => {
 
     describe('when there are users in database', () => {
       it('returns all tasks in database', async () => {
-        const projectTest = new Project()
-        projectTest.name = 'Project Test'
-        projectTest.shortText = 'Short Text'
-        projectTest.description = 'Description'
-        projectTest.initialTimeSpent = 0
-        projectTest.createdAt = new Date('2021-11-23T23:18:00.134Z')
-        projectTest.updatedAt = new Date('2021-11-23T23:18:00.134Z')
-        await projectTest.save()
-
-        const taskTest1 = new Task()
-        taskTest1.subject = 'Task Test 1'
-        taskTest1.shortText = 'Short Text'
-        taskTest1.description = 'Description'
-        taskTest1.project = projectTest
-        taskTest1.createdAt = new Date('2021-11-23T23:18:00.134Z')
-        taskTest1.updatedAt = new Date('2021-11-23T23:18:00.134Z')
-        taskTest1.dueDate = new Date('2021-11-23T23:18:00.134Z')
-        taskTest1.expectedDuration = 100
-        taskTest1.spentTime = 0
-        await taskTest1.save()
-
-        const taskTest2 = new Task()
-        taskTest2.subject = 'Task Test 2'
-        taskTest2.shortText = 'Short Text'
-        taskTest2.description = 'Description'
-        taskTest2.project = projectTest
-        taskTest2.createdAt = new Date('2021-11-23T23:18:00.134Z')
-        taskTest2.updatedAt = new Date('2021-11-23T23:18:00.134Z')
-        taskTest2.dueDate = new Date('2021-11-23T23:18:00.134Z')
-        taskTest2.expectedDuration = 100
-        taskTest2.spentTime = 0
-        await taskTest2.save()
+        const projectTest = await projectGenerator('Project Test', 'Short Text', 'Description', 0)
+        await taskGenetor('Task Test 1', 'Short Text', 'Description', projectTest.id)
+        await taskGenetor('Task Test 2', 'Short Text', 'Description', projectTest.id)
 
         const result = await server.executeOperation({
           query: GET_Tasks,
@@ -99,7 +70,7 @@ describe('TaskResolverResolver', () => {
               "expectedDuration": 100,
               "id": "1",
               "project": Object {
-                "name": "Project Test",
+                "name": "Test",
               },
               "shortText": "Short Text",
               "spentTime": 0,
@@ -115,7 +86,7 @@ describe('TaskResolverResolver', () => {
               "expectedDuration": 100,
               "id": "2",
               "project": Object {
-                "name": "Project Test",
+                "name": "Test",
               },
               "shortText": "Short Text",
               "spentTime": 0,
@@ -128,4 +99,64 @@ describe('TaskResolverResolver', () => {
       })
     })
   })
+  describe('mutation create task', () => {
+    it('create a task and return the new task', async () => {
+      const CREATE_TASK = `
+      mutation CreateTask($subject: String!, $shortText: String!, $description: String!, $projectId: Int!, $dueDate: DateTime!, $expectedDuration: Int!) {
+        createTask(subject: $subject, shortText: $shortText, description: $description, projectId: $projectId, dueDate: $dueDate, expectedDuration: $expectedDuration) {
+          id
+          subject
+          shortText
+          description
+          status {
+            name
+          }
+          project {
+            name
+          }
+          assignee {
+            firstName
+          }
+          dueDate
+          expectedDuration
+          spentTime
+          comments {
+            content
+          }
+        }
+      }`
+
+      const projectTest = await projectGenerator('TestProject', 'Test', 'Test', 0)
+
+      const result = await server.executeOperation({
+        query: CREATE_TASK,
+        variables: {
+          subject: 'Test Subject',
+          shortText: 'Test ShortTest',
+          description: 'Test description',
+          projectId: projectTest.id,
+          dueDate: '2021-11-23T23:18:00.134Z',
+          expectedDuration: 100,
+        },
+      })
+
+      expect(result.errors).toBeUndefined()
+      expect(result.data?.createTask).toEqual({
+        assignee: null,
+        comments: [],
+        description: 'Test description',
+        dueDate: '2021-11-23T23:18:00.134Z',
+        expectedDuration: 100,
+        id: '1',
+        project: {
+          name: 'Test',
+        },
+        shortText: 'Test ShortTest',
+        spentTime: 0,
+        status: null,
+        subject: 'Test Subject',
+      })
+    })
+  })
+  
 })
