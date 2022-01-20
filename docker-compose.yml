@@ -1,28 +1,28 @@
 # docker-compose.yml
+version: "3"
 services:
-    back:
-        build: ./back
-        depends_on:
-            - db
-        ports:
-            - 3004:3004
-        volumes:
-            - ./back:/app
-            - /app/node_modules
-    db:
-        image: mysql
-        ports:
-            - 3306:3306
-        volumes:
-            - ./init:/docker-entrypoint-initdb.d
-            - ./data:/var/lib/mysql
-        environment:
-            - MYSQL_ROOT_PASSWORD=root
-    front:
-        build: ./front
-        ports:
-            - 3000:3000
-        volumes:
-            - ./front:/app
-            - /app/node_modules
-
+  back:
+    build: ./back
+    depends_on:
+      - db
+    ports:
+      - 3004:3004
+    volumes:
+      - ./back:/app
+      - /app/node_modules
+  db:
+    image: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - ./data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+  front:
+    build: ./front
+    ports:
+      - 3000:3000
+    volumes:
+      - ./front:/app
+      - /app/node_modules
