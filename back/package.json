@@ -4,7 +4,7 @@
   "description": "red-lion-project",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "npm run build && (jest)",
     "test:watch": "jest --watch",
     "build": "tsc",
     "build:watch": "tsc -w",
