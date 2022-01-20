@@ -1,28 +1,40 @@
 # docker-compose.yml
 version: "3"
+
 services:
-  back:
-    build: ./back
-    depends_on:
-      - db
-    ports:
-      - 3004:3004
-    volumes:
-      - ./back:/app
-      - /app/node_modules
-  db:
-    image: mysql
-    ports:
-      - 3306:3306
-    volumes:
-      - ./init:/docker-entrypoint-initdb.d
-      - ./data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-  front:
-    build: ./front
-    ports:
-      - 3000:3000
-    volumes:
-      - ./front:/app
-      - /app/node_modules
+    back:
+        build: ./back
+        depends_on:
+            - db
+        ports:
+            - 3004:3004
+        volumes:
+            - ./back:/app
+            - /app/node_modules
+        environment:
+            - TYPEORM_HOST=db
+            - TYPEORM_USERNAME=root
+            - TYPEORM_PASSWORD=root
+            - TYPEORM_DATABASE=redlion
+            - TYPEORM_PORT=3306
+        container_name: back_redlion
+    db:
+        image: mysql
+        platform: linux/amd64
+        ports:
+            - 3306:3306
+        volumes:
+            - ./init:/docker-entrypoint-initdb.d
+            - ./data:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+        container_name: db_redlion
+    front:
+        build: ./front
+        ports:
+            - 3000:3000
+        volumes:
+            - ./front:/app
+            - /app/node_modules
+        container_name: front_redlion
+
