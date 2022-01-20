@@ -1,4 +1,4 @@
-FROM node:lts-alpine as ts-compiler
+FROM node:lts as ts-compiler
 
 RUN mkdir /app
 WORKDIR /app
