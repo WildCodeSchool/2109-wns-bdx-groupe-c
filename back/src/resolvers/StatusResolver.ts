@@ -34,7 +34,7 @@ class StatusResolver {
     return status;
   }
   @Mutation(()=>Status)
-  async updateStatus(@Args(){id, name}:UpdateStatusInput) {
+  async updateStatusName(@Args(){id, name}:UpdateStatusInput) {
     const status = await Status.findOneOrFail({id});
     await Status.update(status, {name});
     const updatedStatus = await Status.findOneOrFail({id})
