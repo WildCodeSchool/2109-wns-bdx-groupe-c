@@ -1,4 +1,5 @@
 import getDatabaseConnection from "../database-connection";
+import dotenv from 'dotenv'
 import { userGenerator } from "../_mock_/userGenerator";
 import { commentGenerator } from "../_mock_/commentGenrator";
 import { projectGenerator } from "../_mock_/projectGenerator";
@@ -10,7 +11,10 @@ const dataFixtures = async () => {
   console.log(' --------------    LAUNCHING DATA FIXTURES  ------------------');
 
   console.log(' --------------    STEP 1/5 : Connect to database  ------------------');
-  await getDatabaseConnection();
+  if (!process.env.DATABASE_URL) {
+    throw Error("DATABASE_URL must be set in environment.");
+  }
+  await getDatabaseConnection(process.env.DATABASE_URL);
   console.log("Connected to database");
 
   console.log(' --------------    STEP 2/5 : Generate User  ------------------');
