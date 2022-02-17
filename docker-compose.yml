@@ -25,6 +25,8 @@ services:
         environment:
             - MYSQL_ROOT_PASSWORD=root
         container_name: db_redlion
+        security_opt:
+            - seccomp:unconfined
     front:
         build: ./front
         ports:
