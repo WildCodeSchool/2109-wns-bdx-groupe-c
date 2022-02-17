@@ -1,4 +1,4 @@
-import { Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
+import { Args, ArgsType, Field, Mutation, Query, Resolver } from 'type-graphql'
 import Role from '../models/Role'
 
 @ArgsType()
