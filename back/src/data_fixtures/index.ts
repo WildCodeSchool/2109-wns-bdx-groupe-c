@@ -50,7 +50,7 @@ const dataFixtures = async () => {
   const task10 = await taskGenetor('subject10', 'Short Text10', 'Description10', project2.id);
 
   console.log(' --------------    STEP 6/6 : Generate Comment  ------------------');
-  const comment1 = await commentGenerator('test2', user1.id, task1.id)
+  const comment1 = await commentGenerator('test1', user1.id, task1.id)
 
   console.log(' --------------    DATA FIXTURES SUCCESSFULLY LAUNCHED  ------------------');
   exit();

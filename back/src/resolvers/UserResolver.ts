@@ -1,4 +1,4 @@
-import { Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
+import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import User from '../models/User'
 import Role from '../models/Role'
 
@@ -73,6 +73,12 @@ class UserResolver {
   async users() {
     const users = await User.find({ relations: ['projects','comments','role','tasks'] })
     return users
+  }
+
+  @Query(() => User)
+  async user(@Arg('id') id: number) {
+    const user = await User.findOneOrFail({ id })
+    return user
   }
 
   @Mutation(() => User)

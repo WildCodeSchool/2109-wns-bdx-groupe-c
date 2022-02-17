@@ -55,10 +55,17 @@ class UpdateProjectManagerInput {
 @Resolver(Project)
 class ProjectResolver {
   @Query(() => [Project])
-  async project() {
+  async projects() {
     const projects = await Project.find({ relations: ['languages', 'manager'] })
     return projects
   }
+
+  @Query(() => Project)
+  async project(@Arg('id') id: number) {
+    const project = await Project.findOneOrFail({ id })
+    return project
+  }
+
   @Mutation(() => Project)
   async createProject(@Args() { name, shortText, description }: CreateProjectInput) {
     const project = new Project()
