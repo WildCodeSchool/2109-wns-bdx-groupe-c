@@ -1,3 +1,4 @@
+echo "*********** Truncate table process *********** "
 docker exec -it db_redlion mysql -u root -p -e "use redlion; SET FOREIGN_KEY_CHECKS=0;
 truncate table comment;
 truncate table language;

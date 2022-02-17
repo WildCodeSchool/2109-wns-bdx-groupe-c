@@ -6,7 +6,7 @@ import getDatabaseConnection from '../database-connection-test'
 import { userGenerator } from '../_mock_/userGenerator'
 import { projectGenerator } from '../_mock_/projectGenerator'
 import { taskGenetor } from '../_mock_/taskGenerator'
-import { commentGenerator } from '../_mock_/commentGenrator'
+import { commentGenerator } from '../_mock_/commentGenerator'
 
 describe('TaskResolverResolver', () => {
   let server: ApolloServer

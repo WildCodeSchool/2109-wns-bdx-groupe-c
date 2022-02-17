@@ -43,7 +43,7 @@ class DeleteUserInput {
 @ArgsType()
 class UpdateRoleInput {
   @Field(() => Int)
-  id!: number
+  userId!: number
 
   @Field()
   roleIdentifier!: string
@@ -93,16 +93,15 @@ class UserResolver {
   async deleteUser(@Args() { id }: DeleteUserInput) {
     const user = await User.findOneOrFail({ id })
     await User.update(user, { firstName: '', lastName: '', email: '', isActive: false, updatedAt: new Date() })
-    const updatedUser = await User.findOne({ id })
     return User.findOne({ id: user.id }, { relations: ['projects','comments','role','tasks'] })
   }
 
   @Mutation(() => User)
-  async updateRole(@Args() { id, roleIdentifier }: UpdateRoleInput) {
-    const user = await User.findOneOrFail({ id })
+  async updateRole(@Args() { userId, roleIdentifier }: UpdateRoleInput) {
+    const user = await User.findOneOrFail( userId )
     const role = await Role.findOneOrFail({ identifier: roleIdentifier })
     await User.update(user, { role, updatedAt: new Date() })
-    return User.findOne({ id: id }, { relations: ['projects','comments','role','tasks'] })
+    return User.findOne({ id: userId }, { relations: ['projects','comments','role','tasks'] })
   }
 
   @Mutation(() => User)
