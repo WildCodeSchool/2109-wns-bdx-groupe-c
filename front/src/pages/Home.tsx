@@ -1,12 +1,12 @@
+import { useState } from 'react'
 import { makeStyles } from '@mui/styles'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Login from './Login'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   mainContainer: {
     backgroundColor: '#061B2E',
     height: '100vh',
@@ -25,10 +25,12 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#7273FF',
     color: '#061B2E',
   },
-}))
+})
+
 const Home = () => {
   const classes = useStyles()
   const history = useHistory()
+  
   const [connectionOn, setConnectionOn] = useState(false)
 
   return (
