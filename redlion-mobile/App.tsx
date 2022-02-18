@@ -1,8 +1,10 @@
 import React from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/Home';
+import Tasks from './src/Task/Tasks';
+import Task from './src/Task/Task';
 import { API_URL } from "@env"
 
 
@@ -12,14 +14,16 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const App = () => (
   <ApolloProvider client={client}>
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Project" component={Home} />
-      </Tab.Navigator>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Tasks" component={Tasks} />
+        <Stack.Screen name="Task" component={Task} />
+      </Stack.Navigator>
     </NavigationContainer>
   </ApolloProvider>
 );
