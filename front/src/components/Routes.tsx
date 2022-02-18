@@ -1,5 +1,6 @@
 import { Route, Router, Switch, useHistory } from 'react-router-dom'
 import Home from '../pages/Home'
+import Dashboard from '../pages/Dashboard'
 
 const Routes = () => {
   const history = useHistory()
@@ -11,6 +12,9 @@ const Routes = () => {
         </Route>
         <Route exact path="/login">
           <Home />
+        </Route>
+        <Route exact path="/dashboard">
+          <Dashboard />
         </Route>
       </Switch>
     </Router>
