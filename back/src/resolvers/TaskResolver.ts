@@ -76,8 +76,13 @@ class updateTaskTextInput {
 @Resolver(Task)
 class TaskResolver {
   @Query(() => [Task])
-  async tasks() {
-    const tasks = await Task.find({ relations: ['assignee', 'project', 'status','comments'] })
+  async tasks(@Arg('projectId') projectId: number) {
+    const tasks = await Task.find({
+      relations: ['assignee', 'project', 'status','comments'],
+      where: {
+        project: { id: projectId },
+      },
+    })
     return tasks
   }
   @Query(() => Task)

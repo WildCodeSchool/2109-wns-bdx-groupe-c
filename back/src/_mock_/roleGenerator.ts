@@ -5,4 +5,4 @@ export const roleGenerator = async (name: string, identifier: string) => {
   role.name = name;
   role.identifier = identifier;
   return await role.save();
-}
+};

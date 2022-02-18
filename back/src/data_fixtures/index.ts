@@ -31,8 +31,8 @@ const dataFixtures = async () => {
   const user6 = await userGenerator('Matthieu', 'test4', 'matthieu@mail.com', 'test', roleAdmin)
 
   console.log(' --------------    STEP 4/6 : Generate Project  ------------------');
-  const project1 = await projectGenerator('name1', 'description1', 'shortText1', 0);
-  const project2 = await projectGenerator('name2', 'description2', 'shortText2', 0);
+  const project1 = await projectGenerator('Project1', 'description1', 'shortText1', 0);
+  const project2 = await projectGenerator('Project2', 'description2', 'shortText2', 0);
 
   console.log(' --------------    STEP 5/6 : Generate Task  ------------------');
   // Project 1
