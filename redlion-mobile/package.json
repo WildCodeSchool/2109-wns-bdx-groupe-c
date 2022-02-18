@@ -1,0 +1,37 @@
+{
+  "name": "redlion-mobile",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "generate-gql-types": "npx apollo client:codegen --watch --includes='src/**/*.tsx' --endpoint=http://192.168.1.27:3004/graphql --target typescript --outputFlat src/schemaTypes.ts"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.5.9",
+    "@expo/vector-icons": "^12.0.0",
+    "@react-navigation/bottom-tabs": "^6.2.0",
+    "@react-navigation/native": "^6.0.8",
+    "@types/react-native-dotenv": "^0.2.0",
+    "expo": "~44.0.0",
+    "expo-status-bar": "~1.2.0",
+    "graphql": "^16.3.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-dotenv": "^3.3.1",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.10.1",
+    "react-native-web": "0.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@types/react": "~17.0.21",
+    "@types/react-native": "~0.64.12",
+    "typescript": "~4.3.5"
+  },
+  "private": true
+}
