@@ -1,26 +1,28 @@
 import { ApolloServer } from 'apollo-server'
 import { buildSchema } from 'type-graphql'
 
+import CommentResolver from './resolvers/CommentResolver'
+import LanguageResolver from './resolvers/LanguageResolver'
 import ProjectResolver from './resolvers/ProjectResolver'
 import ProjectRoleResolver from './resolvers/ProjectRoleResolver'
-import StatusResolver from './resolvers/StatusResolver'
 import RoleResolver from './resolvers/RoleResolver'
-import CommentResolver from './resolvers/CommentResolver'
-import UserResolver from './resolvers/UserResolver'
-import LanguageResolver from './resolvers/LanguageResolver'
+import StatusResolver from './resolvers/StatusResolver'
 import TaskResolver from './resolvers/TaskResolver'
+import UserResolver from './resolvers/UserResolver'
+import UserProjectResolver from './resolvers/UserProjectResolver'
 
 export default async () => {
   const schema = await buildSchema({
     resolvers: [
+      CommentResolver,
+      LanguageResolver,
       ProjectResolver,
       ProjectRoleResolver,
-      StatusResolver,
       RoleResolver,
-      CommentResolver,
-      UserResolver,
-      LanguageResolver,
+      StatusResolver,
       TaskResolver,
+      UserResolver,
+      UserProjectResolver,
     ],
   })
   const server = new ApolloServer({ schema })

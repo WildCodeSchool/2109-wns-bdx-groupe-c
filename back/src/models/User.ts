@@ -48,9 +48,9 @@ class User extends BaseEntity {
   @Field(() => [Comment])
   comments!: Comment[]
 
-  @OneToMany(() => Project, project => project.manager)
+  @OneToMany(() => Project, project => project.createdBy)
   @Field(() => [Project])
-  projects!: Project[]
+  projectsCreated!: Project[]
 
   @OneToMany(() => Task, task => task.assignee)
   @Field(() => [Task])

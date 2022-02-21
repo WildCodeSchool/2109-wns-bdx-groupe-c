@@ -71,7 +71,7 @@ class UpdateUserInput {
 class UserResolver {
   @Query(() => [User])
   async users() {
-    const users = await User.find({ relations: ['projects','comments','role','tasks'] })
+    const users = await User.find({ relations: ['projectsCreated','comments','role','tasks'] })
     return users
   }
 
@@ -92,14 +92,14 @@ class UserResolver {
     user.createdAt = new Date();
     user.updatedAt = new Date();
     await user.save()
-    return User.findOne({ id: user.id }, { relations: ['projects','comments','role','tasks'] })
+    return User.findOne({ id: user.id }, { relations: ['projectsCreated','comments','role','tasks'] })
   }
 
   @Mutation(() => User)
   async deleteUser(@Args() { id }: DeleteUserInput) {
     const user = await User.findOneOrFail({ id })
     await User.update(user, { firstName: '', lastName: '', email: '', isActive: false, updatedAt: new Date() })
-    return User.findOne({ id: user.id }, { relations: ['projects','comments','role','tasks'] })
+    return User.findOne({ id: user.id }, { relations: ['projectsCreated','comments','role','tasks'] })
   }
 
   @Mutation(() => User)
@@ -107,7 +107,7 @@ class UserResolver {
     const user = await User.findOneOrFail( userId )
     const role = await Role.findOneOrFail({ identifier: roleIdentifier })
     await User.update(user, { role, updatedAt: new Date() })
-    return User.findOne({ id: userId }, { relations: ['projects','comments','role','tasks'] })
+    return User.findOne({ id: userId }, { relations: ['projectsCreated','comments','role','tasks'] })
   }
 
   @Mutation(() => User)
@@ -120,7 +120,7 @@ class UserResolver {
     if (password) updatedProperty['password'] = await hashPassword(password)
     updatedProperty['updatedAt'] = new Date()
     await User.update(user, updatedProperty)
-    return User.findOne({ id: user.id }, { relations: ['projects','comments','role','tasks'] })
+    return User.findOne({ id: user.id }, { relations: ['projectsCreated','comments','role','tasks'] })
   }
 }
 

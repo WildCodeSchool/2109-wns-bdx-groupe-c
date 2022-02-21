@@ -1,7 +1,8 @@
 import Task from '../models/Task';
 import Project from '../models/Project';
+import User from '../models/User';
 
-export const taskGenetor = async (subject: string, shortText: string, description: string, projectID: number) => {
+export const taskGenetor = async (subject: string, shortText: string, description: string, projectID: number, assignee? : User) => {
   const taskTest = new Task();
   taskTest.subject = subject;
   taskTest.shortText = shortText;
@@ -12,5 +13,6 @@ export const taskGenetor = async (subject: string, shortText: string, descriptio
   taskTest.dueDate = new Date('2021-11-23T23:18:00.134Z');
   taskTest.expectedDuration = 100;
   taskTest.spentTime = 0;
+  if(assignee) taskTest.assignee = assignee;
   return await taskTest.save();
 }
