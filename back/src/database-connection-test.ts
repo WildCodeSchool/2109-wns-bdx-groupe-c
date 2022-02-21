@@ -2,13 +2,14 @@
 import {createConnection} from 'typeorm';
 
 import Comment from "./models/Comment";
+import Language from "./models/Language";
 import Project from "./models/Project";
 import ProjectRole from "./models/ProjectRole";
 import Role from "./models/Role";
 import Status from "./models/Status";
-import User from "./models/User";
-import Language from "./models/Language";
 import Task from './models/Task';
+import User from "./models/User";
+import UserProject from './models/Task';
 
 export default async (database: string, logging = false) => {
     await createConnection({
@@ -16,13 +17,14 @@ export default async (database: string, logging = false) => {
         database,
         entities: [
             Comment,
+            Language,
             Project,
             ProjectRole,
             Role,
             Status,
+            Task,
             User,
-            Language,
-            Task
+            UserProject
         ],
         synchronize: true,
         logging,

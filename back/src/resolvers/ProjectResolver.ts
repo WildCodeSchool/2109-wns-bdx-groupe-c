@@ -2,7 +2,6 @@ import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type
 
 import Project from '../models/Project'
 import Language from '../models/Language'
-import User from '../models/User'
 
 @ArgsType()
 class CreateProjectInput {
@@ -43,20 +42,11 @@ class UpdateProjectLanguageInput {
   languagesId!: number[]
 }
 
-@ArgsType()
-class UpdateProjectManagerInput {
-  @Field(() => Int)
-  id!: number
-
-  @Field(() => Int)
-  userId!: number
-}
-
 @Resolver(Project)
 class ProjectResolver {
   @Query(() => [Project])
   async projects() {
-    const projects = await Project.find({ relations: ['languages', 'manager'] })
+    const projects = await Project.find({ relations: ['languages', 'createdBy'] })
     return projects
   }
 
@@ -76,7 +66,7 @@ class ProjectResolver {
     project.createdAt = new Date()
     project.updatedAt = new Date()
     await project.save()
-    return Project.findOne({ id: project.id }, { relations: ['languages','manager'] })
+    return Project.findOne({ id: project.id }, { relations: ['languages','createdBy'] })
   }
 
   @Mutation(() => Project)
@@ -99,7 +89,7 @@ class ProjectResolver {
     if (initialTimeSpent) updatedProperty['initialTimeSpent'] = initialTimeSpent
     updatedProperty['updatedAt'] = new Date()
     await Project.update(project, updatedProperty)
-    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','manager'] })
+    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy'] })
     return updatedProject
   }
 
@@ -107,26 +97,13 @@ class ProjectResolver {
   async updateProjectLanguage(
     @Args() { id, languagesId }: UpdateProjectLanguageInput
   ) {
-    const project = await Project.findOneOrFail({ id }, { relations: ['languages','manager'] })
+    const project = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy'] })
     const languages = await Language.findByIds(languagesId)
     project.languages = languages;
     await project.save();
-    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','manager'] });
+    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy'] });
     return updatedProject
   }
-
-  @Mutation(() => Project)
-  async updateProjectManager(
-    @Args() { id, userId }: UpdateProjectManagerInput
-  ) {
-    const project = await Project.findOneOrFail({ id }, { relations: ['languages','manager'] })
-    const user = await User.findOneOrFail({ id: userId })
-    project.manager = user;
-    await project.save();
-    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','manager'] });
-    return updatedProject
-  }
-
 
 }
 

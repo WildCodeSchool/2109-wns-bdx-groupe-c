@@ -59,6 +59,12 @@ class updateTimeSpentInput {
 }
 
 @ArgsType()
+class MyTaskInput {
+  @Field(() => Int)
+  userId!: number
+}
+
+@ArgsType()
 class updateTaskTextInput {
   @Field(() => Int)
   id!: number
@@ -85,6 +91,20 @@ class TaskResolver {
     })
     return tasks
   }
+
+  @Query(() => [Task])
+  async myTasks(@Args() { userId }: MyTaskInput) {
+    const tasks = await Task.find({
+      relations: ['assignee', 'project', 'status','comments'],
+      where: {
+        assignee: { id: userId },
+      },
+    })
+    return tasks
+  }
+
+
+
   @Query(() => Task)
   async task(@Arg('id') id: number) {
     const task = await Task.findOneOrFail({ id })
