@@ -103,6 +103,15 @@ class TaskResolver {
     return tasks
   }
 
+  @Query(() => [Task])
+  async allTasks() {
+    const tasks = await Task.find({
+      relations: ['assignee', 'project', 'status','comments'],
+    })
+    return tasks
+  }
+
+
 
 
   @Query(() => Task)
@@ -116,7 +125,8 @@ class TaskResolver {
     @Args() { subject, shortText, description, projectId, dueDate, expectedDuration }: CreateTaskInput
   ) {
     const task = new Task()
-    const project = await Project.findOneOrFail({ id: projectId })
+    const project = await Project.findOneOrFail({ id: projectId });
+    const toDo = await Status.findOneOrFail({ name: 'To Do' });
     task.subject = subject
     task.shortText = shortText
     task.description = description
@@ -126,6 +136,7 @@ class TaskResolver {
     task.spentTime = 0
     task.createdAt = new Date()
     task.updatedAt = new Date()
+    task.status = toDo;
     await task.save()
     return Task.findOne({ id: task.id }, { relations: ['assignee', 'project', 'status','comments'] })
   }
