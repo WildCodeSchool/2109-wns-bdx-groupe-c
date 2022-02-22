@@ -2,37 +2,36 @@
 version: "3"
 
 services:
-    back:
-        build: ./back
-        depends_on:
-            - db
-        ports:
-            - 3004:3004
-        volumes:
-            - ./back:/app
-            - /app/node_modules
-        environment:
-            - DATABASE_URL=mysql://root:root@db/redlion
-        container_name: back_redlion
-    db:
-        image: mysql
-        platform: linux/amd64
-        ports:
-            - 3306:3306
-        volumes:
-            - ./init:/docker-entrypoint-initdb.d
-            - ./data:/var/lib/mysql
-        environment:
-            - MYSQL_ROOT_PASSWORD=root
-        container_name: db_redlion
-        security_opt:
-            - seccomp:unconfined
-    front:
-        build: ./front
-        ports:
-            - 3000:3000
-        volumes:
-            - ./front:/app
-            - /app/node_modules
-        container_name: front_redlion
-
+  back:
+    build: ./back
+    depends_on:
+      - db
+    ports:
+      - 3004:3004
+    volumes:
+      - ./back:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=mysql://root:root@db/redlion
+    container_name: back_redlion
+  db:
+    image: mysql
+    # platform: linux/amd64
+    ports:
+      - 3306:3306
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - ./data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    container_name: db_redlion
+    security_opt:
+      - seccomp:unconfined
+  front:
+    build: ./front
+    ports:
+      - 3000:3000
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    container_name: front_redlion

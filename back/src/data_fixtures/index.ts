@@ -55,8 +55,8 @@ const dataFixtures = async () => {
   const task2 = await taskGenetor('subject2', 'Short Text2', 'Description2', project1.id);
   const task3 = await taskGenetor('subject3', 'Short Text3', 'Description3', project1.id);
   const task4 = await taskGenetor('subject4', 'Short Text4', 'Description4', project1.id);
-  const task5 = await taskGenetor('subject5', 'Short Text5', 'Description5', project1.id, alexis);
-  const task6 = await taskGenetor('subject6', 'Short Text6', 'Description6', project1.id, alexis);
+  const task5 = await taskGenetor('subject5', 'Short Text5', 'Description5', project1.id);
+  const task6 = await taskGenetor('subject6', 'Short Text6', 'Description6', project1.id);
 
   // Project 2
   const task7 = await taskGenetor('subject7', 'Short Text7', 'Description7', project2.id);
