@@ -4,6 +4,7 @@ import getApolloServer from '../apollo-server'
 import getDatabaseConnection from '../database-connection-test'
 
 import { projectGenerator } from '../_mock_/projectGenerator'
+import { statusGenerator } from '../_mock_/statusGenerator'
 import { taskGenetor } from '../_mock_/taskGenerator'
 
 describe('TaskResolverResolver', () => {
@@ -17,25 +18,28 @@ describe('TaskResolverResolver', () => {
 
   describe('query tasks', () => {
     const GET_Tasks = `
-    query Tasks {
-      tasks {
+    query AllTasks {
+      allTasks {
         id
         subject
         shortText
         description
-        createdAt
-        updatedAt
-        dueDate
-        expectedDuration
-        spentTime
         status {
+          name
+        }
+        project {
           name
         }
         assignee {
           firstName
         }
-        project {
-          name
+        createdAt
+        updatedAt
+        expectedDuration
+        dueDate
+        spentTime
+        comments {
+          content
         }
       }
     }`
@@ -46,7 +50,7 @@ describe('TaskResolverResolver', () => {
           query: GET_Tasks,
         })
         expect(result.errors).toBeUndefined()
-        expect(result.data?.tasks).toEqual([])
+        expect(result.data?.allTasks).toEqual([])
       })
     })
 
@@ -60,17 +64,18 @@ describe('TaskResolverResolver', () => {
           query: GET_Tasks,
         })
         expect(result.errors).toBeUndefined()
-        expect(result.data?.tasks).toMatchInlineSnapshot(`
+        expect(result.data?.allTasks).toMatchInlineSnapshot(`
           Array [
             Object {
               "assignee": null,
+              "comments": Array [],
               "createdAt": "2021-11-23T23:18:00.134Z",
               "description": "Description",
               "dueDate": "2021-11-23T23:18:00.134Z",
               "expectedDuration": 100,
               "id": "1",
               "project": Object {
-                "name": "Test",
+                "name": "Project Test",
               },
               "shortText": "Short Text",
               "spentTime": 0,
@@ -80,13 +85,14 @@ describe('TaskResolverResolver', () => {
             },
             Object {
               "assignee": null,
+              "comments": Array [],
               "createdAt": "2021-11-23T23:18:00.134Z",
               "description": "Description",
               "dueDate": "2021-11-23T23:18:00.134Z",
               "expectedDuration": 100,
               "id": "2",
               "project": Object {
-                "name": "Test",
+                "name": "Project Test",
               },
               "shortText": "Short Text",
               "spentTime": 0,
@@ -127,7 +133,7 @@ describe('TaskResolverResolver', () => {
       }`
 
       const projectTest = await projectGenerator('TestProject', 'Test', 'Test', 0)
-
+      const statusToDo = await statusGenerator('To Do');
       const result = await server.executeOperation({
         query: CREATE_TASK,
         variables: {
@@ -149,14 +155,16 @@ describe('TaskResolverResolver', () => {
         expectedDuration: 100,
         id: '1',
         project: {
-          name: 'Test',
+          name: 'TestProject',
         },
         shortText: 'Test ShortTest',
         spentTime: 0,
-        status: null,
+        status: {
+          name: 'To Do',
+        },
         subject: 'Test Subject',
       })
     })
   })
-  
+
 })

@@ -9,6 +9,7 @@ truncate table role;
 truncate table status;
 truncate table task;
 truncate table user;
+truncate table user_language;
 truncate table user_project;
 SET FOREIGN_KEY_CHECKS=1;"
 echo "Database redlion cleaned"

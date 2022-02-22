@@ -9,6 +9,7 @@ import RoleResolver from './resolvers/RoleResolver'
 import StatusResolver from './resolvers/StatusResolver'
 import TaskResolver from './resolvers/TaskResolver'
 import UserResolver from './resolvers/UserResolver'
+import UserLanguageResolver from './resolvers/UserLanguageResolver'
 import UserProjectResolver from './resolvers/UserProjectResolver'
 
 export default async () => {
@@ -22,6 +23,7 @@ export default async () => {
       StatusResolver,
       TaskResolver,
       UserResolver,
+      UserLanguageResolver,
       UserProjectResolver,
     ],
   })
