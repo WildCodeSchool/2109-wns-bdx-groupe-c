@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server'
 import { getConnection } from 'typeorm'
 import getApolloServer from '../apollo-server'
-import getDatabaseConnection from '../database-connection-test'
+import getDatabaseConnection from '../database-connection'
 
 import { projectGenerator } from '../_mock_/projectGenerator'
 import { statusGenerator } from '../_mock_/statusGenerator'
@@ -11,10 +11,21 @@ describe('TaskResolverResolver', () => {
   let server: ApolloServer
 
   beforeAll(async () => {
+    if (!process.env.TEST_DATABASE_URL) {
+      throw Error('TEST_DATABASE_URL must be set in environment.')
+    }
+    await getDatabaseConnection(process.env.TEST_DATABASE_URL)
     server = await getApolloServer()
   })
-  beforeEach(() => getDatabaseConnection(':memory:'))
-  afterEach(() => getConnection().close())
+  beforeEach(async () => {
+    const entities = getConnection().entityMetadatas
+    // eslint-disable-next-line no-restricted-syntax
+    for (const entity of entities) {
+      const repository = getConnection().getRepository(entity.name)
+      await repository.query(`TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`)
+    }
+  })
+  afterAll(() => getConnection().close())
 
   describe('query tasks', () => {
     const GET_Tasks = `
@@ -54,7 +65,7 @@ describe('TaskResolverResolver', () => {
       })
     })
 
-    describe('when there are users in database', () => {
+    describe('when there are tasks in database', () => {
       it('returns all tasks in database', async () => {
         const projectTest = await projectGenerator('Project Test', 'Short Text', 'Description', 0)
         await taskGenetor('Task Test 1', 'Short Text', 'Description', projectTest.id)
@@ -73,14 +84,14 @@ describe('TaskResolverResolver', () => {
               "description": "Description",
               "dueDate": "2021-11-23T23:18:00.134Z",
               "expectedDuration": 100,
-              "id": "1",
+              "id": "2",
               "project": Object {
                 "name": "Project Test",
               },
               "shortText": "Short Text",
               "spentTime": 0,
               "status": null,
-              "subject": "Task Test 1",
+              "subject": "Task Test 2",
               "updatedAt": "2021-11-23T23:18:00.134Z",
             },
             Object {
@@ -90,14 +101,14 @@ describe('TaskResolverResolver', () => {
               "description": "Description",
               "dueDate": "2021-11-23T23:18:00.134Z",
               "expectedDuration": 100,
-              "id": "2",
+              "id": "1",
               "project": Object {
                 "name": "Project Test",
               },
               "shortText": "Short Text",
               "spentTime": 0,
               "status": null,
-              "subject": "Task Test 2",
+              "subject": "Task Test 1",
               "updatedAt": "2021-11-23T23:18:00.134Z",
             },
           ]
@@ -133,7 +144,7 @@ describe('TaskResolverResolver', () => {
       }`
 
       const projectTest = await projectGenerator('TestProject', 'Test', 'Test', 0)
-      const statusToDo = await statusGenerator('To Do');
+      const statusToDo = await statusGenerator('To Do')
       const result = await server.executeOperation({
         query: CREATE_TASK,
         variables: {
@@ -166,5 +177,4 @@ describe('TaskResolverResolver', () => {
       })
     })
   })
-
 })

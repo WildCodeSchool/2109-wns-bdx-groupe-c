@@ -1,5 +1,5 @@
 import Role from '../models/Role';
-import User from '../models/User';
+import User from '../models/AppUser';
 
 export const userGenerator = async (firstname: string, lastname: string, email: string, password: string, role? : Role) => {
   const userTest = new User();

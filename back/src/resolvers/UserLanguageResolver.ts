@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Query, Resolver, Int, Mutation } from 'type-graphql'
 
-import User from '../models/User';
+import User from '../models/AppUser';
 import UserLanguage from '../models/UserLanguage';
 
 

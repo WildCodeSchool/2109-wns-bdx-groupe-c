@@ -1,5 +1,5 @@
 import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
-import User from '../models/User'
+import User from '../models/AppUser'
 import Role from '../models/Role'
 
 const argon2 = require('argon2');
@@ -71,7 +71,10 @@ class UpdateUserInput {
 class UserResolver {
   @Query(() => [User])
   async users() {
-    const users = await User.find({ relations: ['projectsCreated','comments','role','tasks'] })
+    const users = await User.find({
+      relations: ['projectsCreated','comments','role','tasks'],
+      order: { id: 'DESC' }
+    })
     return users
   }
 
@@ -103,11 +106,13 @@ class UserResolver {
   }
 
   @Mutation(() => User)
-  async updateRole(@Args() { userId, roleIdentifier }: UpdateRoleInput) {
+  async updateUserRole(@Args() { userId, roleIdentifier }: UpdateRoleInput) {
     const user = await User.findOneOrFail( userId )
     const role = await Role.findOneOrFail({ identifier: roleIdentifier })
-    await User.update(user, { role, updatedAt: new Date() })
-    return User.findOne({ id: userId }, { relations: ['projectsCreated','comments','role','tasks'] })
+    user.role = role;
+    user.updatedAt = new Date();
+    await user.save();
+    return User.findOne({ id: user.id }, { relations: ['projectsCreated','comments','role','tasks'] })
   }
 
   @Mutation(() => User)

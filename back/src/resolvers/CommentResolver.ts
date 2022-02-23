@@ -1,6 +1,6 @@
 import { Arg, Args, ArgsType, Mutation, Query, Resolver, Field, Int } from 'type-graphql'
 import Comment from '../models/Comment'
-import User from '../models/User'
+import User from '../models/AppUser'
 import Task from '../models/Task'
 @ArgsType()
 class CreateCommentInput {
@@ -27,13 +27,13 @@ class CommentResolver {
   async comments() {
     return await Comment.find({ relations: ['user', 'task'] })
   }
-  
+
   @Mutation(() => Comment)
   async createComment(@Args() { content, userId, taskId }: CreateCommentInput) {
     const comment = new Comment()
     const user = await User.findOneOrFail({ id: userId })
     const task = await Task.findOneOrFail({ id: taskId })
-    
+
     comment.content = content
     comment.createdAt = new Date()
     comment.updatedAt = new Date()

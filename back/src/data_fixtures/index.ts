@@ -13,14 +13,23 @@ import { userLanguageGenerator } from "../_mock_/userLanguageGenerator";
 import { statusGenerator } from "../_mock_/statusGenerator";
 
 const dataFixtures = async () => {
-  console.log(' --------------    LAUNCHING DATA FIXTURES  ------------------');
+  console.log(' --------------    LAUNCHING DATA FIXTURES  ------------------')
 
   console.log(' --------------    STEP 1/11 : Connect to database  ------------------');
   if (!process.env.DATABASE_URL) {
     throw Error("DATABASE_URL must be set in environment.");
   }
-  await getDatabaseConnection(process.env.DATABASE_URL);
+  const connexion = await getDatabaseConnection(process.env.DATABASE_URL);
   console.log("Connected to database");
+
+  const entities = connexion.entityMetadatas;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const entity of entities) {
+    const repository = connexion.getRepository(entity.name);
+    await repository.query(
+      `TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`
+    );
+  }
 
   console.log(' --------------    STEP 2/11 : Generate Role  ------------------');
   const roleUser = await roleGenerator('user', 'user');
