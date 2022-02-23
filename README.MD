@@ -4,13 +4,6 @@
 
 <br>
 
-### <p style='color: yellow'>/!\ Warning if you have mysql install on your computer /!\ <p>
-
-``` BASH
-sudo service mysql stop
-```
-
-
 ### Launch the project
 
 ### The first time
@@ -26,6 +19,26 @@ It will launch 3 container :
 ### Just to re-start the containers
 ``` BASH
 docker-compose start
+```
+
+### Just to go in postgre container
+
+``` BASH
+docker-compose exec database psql -h localhost -p 5432 -U postgres -W
+```
+
+ou pour la table de test
+
+``` BASH
+docker-compose exec test-database psql -h localhost -p 5432 -U postgres -W
+```
+
+mot de passe c'est root
+
+Et pour voir les tables la commande c'est
+
+```PostgreSQL
+\d
 ```
 
 ### In order to reload the fixtures
