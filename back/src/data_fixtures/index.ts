@@ -51,25 +51,32 @@ const dataFixtures = async () => {
   const codeReview = await statusGenerator('Code Review');
   const statusDone = await statusGenerator('Done');
 
-  console.log(' --------------    STEP 5/11 : Generate Project  ------------------');
-  const project1 = await projectGenerator('Project1', 'description1', 'shortText1', 0);
+  console.log(' --------------    STEP 5/11 : Generate Language  ------------------');
+  const languagePHP = await languageGenerator('PHP');
+  const languageJS = await languageGenerator('JS');
+  const languageTS = await languageGenerator('TS');
+  const languageCSS = await languageGenerator('CSS');
+  const languageHTML = await languageGenerator('HTML');
+
+  console.log(' --------------    STEP 6/11 : Generate Project  ------------------');
+  const project1 = await projectGenerator('Project1', 'description1', 'shortText1', 0, [languagePHP, languageJS, languageHTML]);
   const project2 = await projectGenerator('Project2', 'description2', 'shortText2', 0);
 
 
-  console.log('  --------------    STEP 6/11 : Generate Project Role  ------------------');
+  console.log('  --------------    STEP 7/11 : Generate Project Role  ------------------');
   const graphiste = await projectRoleGenerator('Graphiste');
   const chefDeProjet = await projectRoleGenerator('Chef de Projet');
   const developpeur = await projectRoleGenerator('Developpeur');
   const scrumMaster = await projectRoleGenerator('Scrum Master');
 
 
-  console.log('  --------------    STEP 7/11 : Generate UserProject  ------------------');
+  console.log('  --------------    STEP 8/11 : Generate UserProject  ------------------');
   const userProject1 = await userProjectGenerator(alexis, project1, developpeur);
   const userProject2 = await userProjectGenerator(matthieu, project1, developpeur);
   const userProject3 = await userProjectGenerator(rudy, project1, developpeur);
   const userProject4 = await userProjectGenerator(pierre, project1, developpeur);
 
-  console.log(' --------------    STEP 8/11 : Generate Task  ------------------');
+  console.log(' --------------    STEP 9/11 : Generate Task  ------------------');
   // Project 1
   const task1 = await taskGenetor('subject1', 'Short Text1', 'Description1', project1.id, statusToDo, pierre);
   const task2 = await taskGenetor('subject2', 'Short Text2', 'Description2', project1.id, statusToDo, rudy);
@@ -85,15 +92,8 @@ const dataFixtures = async () => {
   const task10 = await taskGenetor('subject10', 'Short Text10', 'Description10', project2.id, statusToDo);
 
 
-  console.log(' --------------    STEP 9/11 : Generate Comment  ------------------');
+  console.log(' --------------    STEP 10/11 : Generate Comment  ------------------');
   const comment1 = await commentGenerator('test1', user1.id, task1.id)
-
-  console.log(' --------------    STEP 10/11 : Generate Language  ------------------');
-  const languagePHP = await languageGenerator('PHP');
-  const languageJS = await languageGenerator('JS');
-  const languageTS = await languageGenerator('TS');
-  const languageCSS = await languageGenerator('CSS');
-  const languageHTML = await languageGenerator('HTML');
 
   console.log(' --------------    STEP 11/11 : Associate Language to User  ------------------');
   await userLanguageGenerator(alexis, languagePHP, 5);

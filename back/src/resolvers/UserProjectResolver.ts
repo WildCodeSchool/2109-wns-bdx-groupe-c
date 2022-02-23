@@ -30,7 +30,7 @@ class UserProjectResolver {
   async myProjects(@Args() { userId }: MyProjectsInput) {
     const user = await User.findOne({ id: userId })
     const myProjects = await UserProject.find({
-      relations: ['user', 'project', 'projectRole'],
+      relations: ['user', 'project', 'projectRole', 'project.languages', 'project.tasks', 'project.tasks.assignee'],
       where: {
         user: user
       }
