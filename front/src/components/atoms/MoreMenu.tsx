@@ -7,10 +7,10 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 
 interface Props {
   options: string[]
-  className: string
+  className?: string
 }
 
-const MoreMenu = ({ options = [], className = '' }: Props) => {
+const MoreMenu = ({ options = [], className }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -30,7 +30,7 @@ const MoreMenu = ({ options = [], className = '' }: Props) => {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <MoreHorizIcon sx={{ fontSize: '40px' }} />
+        <MoreHorizIcon sx={{ fontSize: '40px', color: '#ffffff' }} />
       </IconButton>
       <Menu
         id="horiz-menu"
