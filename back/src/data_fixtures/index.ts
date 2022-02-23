@@ -30,6 +30,7 @@ const dataFixtures = async () => {
       `TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`
     );
   }
+  console.log(' --------------   TABLE TRUNCATED  ------------------');
 
   console.log(' --------------    STEP 2/11 : Generate Role  ------------------');
   const roleUser = await roleGenerator('user', 'user');
@@ -64,14 +65,16 @@ const dataFixtures = async () => {
 
   console.log('  --------------    STEP 7/11 : Generate UserProject  ------------------');
   const userProject1 = await userProjectGenerator(alexis, project1, developpeur);
-
+  const userProject2 = await userProjectGenerator(matthieu, project1, developpeur);
+  const userProject3 = await userProjectGenerator(rudy, project1, developpeur);
+  const userProject4 = await userProjectGenerator(pierre, project1, developpeur);
 
   console.log(' --------------    STEP 8/11 : Generate Task  ------------------');
   // Project 1
-  const task1 = await taskGenetor('subject1', 'Short Text1', 'Description1', project1.id, statusToDo);
-  const task2 = await taskGenetor('subject2', 'Short Text2', 'Description2', project1.id, statusToDo);
-  const task3 = await taskGenetor('subject3', 'Short Text3', 'Description3', project1.id, statusToDo);
-  const task4 = await taskGenetor('subject4', 'Short Text4', 'Description4', project1.id, statusToDo);
+  const task1 = await taskGenetor('subject1', 'Short Text1', 'Description1', project1.id, statusToDo, pierre);
+  const task2 = await taskGenetor('subject2', 'Short Text2', 'Description2', project1.id, statusToDo, rudy);
+  const task3 = await taskGenetor('subject3', 'Short Text3', 'Description3', project1.id, statusToDo, matthieu);
+  const task4 = await taskGenetor('subject4', 'Short Text4', 'Description4', project1.id, statusToDo, matthieu);
   const task5 = await taskGenetor('subject5', 'Short Text5', 'Description5', project1.id, statusToDo, alexis);
   const task6 = await taskGenetor('subject6', 'Short Text6', 'Description6', project1.id, statusToDo, alexis);
 
