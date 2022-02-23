@@ -28,7 +28,7 @@ class Task extends BaseEntity {
   @Field(() => Status, { nullable: true })
   status?: Status
 
-  @ManyToOne(() => Project)
+  @ManyToOne(() => Project, project => project.tasks)
   @Field(() => Project)
   project!: Project
 
