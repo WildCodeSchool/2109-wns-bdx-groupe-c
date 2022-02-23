@@ -7,9 +7,13 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm'
 import Language from './Language'
-import User from './User'
+import User from './AppUser'
+import Task from './Task'
+
+import {toUniqueArray} from '../helpers/helper';
 
 @Entity()
 @ObjectType()
@@ -54,6 +58,26 @@ class Project extends BaseEntity {
   })
   @Field(() => [Language])
   languages?: Language[]
+
+  @OneToMany(() => Task, task => task.project)
+  @Field(() => [Task], { nullable: true })
+  tasks?: Task[]
+
+  @Field()
+  get countAssignee(): number {
+    if(this.tasks) {
+      const assignees = this.tasks.map(task => {
+        if(task.assignee) {
+          return task.assignee.id;
+        } else {
+          return null;
+        }
+      });
+      return toUniqueArray(assignees).length;
+    } else {
+      return 0;
+    }
+  }
 }
 
 export default Project

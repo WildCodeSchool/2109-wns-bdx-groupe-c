@@ -1,5 +1,5 @@
 import Language from '../models/Language';
-import User from '../models/User';
+import User from '../models/AppUser';
 import UserLanguage from '../models/UserLanguage';
 
 export const userLanguageGenerator = async (user: User, language: Language, rating: number) => {

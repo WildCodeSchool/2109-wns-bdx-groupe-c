@@ -46,13 +46,13 @@ class UpdateProjectLanguageInput {
 class ProjectResolver {
   @Query(() => [Project])
   async projects() {
-    const projects = await Project.find({ relations: ['languages', 'createdBy'] })
+    const projects = await Project.find({ relations: ['languages', 'createdBy', 'tasks', 'tasks.assignee'] })
     return projects
   }
 
   @Query(() => Project)
   async project(@Arg('id') id: number) {
-    const project = await Project.findOneOrFail({ id })
+    const project = await Project.findOneOrFail({ id }, { relations: ['languages', 'createdBy', 'tasks', 'tasks.assignee'] } )
     return project
   }
 
@@ -66,7 +66,7 @@ class ProjectResolver {
     project.createdAt = new Date()
     project.updatedAt = new Date()
     await project.save()
-    return Project.findOne({ id: project.id }, { relations: ['languages','createdBy'] })
+    return Project.findOne({ id: project.id }, { relations: ['languages','createdBy', 'tasks'] })
   }
 
   @Mutation(() => Project)
@@ -89,7 +89,7 @@ class ProjectResolver {
     if (initialTimeSpent) updatedProperty['initialTimeSpent'] = initialTimeSpent
     updatedProperty['updatedAt'] = new Date()
     await Project.update(project, updatedProperty)
-    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy'] })
+    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy', 'tasks'] })
     return updatedProject
   }
 
@@ -97,11 +97,11 @@ class ProjectResolver {
   async updateProjectLanguage(
     @Args() { id, languagesId }: UpdateProjectLanguageInput
   ) {
-    const project = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy'] })
+    const project = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy', 'tasks'] })
     const languages = await Language.findByIds(languagesId)
     project.languages = languages;
     await project.save();
-    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy'] });
+    const updatedProject = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy', 'tasks'] });
     return updatedProject
   }
 

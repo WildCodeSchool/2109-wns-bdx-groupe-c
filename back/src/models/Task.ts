@@ -1,8 +1,8 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn } from 'typeorm'
 import Project from './Project'
 import Status from './Status'
-import User from './User'
+import User from './AppUser'
 import Comment from './Comment'
 
 @Entity()
@@ -28,7 +28,7 @@ class Task extends BaseEntity {
   @Field(() => Status, { nullable: true })
   status?: Status
 
-  @ManyToOne(() => Project)
+  @ManyToOne(() => Project, project => project.tasks)
   @Field(() => Project)
   project!: Project
 
@@ -36,15 +36,15 @@ class Task extends BaseEntity {
   @Field(() => User, { nullable: true })
   assignee?: User
 
-  @Column('datetime')
+  @CreateDateColumn()
   @Field()
   createdAt!: Date
 
-  @Column('datetime')
+  @CreateDateColumn()
   @Field()
   updatedAt!: Date
 
-  @Column('datetime')
+  @CreateDateColumn()
   @Field()
   dueDate!: Date
 

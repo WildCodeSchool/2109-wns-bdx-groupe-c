@@ -4,7 +4,7 @@ import {   BaseEntity,
   Entity,
   PrimaryGeneratedColumn, ManyToOne  } from "typeorm";
 
-  import User from "./User";
+  import User from "./AppUser";
   import Task from "./Task";
 @Entity()
 @ObjectType()

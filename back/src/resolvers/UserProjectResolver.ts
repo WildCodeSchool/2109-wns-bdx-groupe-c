@@ -1,7 +1,7 @@
 import { Args, ArgsType, Field, Query, Resolver, Int, Mutation } from 'type-graphql'
 
 import UserProject from '../models/UserProject'
-import User from '../models/User';
+import User from '../models/AppUser';
 import Project from '../models/Project';
 import ProjectRole from '../models/ProjectRole';
 

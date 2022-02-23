@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server'
 import { getConnection } from 'typeorm'
 import getApolloServer from '../apollo-server'
-import getDatabaseConnection from '../database-connection-test'
+import getDatabaseConnection from '../database-connection'
 
 import { userGenerator } from '../_mock_/userGenerator'
 import { projectGenerator } from '../_mock_/projectGenerator'
@@ -12,10 +12,25 @@ describe('TaskResolverResolver', () => {
   let server: ApolloServer
 
   beforeAll(async () => {
-    server = await getApolloServer()
-  })
-  beforeEach(() => getDatabaseConnection(':memory:'))
-  afterEach(() => getConnection().close())
+    server = await getApolloServer();
+
+    if (!process.env.TEST_DATABASE_URL) {
+      throw Error("TEST_DATABASE_URL must be set in environment.");
+    }
+
+    return getDatabaseConnection(process.env.TEST_DATABASE_URL);
+  });
+  beforeEach(async () => {
+    const entities = getConnection().entityMetadatas;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const entity of entities) {
+      const repository = getConnection().getRepository(entity.name);
+      await repository.query(
+        `TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`
+      );
+    }
+  });
+  afterAll(() => getConnection().close());
 
   describe('query comments', () => {
     const GET_Comments = `
