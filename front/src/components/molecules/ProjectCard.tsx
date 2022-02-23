@@ -1,15 +1,21 @@
 import { gql, useQuery } from "@apollo/client"
-import  Paper  from "@mui/material/Paper"
 
 import  Box  from "@mui/material/Box"
 import  Card  from "@mui/material/Card"
 import  CardActionArea from "@mui/material/CardActionArea"
 import  CardContent  from "@mui/material/CardContent"
+import  Paper  from "@mui/material/Paper"
 import  Typography  from "@mui/material/Typography"
+
+import  PersonIcon from '@mui/icons-material/Person';
+import  LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 
 import { makeStyles } from "@mui/styles"
 
 import MoreMenu from "../atoms/MoreMenu"
+
+import { MyProject } from "../../entities/project"
+import { Language } from "../../entities/language"
 
 const useStyles = makeStyles({
     card: {
@@ -37,6 +43,14 @@ const useStyles = makeStyles({
       alignItems: 'center',
       justifyContent: 'space-between',
     },
+    projectUserElements: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    projectLanguagesElement: {
+      display: 'flex',
+      alignItems: 'center',
+    }
 })
 
 const GET_PROJECTS = gql`
@@ -50,6 +64,10 @@ query Query($userId: Int!) {
       project {
         name
         shortText
+        countAssignee
+        languages {
+          name
+        }
       }
       projectRole {
         name
@@ -62,26 +80,6 @@ interface Props {
     userId: number
   }
 
-interface MyProject {
-  id: number,
-  user: User,
-  project: Project, 
-  projectRole: ProjectRole
-}
-
-interface User {
-  firstName: string
-  lastName: string
-}
-
-interface Project {
-  name: string
-  shortText: string
-}
-
-interface ProjectRole {
-  name: string
-}
 
 const ProjectCard = ({ userId = 3 }: Props) => {
     const { loading, data, error } = useQuery(GET_PROJECTS, { variables: { userId } })
@@ -100,16 +98,29 @@ const ProjectCard = ({ userId = 3 }: Props) => {
                 </Typography>
                 <MoreMenu options={['Ajouter une tâche']}/>
               </Box>
-                {data?.myProjects.map((project: MyProject) => {
+                {data?.myProjects.map((myProject: MyProject) => {
                   return (
-                      <Paper key={project.id} className={classes.projectPaper}>
+                      <Paper key={myProject.id} className={classes.projectPaper}>
                         <CardActionArea sx={{ borderRadius: '5px' }} className={classes.projectActionArea}>
                           <Box padding="15px">
                             <Typography fontWeight="bold" className={classes.projectCardName}>
-                              {project.project.name}
+                              {myProject.project.name}
                             </Typography>
-                            <Typography>{project.project.shortText}</Typography>
-                            <Typography variant="h4">{project.user.firstName}</Typography>
+                            <Typography>{myProject.project.shortText}</Typography>
+                            <Box className={classes.projectUserElements}>
+                              <PersonIcon />
+                              <Typography>{myProject.project.countAssignee <= 1 ? myProject.project.countAssignee + ' utilisateur' : myProject.project.countAssignee + ' utilisateurs'}</Typography>
+                            </Box>
+                            <Box className={classes.projectLanguagesElement}>
+                              <LibraryBooksIcon />
+                              {myProject.project.languages.map((language: Language) => {
+                                return (
+                                  <>
+                                    <Typography sx={{marginRight: '5px'}} key={language.id} component='p'>{language.name}</Typography>
+                                  </>
+                                )
+                              })}
+                            </Box>
                           </Box>
                         </CardActionArea>
                       </Paper>

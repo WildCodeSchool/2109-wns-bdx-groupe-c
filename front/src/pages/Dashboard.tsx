@@ -1,20 +1,9 @@
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import ProjectCard from '../components/molecules/ProjectCard'
 import TaskCard from '../components/molecules/TaskCard'
 
-const theme = createTheme({
-  components: {
-    MuiCard: {
-      styleOverrides: { 
-        root: { 
-          backgroundColor: '#7273FF'
-        }
-      }
-    }
-  }
-})
+
 
 const useStyles = makeStyles({
   mainContainer: {
@@ -30,10 +19,8 @@ const Dashboard = () => {
 
   return (
     <Box className={classes.mainContainer}>
-      <ThemeProvider theme={theme}>
         <TaskCard projectId={1} />
-        <ProjectCard userId={3}></ProjectCard>
-      </ThemeProvider>
+        <ProjectCard userId={3} />
     </Box>
   )
 }
