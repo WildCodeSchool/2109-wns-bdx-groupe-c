@@ -1,5 +1,5 @@
 import Comment from '../models/Comment';
-import User from '../models/User';
+import User from '../models/AppUser';
 import Task from '../models/Task';
 
 export const commentGenerator = async (content: string, userId: number, taskId:number) => {

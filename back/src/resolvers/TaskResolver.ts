@@ -1,7 +1,7 @@
 import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import Task from '../models/Task'
 import Project from '../models/Project'
-import User from '../models/User'
+import User from '../models/AppUser'
 import Status from '../models/Status'
 
 @ArgsType()

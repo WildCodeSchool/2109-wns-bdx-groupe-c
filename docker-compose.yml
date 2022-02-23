@@ -5,28 +5,32 @@ services:
   back:
     build: ./back
     depends_on:
-      - db
+      - database
+      - test-database
     ports:
       - 3004:3004
     volumes:
       - ./back:/app
       - /app/node_modules
     environment:
-      - DATABASE_URL=mysql://root:root@db/redlion
+      - DATABASE_URL=postgres://postgres:root@database:5432/postgres
+      - TEST_DATABASE_URL=postgres://postgres:root@test-database:5432/postgres
     container_name: back_redlion
-  db:
-    image: mysql
-    # platform: linux/amd64
-    ports:
-      - 3306:3306
-    volumes:
-      - ./init:/docker-entrypoint-initdb.d
-      - ./data:/var/lib/mysql
+
+  database:
+    image: postgres
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - database-volume:/var/lib/postgresql/data
     container_name: db_redlion
-    security_opt:
-      - seccomp:unconfined
+
+  test-database:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: root
+    container_name: db_test_redlion
+
   front:
     build: ./front
     ports:
@@ -35,3 +39,7 @@ services:
       - ./front:/app
       - /app/node_modules
     container_name: front_redlion
+
+#volume qui n'est pas stocke dans le repertoire courant
+volumes:
+  database-volume:

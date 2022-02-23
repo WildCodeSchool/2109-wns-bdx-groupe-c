@@ -1,6 +1,6 @@
 import Task from '../models/Task';
 import Project from '../models/Project';
-import User from '../models/User';
+import User from '../models/AppUser';
 import Status from '../models/Status';
 
 export const taskGenetor = async (

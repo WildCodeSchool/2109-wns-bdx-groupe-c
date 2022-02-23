@@ -9,7 +9,7 @@ import {
   JoinTable,
 } from 'typeorm'
 import Language from './Language'
-import User from './User'
+import User from './AppUser'
 
 @Entity()
 @ObjectType()

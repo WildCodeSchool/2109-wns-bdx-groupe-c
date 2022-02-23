@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm'
 
 import Comment from './Comment'
 import Project from './Project'
@@ -7,7 +7,7 @@ import Role from './Role'
 import Task from './Task'
 @Entity()
 @ObjectType()
-class User extends BaseEntity {
+class AppUser extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id!: number
@@ -24,19 +24,19 @@ class User extends BaseEntity {
   @Field()
   email!: string
 
+  // On enlève le @Field() pour ne pas afficher le mot de passe côté Front
   @Column('varchar', { length: 255 })
-  @Field()
   password!: string
 
   @Column('boolean', { default: true })
   @Field()
   isActive!: boolean
 
-  @Column('datetime')
+  @CreateDateColumn()
   @Field()
   createdAt!: Date
 
-  @Column('datetime')
+  @CreateDateColumn()
   @Field()
   updatedAt!: Date
 
@@ -45,16 +45,16 @@ class User extends BaseEntity {
   role?: Role
 
   @OneToMany(() => Comment, comment => comment.user)
-  @Field(() => [Comment])
-  comments!: Comment[]
+  @Field(() => [Comment], { nullable: true })
+  comments?: Comment[]
 
   @OneToMany(() => Project, project => project.createdBy)
-  @Field(() => [Project])
-  projectsCreated!: Project[]
+  @Field(() => [Project], { nullable: true })
+  projectsCreated?: Project[]
 
   @OneToMany(() => Task, task => task.assignee)
-  @Field(() => [Task])
+  @Field(() => [Task], { nullable: true })
   tasks?: Task[]
 }
 
-export default User
+export default AppUser

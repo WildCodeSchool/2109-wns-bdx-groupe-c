@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { BaseEntity, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
-import User from './User'
+import User from './AppUser'
 import Project from './Project'
 import ProjectRole from './ProjectRole'
 

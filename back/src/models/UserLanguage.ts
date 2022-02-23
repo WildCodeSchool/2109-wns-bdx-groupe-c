@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType  } from 'type-graphql'
 import { BaseEntity, Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm'
-import User from './User'
+import User from './AppUser'
 import Language from './Language'
 
 @Entity()
