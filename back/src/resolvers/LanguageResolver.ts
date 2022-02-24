@@ -1,5 +1,6 @@
 import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import Language from '../models/Language'
+import LanguageRepository from '../repository/LanguageRepository'
 
 @ArgsType()
 class DeleteLanguageInput {
@@ -19,29 +20,21 @@ class UpdateLangugeInput {
 @Resolver(Language)
 class LanguageResolver {
   @Query(() => [Language])
-  async language() {
-    const language = await Language.find()
-    return language
+  async languages() {
+    return LanguageRepository.findAll();
   }
   @Mutation(() => Language)
   async createLanguage(@Arg('name') name: string) {
-    const language = new Language()
-    language.name = name
-    await language.save()
-    return language
+    return LanguageRepository.createLanguage(name);
   }
   @Mutation(() => Language)
   async deleteLanguage(@Args() { id }: DeleteLanguageInput) {
-    const language = await Language.findOneOrFail({ id })
-    await Language.remove(language)
-    return language
+    return LanguageRepository.deleteLanguage(id);
   }
   @Mutation(() => Language)
   async updateLanguage(@Args() { id, name }: UpdateLangugeInput) {
     const language = await Language.findOneOrFail({ id })
-    await Language.update(language, { name })
-    const updateLanguage = await Language.findOne({ id })
-    return updateLanguage
+    return language.update(name);
   }
 }
 

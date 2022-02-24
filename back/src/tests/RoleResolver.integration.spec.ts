@@ -33,8 +33,8 @@ describe('RoleResolver', () => {
 
   describe('query roles', () => {
     const GET_Roles = `
-    query Role {
-      role {
+    query Roles {
+      roles {
         id
         name
         identifier
@@ -48,7 +48,7 @@ describe('RoleResolver', () => {
           query: GET_Roles,
         })
         expect(result.errors).toBeUndefined()
-        expect(result.data?.role).toEqual([])
+        expect(result.data?.roles).toEqual([])
       })
     })
 
@@ -62,7 +62,7 @@ describe('RoleResolver', () => {
           query: GET_Roles,
         })
         expect(result.errors).toBeUndefined()
-        expect(result.data?.role).toMatchInlineSnapshot(`
+        expect(result.data?.roles).toMatchInlineSnapshot(`
           Array [
             Object {
               "id": "1",

@@ -1,7 +1,13 @@
 import Language from '../models/Language';
 import Project from '../models/Project';
 
-export const projectGenerator = async (name: string, description: string, shortText:string, initialTimeSpent:0, languages?: Language[]) => {
+export const projectGenerator = async (
+  name: string,
+  description: string,
+  shortText:string,
+  initialTimeSpent:0,
+  languages?: Language[]
+  ) => {
   const projectTest = new Project();
   projectTest.name = name;
   projectTest.description = description;

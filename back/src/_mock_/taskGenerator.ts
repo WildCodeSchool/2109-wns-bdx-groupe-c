@@ -2,6 +2,7 @@ import Task from '../models/Task';
 import Project from '../models/Project';
 import User from '../models/AppUser';
 import Status from '../models/Status';
+import Comment from '../models/Comment';
 
 export const taskGenetor = async (
   subject: string,
@@ -10,6 +11,7 @@ export const taskGenetor = async (
   projectID: number,
   status?: Status,
   assignee? : User,
+  comments?: Comment[],
   ) => {
   const taskTest = new Task();
   taskTest.subject = subject;
@@ -23,5 +25,6 @@ export const taskGenetor = async (
   taskTest.spentTime = 0;
   if(assignee) taskTest.assignee = assignee;
   if(status) taskTest.status = status;
+  if(comments) taskTest.comments = comments;
   return await taskTest.save();
 }

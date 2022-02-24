@@ -33,6 +33,13 @@ class Comment extends BaseEntity{
   @ManyToOne(() => Task, task => task.comments)
   @Field(() => Task)
   task!: Task;
+
+  update(content: string) {
+    this.content = content;
+    this.updatedAt = new Date();
+    this.save();
+    return this;
+  }
 }
 
 export default Comment;
