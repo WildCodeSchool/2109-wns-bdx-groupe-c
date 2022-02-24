@@ -1,6 +1,7 @@
 import { Route, Router, Switch, useHistory } from 'react-router-dom'
 import Home from '../pages/Home'
 import Dashboard from '../pages/Dashboard'
+import Project from '../pages/Project'
 
 const Routes = () => {
   const history = useHistory()
@@ -17,7 +18,7 @@ const Routes = () => {
           <Dashboard />
         </Route>
         <Route exact path="/project">
-          <Dashboard />
+          <Project />
         </Route>
       </Switch>
     </Router>

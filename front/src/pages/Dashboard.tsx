@@ -1,9 +1,8 @@
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
-import ProjectCard from '../components/molecules/ProjectCard'
-import TaskCard from '../components/molecules/TaskCard'
 
-
+import DashboardMyProjectsCard from '../components/molecules/DashboardMyProjectsCard'
+import DashboardMyTasksCard from '../components/molecules/DashboardMyTasksCard'
 
 const useStyles = makeStyles({
   mainContainer: {
@@ -19,8 +18,8 @@ const Dashboard = () => {
 
   return (
     <Box className={classes.mainContainer}>
-        <TaskCard projectId={1} />
-        <ProjectCard userId={3} />
+        <DashboardMyTasksCard projectId={1} />
+        <DashboardMyProjectsCard userId={3} />
     </Box>
   )
 }

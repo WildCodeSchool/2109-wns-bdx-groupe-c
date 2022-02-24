@@ -1,20 +1,21 @@
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 
 import Box from '@mui/material/Box'
-import CardContent from '@mui/material/CardContent'
 import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
+import CardContent from '@mui/material/CardContent'
+import { makeStyles } from '@mui/styles'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import { makeStyles } from '@mui/styles'
 
 import MoreMenu from '../atoms/MoreMenu'
+import { GET_TASKS_BY_PROJECT } from '../../queries/task'
+import { Task } from '../../entities/task'
 
 const useStyles = makeStyles({
   card: {
     maxWidth: '500px',
     backgroundColor: '#7273FF',
-    overflow: 'hidden',
   },
   taskPaper: {
     maxWidth: '430px',
@@ -33,42 +34,13 @@ const useStyles = makeStyles({
   },
 })
 
-const GET_TASKS = gql`
-  query Query($projectId: Float!) {
-    tasks(projectId: $projectId) {
-      id
-      subject
-      shortText
-      description
-      assignee {
-        id
-      }
-      status {
-        name
-      }
-      updatedAt
-      createdAt
-      dueDate
-      comments {
-        id
-      }
-    }
-  }
-`
-
 interface Props {
   projectId: number
 }
 
-interface Task {
-  id: number,
-  subject: string
-  description: string
-  createdAt: Date
-}
 
-const TaskCard = ({ projectId = 1 }: Props) => {
-  const { loading, data, error } = useQuery(GET_TASKS, { variables: { projectId } })
+const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
+  const { loading, data, error } = useQuery(GET_TASKS_BY_PROJECT, { variables: { projectId } })
 
   const classes = useStyles()
   console.log('error', error)
@@ -78,7 +50,7 @@ const TaskCard = ({ projectId = 1 }: Props) => {
     <Card className={classes.card} sx={{borderRadius: '20px'}}>
       <CardContent sx={{ backgroundColor: '#0F4473', position: 'relative'}}>
         <Box className={classes.boxTitle}>
-          <Typography variant="h2" sx={{ fontSize: '28px' }}>
+          <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold' }}>
             Tasks &lt; To do
           </Typography>
           <MoreMenu options={['Ajouter une tâche']}/>
@@ -103,4 +75,4 @@ const TaskCard = ({ projectId = 1 }: Props) => {
   )
 }
 
-export default TaskCard
+export default DashboardMyTasksCard

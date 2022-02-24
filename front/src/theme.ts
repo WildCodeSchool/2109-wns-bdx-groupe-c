@@ -5,7 +5,15 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: '#7273FF',
+          backgroundColor: '#0f4473',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#061B2E',
+          color: 'white',
         },
       },
     },
