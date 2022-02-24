@@ -1,9 +1,6 @@
 import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import Task from '../models/Task'
-import Project from '../models/Project'
-import User from '../models/AppUser'
-import Status from '../models/Status'
-
+import TaskRepository from '../repository/TaskRepository';
 @ArgsType()
 class CreateTaskInput {
   @Field()
@@ -65,7 +62,7 @@ class MyTaskInput {
 }
 
 @ArgsType()
-class updateTaskTextInput {
+class updateTask {
   @Field(() => Int)
   id!: number
 
@@ -77,94 +74,58 @@ class updateTaskTextInput {
 
   @Field()
   subject?: string
+
+  @Field()
+  expectedDuration?: number
+
+  @Field()
+  dueDate?: Date
 }
 
 @Resolver(Task)
 class TaskResolver {
   @Query(() => [Task])
   async tasks(@Arg('projectId') projectId: number) {
-    const tasks = await Task.find({
-      relations: ['assignee', 'project', 'status','comments'],
-      where: {
-        project: { id: projectId },
-      },
-    })
-    return tasks
+    return TaskRepository.findByProjectId(projectId);
   }
 
   @Query(() => [Task])
   async myTasks(@Args() { userId }: MyTaskInput) {
-    const tasks = await Task.find({
-      relations: ['assignee', 'project', 'status','comments'],
-      where: {
-        assignee: { id: userId },
-      },
-    })
-    return tasks
+    return TaskRepository.findByUserId(userId);
   }
 
   @Query(() => [Task])
   async allTasks() {
-    const tasks = await Task.find({
-      relations: ['assignee', 'project', 'status','comments'],
-    })
-    return tasks
+    return TaskRepository.findAll();
   }
-
-
 
 
   @Query(() => Task)
   async task(@Arg('id') id: number) {
-    const task = await Task.findOneOrFail({ id })
-    return task
+    return TaskRepository.findOneById(id);
   }
 
   @Mutation(() => Task)
   async createTask(
     @Args() { subject, shortText, description, projectId, dueDate, expectedDuration }: CreateTaskInput
   ) {
-    const task = new Task()
-    const project = await Project.findOneOrFail({ id: projectId });
-    const toDo = await Status.findOneOrFail({ name: 'To Do' });
-    task.subject = subject
-    task.shortText = shortText
-    task.description = description
-    task.project = project
-    task.dueDate = dueDate
-    task.expectedDuration = expectedDuration
-    task.spentTime = 0
-    task.createdAt = new Date()
-    task.updatedAt = new Date()
-    task.status = toDo;
-    await task.save()
-    return Task.findOne({ id: task.id }, { relations: ['assignee', 'project', 'status','comments'] })
+    return TaskRepository.createTask(subject, shortText, description, projectId, dueDate, expectedDuration);
   }
 
   @Mutation(() => Task)
-  async assignUser(
+  async assignUserToTask(
     @Args() { id, userId }: assignUserInput
   ) {
     const task = await Task.findOneOrFail({ id: id }, { relations: ['assignee', 'project', 'status','comments'] })
-    const assignee = await User.findOneOrFail({ id: userId })
-    task.assignee = assignee
-    task.updatedAt = new Date()
-    await task.save()
-    return Task.findOne({ id: task.id }, { relations: ['assignee', 'project', 'status','comments'] })
+    return task.assignUser(userId);
   }
 
   @Mutation(() => Task)
-  async updateText(
-    @Args() { id, description, shortText, subject }: updateTaskTextInput
+  async updateTask(
+    @Args() { id, description, shortText, subject, expectedDuration, dueDate }: updateTask
   ) {
     const task = await Task.findOneOrFail({ id: id }, { relations: ['assignee', 'project', 'status','comments'] })
-    const updatedProperty: any = {}
-    if(description) updatedProperty.description = description
-    if(shortText) updatedProperty.shortText = shortText
-    if(subject) updatedProperty.subject = subject
-    task.updatedAt = new Date()
-    await Task.update(task, updatedProperty)
-    return Task.findOne({ id: task.id }, { relations: ['assignee', 'project', 'status','comments'] })
+    return task.updateTask(description, shortText, subject, expectedDuration, dueDate)
   }
 
   @Mutation(() => Task)
@@ -172,11 +133,7 @@ class TaskResolver {
     @Args() { id, statusId }: updateStatusInput
   ) {
     const task = await Task.findOneOrFail({ id: id }, { relations: ['assignee', 'project', 'status','comments'] })
-    const status = await Status.findOneOrFail({ id: statusId })
-    task.status = status
-    task.updatedAt = new Date()
-    await task.save()
-    return Task.findOne({ id: task.id }, { relations: ['assignee', 'project', 'status','comments'] })
+    return task.updateStatus(statusId);
   }
 
   @Mutation(() => Task)
@@ -184,17 +141,13 @@ class TaskResolver {
     @Args() { id, spentTime }: updateTimeSpentInput
   ) {
     const task = await Task.findOneOrFail({ id: id }, { relations: ['assignee', 'project', 'status','comments'] })
-    task.spentTime = task.spentTime + spentTime
-    await task.save()
-    return Task.findOne({ id: task.id }, { relations: ['assignee', 'project', 'status','comments'] })
+    return task.updateTimeSpent(spentTime);
   }
 
 
   @Mutation(() => Task)
-  async deleteTask({ id }: DeleteTaskInput) {
-    const task = await Task.findOneOrFail({ id }, { relations: ['assignee', 'project', 'status','comments'] })
-    await Task.remove(task)
-    return task
+  async deleteTask(@Arg('id') id: number) {
+    return TaskRepository.deleteTask(id);
   }
 
 }

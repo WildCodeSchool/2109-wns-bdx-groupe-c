@@ -15,9 +15,9 @@ class ProjectRole extends BaseEntity{
   @Field()
   name!: string;
 
-  update(name: string) {
+  async update(name: string) {
     this.name = name;
-    this.save();
+    await this.save();
     return this;
   }
 }
