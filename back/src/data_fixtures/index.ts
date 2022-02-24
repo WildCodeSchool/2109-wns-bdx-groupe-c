@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import { userGenerator } from "../_mock_/userGenerator";
 import { commentGenerator } from "../_mock_/commentGenerator";
 import { projectGenerator } from "../_mock_/projectGenerator";
-import { taskGenetor } from "../_mock_/taskGenerator";
+import { taskGenerator } from "../_mock_/taskGenerator";
 import { exit } from "process";
 import { roleGenerator } from "../_mock_/roleGenerator";
 import { projectRoleGenerator } from "../_mock_/projectRoleGenerator";
@@ -59,9 +59,11 @@ const dataFixtures = async () => {
   const languageHTML = await languageGenerator('HTML');
 
   console.log(' --------------    STEP 6/11 : Generate Project  ------------------');
-  const project1 = await projectGenerator('Project1', 'description1', 'shortText1', 0, [languagePHP, languageJS, languageHTML]);
-  const project2 = await projectGenerator('Project2', 'description2', 'shortText2', 0);
-
+  const project1 = await projectGenerator('Redlion', 'Application to manage ticket in a team, change the status of a task ...', 'Manage ticket', 600, [languagePHP, languageJS, languageHTML], alexis, statusInProgress);
+  const project2 = await projectGenerator('KitchenApp', 'Application to manage aliments in our fridge', 'Manage our food', 450, [languageTS, languageHTML, languageCSS], matthieu, statusToDo);
+  const project3 = await projectGenerator('SpotifyLike', 'Application based on the spotify app', 'Manage our music', 800, [languagePHP, languageJS], matthieu, statusToDo);
+  const project4 = await projectGenerator('GardenApp', 'Application to manage our garden, know how to keep or plants alive', 'Manage our plants', 550, [languagePHP, languageJS], matthieu, statusToDo);
+  const project5 = await projectGenerator('LoveApp', 'Application to find the most beautiful developers near you', 'Find love', 350, [languagePHP, languageJS], matthieu, statusDone);
 
   console.log('  --------------    STEP 7/11 : Generate Project Role  ------------------');
   const graphiste = await projectRoleGenerator('Graphiste');
@@ -78,22 +80,23 @@ const dataFixtures = async () => {
 
   console.log(' --------------    STEP 9/11 : Generate Task  ------------------');
   // Project 1
-  const task1 = await taskGenetor('subject1', 'Short Text1', 'Description1', project1.id, statusToDo, pierre);
-  const task2 = await taskGenetor('subject2', 'Short Text2', 'Description2', project1.id, statusToDo, rudy);
-  const task3 = await taskGenetor('subject3', 'Short Text3', 'Description3', project1.id, statusToDo, matthieu);
-  const task4 = await taskGenetor('subject4', 'Short Text4', 'Description4', project1.id, statusToDo, matthieu);
-  const task5 = await taskGenetor('subject5', 'Short Text5', 'Description5', project1.id, statusToDo, alexis);
-  const task6 = await taskGenetor('subject6', 'Short Text6', 'Description6', project1.id, statusToDo, alexis);
+  const task1 = await taskGenerator('[MOBILE] Change the mobile design', 'Mobile design', 'Change the design aspect of the mobile app', project1.id, 100, 0, statusToDo, pierre);
+  const task2 = await taskGenerator('[FRONT] Manage the React Routes', 'Routes React', 'Manage the different routes of the front app', project1.id, 100, 0,  statusToDo, rudy);
+  const task3 = await taskGenerator('[FRONT] Apply the theme of material ui', 'Material UI design', 'Change the components to apply the theme of material ui', project1.id, 100, 55,  statusInProgress, matthieu);
+  const task4 = await taskGenerator('[FRONT] Change the card of a task', 'Design Task', 'Adapt the view of a task baased on the wireframes', project1.id, 100, 75,  statusInProgress, matthieu);
+  const task5 = await taskGenerator('[BACK] Manage the test on the back', 'Back Test', 'Manage the different test with all the resolvers', project1.id, 100, 95,  codeReview, alexis);
+  const task6 = await taskGenerator('[BACK] Change the status of a project', 'Back Status Project', 'As a user i can change the status of a project', project1.id, 100, 100,  statusDone, alexis);
+  const task7 = await taskGenerator('[BACK] Creation of the different fixtures', 'Back Fixtures', 'Make fixtures for all the entites of the project', project1.id, 100, 60,  statusInProgress, alexis);
 
   // Project 2
-  const task7 = await taskGenetor('subject7', 'Short Text7', 'Description7', project2.id, statusToDo);
-  const task8 = await taskGenetor('subject8', 'Short Text8', 'Description8', project2.id, statusToDo);
-  const task9 = await taskGenetor('subject9', 'Short Text9', 'Description9', project2.id, statusToDo);
-  const task10 = await taskGenetor('subject10', 'Short Text10', 'Description10', project2.id, statusToDo);
+  const task8 = await taskGenerator('[MOBILE] Initialisation', 'Mobile initialisation', 'Initiate the project on react native', project2.id, 100, 0,  statusToDo);
+  const task9 = await taskGenerator('[FRONT] Initialisation', 'Front initialisation', 'Initiate the project on react', project2.id, 100, 100,  statusDone);
+  const task10 = await taskGenerator('[BACK] Installation of Apollo', 'Back Apollo', 'Installation of apollo on the server', project2.id, 100, 75,  statusInProgress);
+  const task11 = await taskGenerator('[BACK] Initialisation', 'Back initialisation', 'Initiate the api', project2.id, 100, 90,  codeReview);
 
 
   console.log(' --------------    STEP 10/11 : Generate Comment  ------------------');
-  const comment1 = await commentGenerator('test1', user1.id, task1.id)
+  const comment1 = await commentGenerator('Super task i loved it !', user1.id, task1.id)
 
   console.log(' --------------    STEP 11/11 : Associate Language to User  ------------------');
   await userLanguageGenerator(alexis, languagePHP, 5);
