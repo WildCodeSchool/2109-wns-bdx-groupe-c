@@ -4,6 +4,9 @@ import UserProject from '../models/UserProject'
 import User from '../models/AppUser';
 import Project from '../models/Project';
 import ProjectRole from '../models/ProjectRole';
+import ObjectHelpers from '../helpers/ObjectHelper';
+
+import UserProjectRepository from '../repository/UserProjectRepository';
 
 @ArgsType()
 class MyProjectsInput {
@@ -14,13 +17,28 @@ class MyProjectsInput {
 @ArgsType()
 class CreateUserProjectInput {
   @Field(() => Int)
-  userID!: number
+  userId!: number
 
   @Field(() => Int)
   projectId!: number
 
   @Field(() => Int)
-  roleId?: number
+  roleId!: number
+}
+
+@ArgsType()
+class updateUserRoleInput {
+  @Field(() => Int)
+  userProjectId!: number
+
+  @Field(() => Int)
+  roleId!: number
+}
+
+@ArgsType()
+class deleteUserProjectInput {
+  @Field(() => Int)
+  userProjectId!: number
 }
 
 @Resolver(UserProject)
@@ -28,26 +46,22 @@ class UserProjectResolver {
 
   @Query(() => [UserProject])
   async myProjects(@Args() { userId }: MyProjectsInput) {
-    const user = await User.findOne({ id: userId })
-    const myProjects = await UserProject.find({
-      relations: ['user', 'project', 'projectRole', 'project.languages', 'project.tasks', 'project.tasks.assignee'],
-      where: {
-        user: user
-      }
-    })
-    return myProjects
+    return UserProjectRepository.findAll(userId);
   }
 
+  @Mutation(() => UserProject)
+  async associateUserToProject(@Args() { userId, projectId, roleId }: CreateUserProjectInput) {
+    return UserProjectRepository.createUserProject(userId, projectId, roleId);
+  }
 
   @Mutation(() => UserProject)
-  async associateUserToProject(@Args() { userID, projectId, roleId }: CreateUserProjectInput) {
-    const userProject = new UserProject();
-    userProject.user = await User.findOneOrFail({ id: userID });
-    userProject.project = await Project.findOneOrFail({ id: projectId });
-    userProject.projectRole = await ProjectRole.findOneOrFail({ id: roleId });
+  async updateUserRoleToProject(@Args() { userProjectId, roleId }: updateUserRoleInput) {
+    return UserProjectRepository.updateUserProject(userProjectId, roleId);
+  }
 
-    await userProject.save()
-    return UserProject.findOne({ id: userProject.id }, { relations: ['user','project','projectRole'] })
+  @Mutation(() => UserProject)
+  async deleteUserFromProject(@Args() { userProjectId }: deleteUserProjectInput) {
+    return UserProjectRepository.deleteUserProject(userProjectId);
   }
 
 

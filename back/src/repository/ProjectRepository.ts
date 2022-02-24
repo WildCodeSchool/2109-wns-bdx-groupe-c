@@ -2,6 +2,7 @@ import Project from "../models/Project";
 import Status from '../models/Status';
 import User from '../models/AppUser';
 import Language from "../models/Language";
+import ObjectHelpers from "../helpers/ObjectHelper";
 
 class ProjectRepository extends Project {
     static async findAll() {
@@ -29,8 +30,8 @@ class ProjectRepository extends Project {
     }
 
     static async deleteProject(id: number) {
-      const project = await Project.findOneOrFail({ id })
-      const projectSelected = { ...project }
+      const project = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy', 'tasks', 'status'] })
+      const projectSelected = ObjectHelpers.deepClone(project);
       await Project.remove(project)
       return projectSelected
     }

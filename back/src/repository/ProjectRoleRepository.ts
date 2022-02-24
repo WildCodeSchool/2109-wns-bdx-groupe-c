@@ -1,3 +1,4 @@
+import ObjectHelpers from '../helpers/ObjectHelper';
 import ProjectRole from '../models/ProjectRole'
 
 class ProjectRoleRepository extends ProjectRole {
@@ -13,7 +14,7 @@ class ProjectRoleRepository extends ProjectRole {
 
   static async deleteProjectRole(id: number) {
     const projectRole = await ProjectRole.findOneOrFail({ id })
-    const projectRoleCopy = { ...projectRole };
+    const projectRoleCopy = ObjectHelpers.deepClone(projectRole);
     await ProjectRole.remove(projectRole)
     return projectRoleCopy
   }

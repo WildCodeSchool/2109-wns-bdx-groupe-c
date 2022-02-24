@@ -2,6 +2,7 @@ import Task from '../models/Task'
 import Project from '../models/Project'
 import User from '../models/AppUser'
 import Status from '../models/Status'
+import ObjectHelpers from '../helpers/ObjectHelper';
 
 class TaskRepository extends Task {
   static async findAll() {
@@ -60,7 +61,7 @@ class TaskRepository extends Task {
 
   static async deleteTask(id: number) {
     const task = await Task.findOneOrFail({ id }, { relations: ['assignee', 'project', 'status','comments'] })
-    const taskCopy = { ...task };
+    const taskCopy = ObjectHelpers.deepClone(task);
     await Task.remove(task)
     return taskCopy
   }

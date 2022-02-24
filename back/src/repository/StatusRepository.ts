@@ -1,3 +1,4 @@
+import ObjectHelpers from '../helpers/ObjectHelper';
 import Status from '../models/Status'
 
 class StatusRepository extends Status {
@@ -13,7 +14,7 @@ class StatusRepository extends Status {
 
   static async deleteStatus(id: number) {
     const status = await Status.findOneOrFail({ id })
-    const statusCopy = { ...status };
+    const statusCopy = ObjectHelpers.deepClone(status);
     await Status.remove(status)
     return statusCopy
   }

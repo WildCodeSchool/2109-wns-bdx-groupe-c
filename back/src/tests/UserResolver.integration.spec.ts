@@ -82,7 +82,7 @@ describe('UserResolver', () => {
       })
     })
 
-    describe('when there users in database', () => {
+    describe('when there is users in database', () => {
       it('returns 1 user if needed in the database', async () => {
         const GET_ONE_USER = `
         query User($userId: Float!) {
@@ -194,19 +194,87 @@ describe('UserResolver', () => {
       expect(result.errors).toBeUndefined()
       expect(result.data?.updateUserRole).toMatchInlineSnapshot(`
         Object {
-          "comments": Array [],
+          "comments": null,
           "email": "nouveau@mail.com",
           "firstName": "Nouveau",
           "id": "1",
           "isActive": true,
           "lastName": "Nouveau",
-          "projectsCreated": Array [],
+          "projectsCreated": null,
           "role": Object {
             "id": "2",
             "identifier": "test2",
             "name": "test2",
           },
-          "tasks": Array [],
+          "tasks": null,
+        }
+      `)
+    })
+  })
+
+  describe('mutation change Information', () => {
+    it('change the informations user', async () => {
+      const CHANGE_INFORMATION_USER = `
+      mutation Mutation($updateUserInformationId: Int!, $firstName: String, $lastName: String, $email: String, $password: String) {
+        updateUserInformation(id: $updateUserInformationId, firstName: $firstName, lastName: $lastName, email: $email, password: $password) {
+          firstName
+          lastName
+          email
+        }
+      }
+      `
+      const role1 = await roleGenerator('test1', 'test1')
+      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
+      const result = await server.executeOperation({
+        query: CHANGE_INFORMATION_USER,
+        variables: {
+          updateUserInformationId: user1.id,
+          firstName: 'test firstname updated',
+          lastName: 'test lastname updated',
+          email: 'test email updated',
+          password: 'password',
+        },
+      })
+
+      expect(result.errors).toBeUndefined()
+      expect(result.data?.updateUserInformation).toMatchInlineSnapshot(`
+        Object {
+          "email": "test email updated",
+          "firstName": "test firstname updated",
+          "lastName": "test lastname updated",
+        }
+      `)
+    })
+  })
+
+  describe('mutation delete a user', () => {
+    it('update the boolean is active to false', async () => {
+      const DELETE_USER = `
+      mutation Mutation($deleteUserId: Int!) {
+        deleteUser(id: $deleteUserId) {
+          firstName
+          lastName
+          email
+          isActive
+        }
+      }
+      `
+      const role1 = await roleGenerator('test1', 'test1')
+      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
+      const result = await server.executeOperation({
+        query: DELETE_USER,
+        variables: {
+          deleteUserId: user1.id,
+        },
+      })
+
+      expect(result.errors).toBeUndefined()
+      expect(result.data?.deleteUser).toMatchInlineSnapshot(`
+        Object {
+          "email": "",
+          "firstName": "",
+          "isActive": false,
+          "lastName": "",
         }
       `)
     })
