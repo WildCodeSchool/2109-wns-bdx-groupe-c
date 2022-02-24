@@ -1,4 +1,4 @@
-import getDatabaseConnection from "../database-connection";
+import getDatabaseConnection from '../database-connection'
 import dotenv from 'dotenv'
 import { userGenerator } from "../_mock_/userGenerator";
 import { commentGenerator } from "../_mock_/commentGenerator";
@@ -15,31 +15,28 @@ import { statusGenerator } from "../_mock_/statusGenerator";
 const dataFixtures = async () => {
   console.log(' --------------    LAUNCHING DATA FIXTURES  ------------------')
 
-  console.log(' --------------    STEP 1/11 : Connect to database  ------------------');
+  console.log(' --------------    STEP 1/11 : Connect to database  ------------------')
   if (!process.env.DATABASE_URL) {
-    throw Error("DATABASE_URL must be set in environment.");
+    throw Error('DATABASE_URL must be set in environment.')
   }
-  const connexion = await getDatabaseConnection(process.env.DATABASE_URL);
-  console.log("Connected to database");
+  const connexion = await getDatabaseConnection(process.env.DATABASE_URL)
+  console.log('Connected to database')
 
-  const entities = connexion.entityMetadatas;
+  const entities = connexion.entityMetadatas
   // eslint-disable-next-line no-restricted-syntax
   for (const entity of entities) {
-    const repository = connexion.getRepository(entity.name);
-    await repository.query(
-      `TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`
-    );
+    const repository = connexion.getRepository(entity.name)
+    await repository.query(`TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`)
   }
-  console.log(' --------------   TABLE TRUNCATED  ------------------');
+  console.log(' --------------   TABLE TRUNCATED  ------------------')
 
-  console.log(' --------------    STEP 2/11 : Generate Role  ------------------');
-  const roleUser = await roleGenerator('user', 'user');
-  const roleAdmin = await roleGenerator('admin', 'admin');
+  console.log(' --------------    STEP 2/11 : Generate Role  ------------------')
+  const roleUser = await roleGenerator('user', 'user')
+  const roleAdmin = await roleGenerator('admin', 'admin')
 
-
-  console.log(' --------------    STEP 3/11 : Generate User  ------------------');
-  const user1 = await userGenerator('user1', 'UserName1', 'user1@mail.com', 'test', roleUser);
-  const user2 = await userGenerator('user2', 'UserName2', 'user2@mail.com', 'test', roleUser);
+  console.log(' --------------    STEP 3/11 : Generate User  ------------------')
+  const user1 = await userGenerator('user1', 'UserName1', 'user1@mail.com', 'test', roleUser)
+  const user2 = await userGenerator('user2', 'UserName2', 'user2@mail.com', 'test', roleUser)
   const alexis = await userGenerator('Alexis', 'test1', 'alexis@mail.com', 'test', roleAdmin)
   const rudy = await userGenerator('Rudy', 'test2', 'rudy@mail.com', 'test', roleAdmin)
   const pierre = await userGenerator('Pierre', 'test3', 'pierre@mail.com', 'test', roleAdmin)
@@ -98,13 +95,13 @@ const dataFixtures = async () => {
   console.log(' --------------    STEP 10/11 : Generate Comment  ------------------');
   const comment1 = await commentGenerator('Super task i loved it !', user1.id, task1.id)
 
-  console.log(' --------------    STEP 11/11 : Associate Language to User  ------------------');
-  await userLanguageGenerator(alexis, languagePHP, 5);
-  await userLanguageGenerator(alexis, languageJS, 3);
-  await userLanguageGenerator(alexis, languageTS, 2);
+  console.log(' --------------    STEP 11/11 : Associate Language to User  ------------------')
+  await userLanguageGenerator(alexis, languagePHP, 5)
+  await userLanguageGenerator(alexis, languageJS, 3)
+  await userLanguageGenerator(alexis, languageTS, 2)
 
-  console.log(' --------------    DATA FIXTURES SUCCESSFULLY LAUNCHED  ------------------');
-  exit();
+  console.log(' --------------    DATA FIXTURES SUCCESSFULLY LAUNCHED  ------------------')
+  exit()
 }
 
-dataFixtures();
+dataFixtures()

@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 
 import  Box  from "@mui/material/Box"
 import  Card  from "@mui/material/Card"
@@ -7,15 +7,16 @@ import  CardContent  from "@mui/material/CardContent"
 import  Paper  from "@mui/material/Paper"
 import  Typography  from "@mui/material/Typography"
 
-import  PersonIcon from '@mui/icons-material/Person';
 import  LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import  PersonIcon from '@mui/icons-material/Person';
 
 import { makeStyles } from "@mui/styles"
 
 import MoreMenu from "../atoms/MoreMenu"
 
-import { MyProject } from "../../entities/project"
+import { GET_MY_PROJECTS }  from "../../queries/project"
 import { Language } from "../../entities/language"
+import { MyProject } from "../../entities/project"
 
 const useStyles = makeStyles({
     card: {
@@ -53,36 +54,13 @@ const useStyles = makeStyles({
     }
 })
 
-const GET_PROJECTS = gql`
-query Query($userId: Int!) {
-    myProjects(userId: $userId) {
-      id
-      user {
-        firstName
-        lastName
-      }
-      project {
-        name
-        shortText
-        countAssignee
-        languages {
-          name
-        }
-      }
-      projectRole {
-        name
-      }
-    }
-  }
-`
-
 interface Props {
     userId: number
   }
 
 
-const ProjectCard = ({ userId = 3 }: Props) => {
-    const { loading, data, error } = useQuery(GET_PROJECTS, { variables: { userId } })
+const DashboardMyProjectsCard = ({ userId = 3 }: Props) => {
+    const { loading, data, error } = useQuery(GET_MY_PROJECTS, { variables: { userId } })
     const classes = useStyles()
 
     console.log('error', error)
@@ -93,7 +71,7 @@ const ProjectCard = ({ userId = 3 }: Props) => {
         <Card className={classes.card} sx={{borderRadius: '20px'}}>
             <CardContent sx={{ backgroundColor: '#0F4473'}}>
               <Box className={classes.boxTitle}>
-                <Typography variant="h2" sx={{ fontSize: '28px' }}>
+                <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
                 Projects
                 </Typography>
                 <MoreMenu options={['Ajouter une tâche']}/>
@@ -131,4 +109,4 @@ const ProjectCard = ({ userId = 3 }: Props) => {
     )
 }
 
-export default ProjectCard
+export default DashboardMyProjectsCard

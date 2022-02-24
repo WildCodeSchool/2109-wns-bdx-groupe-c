@@ -6,10 +6,10 @@ import StatusRepository from "../repository/StatusRepository";
 @ArgsType()
 class UpdateStatusInput {
   @Field(() => Int)
-  id!: number;
+  id!: number
 
   @Field()
-  name!: string;
+  name!: string
 }
 
 @Resolver(Status)
@@ -31,7 +31,6 @@ class StatusResolver {
     const status = await Status.findOneOrFail({ id })
     return status.update(name);
   }
-
 }
 
-export default StatusResolver;
+export default StatusResolver
