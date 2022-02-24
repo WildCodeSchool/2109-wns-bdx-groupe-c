@@ -122,7 +122,6 @@ describe('UserResolver', () => {
         firstName
         lastName
         email
-        password
       }
     }
     `
@@ -149,7 +148,6 @@ describe('UserResolver', () => {
         firstName: 'Nouveau',
         lastName: 'Nouveau',
         email: 'nouveau@mail.com',
-        password: expect.anything(),
       })
     })
   })
@@ -163,7 +161,6 @@ describe('UserResolver', () => {
           firstName
           lastName
           email
-          password
           isActive
           role {
             name
@@ -203,7 +200,6 @@ describe('UserResolver', () => {
           "id": "1",
           "isActive": true,
           "lastName": "Nouveau",
-          "password": "password",
           "projectsCreated": Array [],
           "role": Object {
             "id": "2",

@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType, Int } from 'type-graphql'
 import {
   BaseEntity,
   Column,
@@ -56,14 +56,14 @@ class Project extends BaseEntity {
     joinColumn: { name: 'projectId', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'languageId' },
   })
-  @Field(() => [Language])
+  @Field(() => [Language], { nullable: true })
   languages?: Language[]
 
   @OneToMany(() => Task, task => task.project)
   @Field(() => [Task], { nullable: true })
   tasks?: Task[]
 
-  @Field()
+  @Field(()=> Int)
   get countAssignee(): number {
     if(this.tasks) {
       const assignees = this.tasks.map(task => {

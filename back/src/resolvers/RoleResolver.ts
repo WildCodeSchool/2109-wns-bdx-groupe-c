@@ -1,5 +1,6 @@
 import { Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import Role from '../models/Role'
+import RoleRepository from '../repository/RoleRepository'
 
 @ArgsType()
 class CreateRoleInput {
@@ -25,25 +26,19 @@ class UpdateRoleInput {
 @Resolver(Role)
 class RoleResolver {
   @Query(() => [Role])
-  async role() {
-    const role = await Role.find()
-    return role
-  }
-  @Mutation(() => Role)
-  async createRole(@Args() { name, identifier }: CreateRoleInput) {
-    const role = new Role()
-    role.name = name
-    role.identifier = identifier
-    await role.save()
-    return role
+  async roles() {
+    return RoleRepository.findAll();
   }
 
-  @Mutation(()=>Role)
-  async updateRole(@Args(){id, name, identifier}:UpdateRoleInput) {
-    const role = await Role.findOneOrFail({id});
-    await Role.update(role, {name, identifier});
-    const updatedRole = await Role.findOneOrFail({id})
-    return updatedRole;
+  @Mutation(() => Role)
+  async createRole(@Args() { name, identifier }: CreateRoleInput) {
+    return RoleRepository.createRole(name, identifier);
+  }
+
+  @Mutation(() => Role)
+  async updateRole(@Args() { id, name, identifier }: UpdateRoleInput) {
+    const role = await Role.findOneOrFail({ id })
+    return role.update(name, identifier);
   }
 }
 
