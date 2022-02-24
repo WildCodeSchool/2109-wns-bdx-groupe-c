@@ -2,7 +2,7 @@ import { Arg, Args, ArgsType, Field, Int,Mutation, Query, Resolver } from "type-
 
 
 import ProjectRole from "../models/ProjectRole";
-
+import ProjectRoleRepository from "../repository/ProjectRoleRepository";
 
 @ArgsType()
 class UpdateProjectRoleInput {
@@ -17,28 +17,20 @@ class UpdateProjectRoleInput {
 class ProjectRoleResolver {
   @Query(() => [ProjectRole])
   async projectRoles() {
-    const projectRoles = await ProjectRole.find();
-    return projectRoles;
+    return ProjectRoleRepository.findAll();
   }
   @Mutation(()=>ProjectRole)
   async createProjectRole(@Arg("name") name:string) {
-    const projectRole = new ProjectRole();
-    projectRole.name = name;
-    await projectRole.save();
-    return projectRole;
+    return ProjectRoleRepository.createProjectRole(name);
   }
   @Mutation(()=>ProjectRole)
   async deleteProjectRole(@Arg("id") id:number) {
-    const projectRole = await ProjectRole.findOneOrFail({id});
-    await ProjectRole.remove(projectRole);
-    return projectRole;
+    return ProjectRoleRepository.deleteProjectRole(id);
   }
-  @Mutation(()=>ProjectRole)
-  async updateProjectRole(@Args(){id, name}:UpdateProjectRoleInput) {
-    const projectRole = await ProjectRole.findOneOrFail({id});
-    await ProjectRole.update(projectRole, {name});
-    const updatedProjectRole = await ProjectRole.findOneOrFail({id})
-    return updatedProjectRole;
+  @Mutation(() => ProjectRole)
+  async updateProjectRole(@Args() { id, name }: UpdateProjectRoleInput) {
+    const projectRole = await ProjectRole.findOneOrFail({ id })
+    return projectRole.update(name);
   }
 
 }

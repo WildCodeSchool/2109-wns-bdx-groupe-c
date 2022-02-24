@@ -5,7 +5,7 @@ import getDatabaseConnection from '../database-connection'
 
 import { projectGenerator } from '../_mock_/projectGenerator'
 import { statusGenerator } from '../_mock_/statusGenerator'
-import { taskGenetor } from '../_mock_/taskGenerator'
+import { taskGenerator } from '../_mock_/taskGenerator'
 
 describe('TaskResolverResolver', () => {
   let server: ApolloServer
@@ -41,13 +41,7 @@ describe('TaskResolverResolver', () => {
         project {
           name
         }
-        assignee {
-          firstName
-        }
-        createdAt
-        updatedAt
         expectedDuration
-        dueDate
         spentTime
         comments {
           content
@@ -68,8 +62,8 @@ describe('TaskResolverResolver', () => {
     describe('when there are tasks in database', () => {
       it('returns all tasks in database', async () => {
         const projectTest = await projectGenerator('Project Test', 'Short Text', 'Description', 0)
-        await taskGenetor('Task Test 1', 'Short Text', 'Description', projectTest.id)
-        await taskGenetor('Task Test 2', 'Short Text', 'Description', projectTest.id)
+        await taskGenerator('Task Test 1', 'Short Text', 'Description', projectTest.id, 100, 0)
+        await taskGenerator('Task Test 2', 'Short Text', 'Description', projectTest.id, 100, 0)
 
         const result = await server.executeOperation({
           query: GET_Tasks,
@@ -78,28 +72,8 @@ describe('TaskResolverResolver', () => {
         expect(result.data?.allTasks).toMatchInlineSnapshot(`
           Array [
             Object {
-              "assignee": null,
               "comments": Array [],
-              "createdAt": "2021-11-23T23:18:00.134Z",
               "description": "Description",
-              "dueDate": "2021-11-23T23:18:00.134Z",
-              "expectedDuration": 100,
-              "id": "2",
-              "project": Object {
-                "name": "Project Test",
-              },
-              "shortText": "Short Text",
-              "spentTime": 0,
-              "status": null,
-              "subject": "Task Test 2",
-              "updatedAt": "2021-11-23T23:18:00.134Z",
-            },
-            Object {
-              "assignee": null,
-              "comments": Array [],
-              "createdAt": "2021-11-23T23:18:00.134Z",
-              "description": "Description",
-              "dueDate": "2021-11-23T23:18:00.134Z",
               "expectedDuration": 100,
               "id": "1",
               "project": Object {
@@ -109,7 +83,19 @@ describe('TaskResolverResolver', () => {
               "spentTime": 0,
               "status": null,
               "subject": "Task Test 1",
-              "updatedAt": "2021-11-23T23:18:00.134Z",
+            },
+            Object {
+              "comments": Array [],
+              "description": "Description",
+              "expectedDuration": 100,
+              "id": "2",
+              "project": Object {
+                "name": "Project Test",
+              },
+              "shortText": "Short Text",
+              "spentTime": 0,
+              "status": null,
+              "subject": "Task Test 2",
             },
           ]
         `)

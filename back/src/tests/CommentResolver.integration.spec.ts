@@ -5,7 +5,7 @@ import getDatabaseConnection from '../database-connection'
 
 import { userGenerator } from '../_mock_/userGenerator'
 import { projectGenerator } from '../_mock_/projectGenerator'
-import { taskGenetor } from '../_mock_/taskGenerator'
+import { taskGenerator } from '../_mock_/taskGenerator'
 import { commentGenerator } from '../_mock_/commentGenerator'
 
 describe('TaskResolverResolver', () => {
@@ -47,7 +47,7 @@ describe('TaskResolverResolver', () => {
     describe('when there are no comments in database', () => {
       it('returns empty array', async () => {
         const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-        const taskTest = await taskGenetor('Task Text', 'Short Text', 'Test', projectTest.id)
+        const taskTest = await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0)
 
         const result = await server.executeOperation({
           query: GET_Comments,
@@ -63,8 +63,8 @@ describe('TaskResolverResolver', () => {
       it('returns all comments in database', async () => {
         const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
         const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-        const taskTest = await taskGenetor('Task Text', 'Short Text', 'Test', projectTest.id)
-        const taskTest2 = await taskGenetor('Task Text', 'Short Text', 'Test', projectTest.id)
+        const taskTest = await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0)
+        const taskTest2 = await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0)
         await commentGenerator('Test', userTest.id, taskTest.id)
         await commentGenerator('Test2', userTest.id, taskTest.id)
         await commentGenerator('Test3', userTest.id, taskTest2.id)
@@ -120,7 +120,7 @@ describe('TaskResolverResolver', () => {
 
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-      const taskTest = await taskGenetor('Task Text', 'Short Text', 'Description', projectTest.id)
+      const taskTest = await taskGenerator('Task Text', 'Short Text', 'Description', projectTest.id, 100, 0)
 
       const result = await server.executeOperation({
         query: CREATE_COMMENT,
@@ -156,7 +156,7 @@ describe('TaskResolverResolver', () => {
 
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-      const taskTest = await taskGenetor('Task Text', 'Short Text', 'Description', projectTest.id)
+      const taskTest = await taskGenerator('Task Text', 'Short Text', 'Description', projectTest.id, 100, 0)
       const commentTest = await commentGenerator('Test', userTest.id, taskTest.id)
 
       const result = await server.executeOperation({
@@ -185,7 +185,7 @@ describe('TaskResolverResolver', () => {
 
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-      const taskTest = await taskGenetor('Task Text', 'Short Text', 'Description', projectTest.id)
+      const taskTest = await taskGenerator('Task Text', 'Short Text', 'Description', projectTest.id, 100, 0)
       const commentTest = await commentGenerator(
         'Test commentaire à supprimer',
         userTest.id,

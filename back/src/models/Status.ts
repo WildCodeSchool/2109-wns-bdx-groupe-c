@@ -11,9 +11,15 @@ class Status extends BaseEntity{
   @Field(() => ID)
   id!: number;
 
-  @Column("varchar", { length: 150 })
+  @Column("varchar", { length: 150, unique: true })
   @Field()
   name!: string;
+
+  update(name: string) {
+    this.name = name;
+    this.save();
+    return this;
+  }
 }
 
 export default Status;

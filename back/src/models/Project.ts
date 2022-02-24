@@ -12,6 +12,7 @@ import {
 import Language from './Language'
 import User from './AppUser'
 import Task from './Task'
+import Status from './Status'
 
 import {toUniqueArray} from '../helpers/helper';
 
@@ -59,9 +60,13 @@ class Project extends BaseEntity {
   @Field(() => [Language], { nullable: true })
   languages?: Language[]
 
-  @OneToMany(() => Task, task => task.project)
+  @OneToMany(() => Task, task => task.project, { cascade: true })
   @Field(() => [Task], { nullable: true })
   tasks?: Task[]
+
+  @ManyToOne(() => Status, {cascade: true})
+  @Field(() => Status, { nullable: true })
+  status?: Status
 
   @Field(()=> Int)
   get countAssignee(): number {
@@ -77,6 +82,23 @@ class Project extends BaseEntity {
     } else {
       return 0;
     }
+  }
+
+  update(name?: string, shortText?: string, description?: string, initialTimeSpent?: number) {
+    if (name) this.name = name
+    if (shortText) this.shortText = shortText
+    if (description) this.description = description
+    if (initialTimeSpent) this.initialTimeSpent = initialTimeSpent
+    this.updatedAt = new Date()
+    this.save();
+    return this;
+  }
+
+  updateStatus(status: Status) {
+    this.status = status;
+    this.updatedAt = new Date();
+    this.save();
+    return this;
   }
 }
 
