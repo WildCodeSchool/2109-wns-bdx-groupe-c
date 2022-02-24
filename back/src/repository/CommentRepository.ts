@@ -1,6 +1,7 @@
 import Comment from '../models/Comment'
 import User from '../models/AppUser'
 import Task from '../models/Task'
+import ObjectHelpers from '../helpers/ObjectHelper'
 
 class CommentRepository extends Comment {
   static async findAll(taskId: number) {
@@ -23,10 +24,10 @@ class CommentRepository extends Comment {
   }
 
   static async deleteComment(id: number) {
-    const comment = await Comment.findOneOrFail({ id })
-    const commentSelected = { ...comment }
+    const comment = await Comment.findOneOrFail({ id }, { relations: ['user', 'task'] })
+    const commentCopy = ObjectHelpers.deepClone(comment);
     await Comment.remove(comment)
-    return commentSelected
+    return commentCopy
   }
 }
 

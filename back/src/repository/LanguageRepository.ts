@@ -1,3 +1,4 @@
+import ObjectHelpers from "../helpers/ObjectHelper";
 import Language from "../models/Language";
 
 class LanguageRepository extends Language {
@@ -13,7 +14,7 @@ class LanguageRepository extends Language {
 
     static async deleteLanguage(id: number) {
       const language = await Language.findOneOrFail({ id })
-      const languageCopy = { ...language };
+      const languageCopy = ObjectHelpers.deepClone(language);
       await Language.remove(language)
       return languageCopy
     }

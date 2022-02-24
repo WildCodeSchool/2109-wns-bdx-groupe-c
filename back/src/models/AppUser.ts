@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm'
+import Argon2Password from '../helpers/Argon2Password'
 
 import Comment from './Comment'
 import Project from './Project'
@@ -20,7 +21,7 @@ class AppUser extends BaseEntity {
   @Field()
   lastName!: string
 
-  @Column('varchar', { length: 100 })
+  @Column('varchar', { length: 100, unique: true })
   @Field()
   email!: string
 
@@ -55,6 +56,23 @@ class AppUser extends BaseEntity {
   @OneToMany(() => Task, task => task.assignee)
   @Field(() => [Task], { nullable: true })
   tasks?: Task[]
+
+  async updateInformation(firstName?: string, lastName?: string, email?: string, password?: string) {
+    if (firstName) this.firstName = firstName;
+    if (lastName) this.lastName = lastName;
+    if (email) this.email = email;
+    if (password) this.password = await Argon2Password.hashPassword(password);
+    this.updatedAt = new Date();
+    await this.save();
+    return this;
+  }
+
+  async updateUserRole(role: Role) {
+    this.role = role;
+    this.updatedAt = new Date();
+    await this.save();
+    return this;
+  }
 }
 
 export default AppUser

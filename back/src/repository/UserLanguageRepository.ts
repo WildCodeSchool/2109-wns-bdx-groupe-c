@@ -1,6 +1,7 @@
 import UserLanguage from '../models/UserLanguage'
 import User from '../models/AppUser';
 import Language from '../models/Language';
+import ObjectHelpers from '../helpers/ObjectHelper';
 
 class UserLanguageRepository extends UserLanguage {
   static async findAll(userId: number) {
@@ -26,7 +27,7 @@ class UserLanguageRepository extends UserLanguage {
 
   static async deleteUserLanguage(id: number) {
     const userLanguage = await UserLanguage.findOneOrFail({ id: id })
-    const userLanguageCopy = { ...userLanguage };
+    const userLanguageCopy = ObjectHelpers.deepClone(userLanguage);
     await UserLanguage.remove(userLanguage)
     return userLanguageCopy
   }
