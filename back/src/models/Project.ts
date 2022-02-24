@@ -84,20 +84,20 @@ class Project extends BaseEntity {
     }
   }
 
-  update(name?: string, shortText?: string, description?: string, initialTimeSpent?: number) {
+  async update(name?: string, shortText?: string, description?: string, initialTimeSpent?: number) {
     if (name) this.name = name
     if (shortText) this.shortText = shortText
     if (description) this.description = description
     if (initialTimeSpent) this.initialTimeSpent = initialTimeSpent
     this.updatedAt = new Date()
-    this.save();
+    await this.save();
     return this;
   }
 
-  updateStatus(status: Status) {
+  async updateStatus(status: Status) {
     this.status = status;
     this.updatedAt = new Date();
-    this.save();
+    await this.save();
     return this;
   }
 }

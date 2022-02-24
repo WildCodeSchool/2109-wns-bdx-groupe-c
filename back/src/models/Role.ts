@@ -16,10 +16,10 @@ class Role extends BaseEntity {
   @Field()
   identifier!: string
 
-  update(name: string, identifier: string) {
+  async update(name: string, identifier: string) {
     this.name = name;
     this.identifier = identifier;
-    this.save();
+    await this.save();
     return this;
   }
 }

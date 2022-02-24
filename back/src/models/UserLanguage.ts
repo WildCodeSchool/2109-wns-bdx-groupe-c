@@ -21,6 +21,12 @@ class UserLanguage extends BaseEntity {
   @ManyToOne(() => Language)
   @Field(() => Language)
   language!: Language
+
+  async update(rating: number) {
+    this.rating = rating;
+    await this.save();
+    return this;
+  }
 }
 
 export default UserLanguage

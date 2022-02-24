@@ -34,10 +34,10 @@ class Comment extends BaseEntity{
   @Field(() => Task)
   task!: Task;
 
-  update(content: string) {
+  async update(content: string) {
     this.content = content;
     this.updatedAt = new Date();
-    this.save();
+    await this.save();
     return this;
   }
 }

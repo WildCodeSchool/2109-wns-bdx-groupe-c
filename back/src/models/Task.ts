@@ -60,7 +60,45 @@ class Task extends BaseEntity {
   @Field(() => [Comment])
   comments!: Comment[]
 
+  async assignUser(userId: number) {
+    const assignee = await User.findOneOrFail({ id: userId })
+    this.assignee = assignee
+    this.updatedAt = new Date()
+    await this.save()
+    return this;
+  }
 
+  async updateTask(
+    description: string | undefined,
+    shortText: string | undefined,
+    subject: string | undefined,
+    expectedDuration: number | undefined,
+    dueDate: Date | undefined
+  ) {
+    if(description) this.description = description
+    if(shortText) this.shortText = shortText
+    if(subject) this.subject = subject
+    if(expectedDuration) this.expectedDuration = expectedDuration
+    if(dueDate) this.dueDate = dueDate
+    this.updatedAt = new Date()
+    await this.save()
+    return this;
+  }
+
+  async updateStatus(statusId: number) {
+    const status = await Status.findOneOrFail({ id: statusId })
+    this.status = status
+    this.updatedAt = new Date()
+    await this.save()
+    return this;
+  }
+
+  async updateTimeSpent(spentTime: number) {
+    this.spentTime += spentTime;
+    this.updatedAt = new Date()
+    await this.save()
+    return this;
+  }
 }
 
 export default Task
