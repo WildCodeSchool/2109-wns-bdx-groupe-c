@@ -12,6 +12,12 @@ class Language extends BaseEntity {
   @Column('varchar', { length: 100 })
   @Field()
   name!: string
+
+  update(name: string) {
+    this.name = name;
+    this.save();
+    return this;
+  }
 }
 
 export default Language

@@ -1,7 +1,7 @@
 import { Arg, Args, ArgsType, Mutation, Query, Resolver, Field, Int } from 'type-graphql'
 import Comment from '../models/Comment'
-import User from '../models/AppUser'
-import Task from '../models/Task'
+import CommentRepository from '../repository/CommentRepository'
+
 @ArgsType()
 class CreateCommentInput {
   @Field()
@@ -24,41 +24,23 @@ class UpdateCommentInput {
 @Resolver(Comment)
 class CommentResolver {
   @Query(() => [Comment])
-  async comments() {
-    return await Comment.find({ relations: ['user', 'task'] })
+  async comments(@Arg('taskId') taskId: number) {
+    return CommentRepository.findAll(taskId);
   }
 
   @Mutation(() => Comment)
   async createComment(@Args() { content, userId, taskId }: CreateCommentInput) {
-    const comment = new Comment()
-    const user = await User.findOneOrFail({ id: userId })
-    const task = await Task.findOneOrFail({ id: taskId })
-
-    comment.content = content
-    comment.createdAt = new Date()
-    comment.updatedAt = new Date()
-    comment.user = user
-    comment.task = task
-
-    await comment.save()
-    return Comment.findOne({ id: comment.id }, { relations: ['user', 'task'] })
+    return await CommentRepository.createComment(content, userId, taskId)
   }
 
   @Mutation(() => Comment)
   async deleteComment(@Arg('id') id: number) {
-    const comment = await Comment.findOneOrFail({ id })
-    const commentSelected = { ...comment }
-    await Comment.remove(comment)
-    return commentSelected
+    return await CommentRepository.deleteComment(id)
   }
   @Mutation(() => Comment)
   async updateComment(@Args() { id, content }: UpdateCommentInput) {
     const comment = await Comment.findOneOrFail({ id })
-    const updatedAt = new Date()
-    comment.content = content
-    comment.updatedAt = updatedAt
-    await comment.save()
-    return await Comment.findOneOrFail({ id }, { relations: ['user', 'task'] })
+    return comment.update(content);
   }
 }
 
