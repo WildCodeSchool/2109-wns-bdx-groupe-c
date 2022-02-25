@@ -1,31 +1,17 @@
 import React from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from './src/Home';
-import Tasks from './src/Task/Tasks';
-import Task from './src/Task/Task';
-import { API_URL } from "@env"
+import 'react-native-gesture-handler';
+import { StatusBar } from "react-native";
+import { Provider as PaperProvider } from 'react-native-paper';
 
+import VARIABLES from './assets/styles/_variables';
 
-// Initialize Apollo Client
-const client = new ApolloClient({
-  uri: API_URL,
-  cache: new InMemoryCache(),
-});
-
-const Stack = createNativeStackNavigator();
+import Navigation from './assets/components/_all/organisms/Navigation';
 
 const App = () => (
-  <ApolloProvider client={client}>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Tasks" component={Tasks} />
-        <Stack.Screen name="Task" component={Task} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  </ApolloProvider>
+  <PaperProvider>
+    <StatusBar backgroundColor={VARIABLES.clrBgDark}/>
+    <Navigation></Navigation>
+  </PaperProvider>
 );
 
 export default App;
