@@ -62,6 +62,13 @@ class MyTaskInput {
 }
 
 @ArgsType()
+class TaskByStatusInput {
+  @Field()
+  statusName!: string
+}
+
+
+@ArgsType()
 class updateTask {
   @Field(() => Int)
   id!: number
@@ -99,6 +106,10 @@ class TaskResolver {
     return TaskRepository.findAll();
   }
 
+  @Query(() => [Task])
+  async tasksByStatus(@Args() { statusName }: TaskByStatusInput) {
+    return TaskRepository.findByStatus(statusName);
+  }
 
   @Query(() => Task)
   async task(@Arg('id') id: number) {

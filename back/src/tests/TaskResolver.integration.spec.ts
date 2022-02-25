@@ -175,6 +175,132 @@ describe('TaskResolverResolver', () => {
       `)
     })
   })
+  describe('query tasks by status', () => {
+    it('query task by status name', async () => {
+      const TASKS_BY_STATUS = `
+      query TasksByStatus($statusName: String!) {
+        tasksByStatus(statusName: $statusName) {
+          id
+          subject
+          shortText
+          description
+          status {
+            name
+          }
+          project {
+            name
+          }
+          assignee {
+            firstName
+          }
+          expectedDuration
+          comments {
+            content
+          }
+        }
+      }`
+
+      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const statusToDo = await statusGenerator('To Do')
+      const inProgress = await statusGenerator('In Progress')
+      const projectTest = await projectGenerator('TestProject', 'Test', 'Test', 0)
+      await taskGenerator('TestTask', 'Test', 'Test', projectTest.id, 100, 0, statusToDo, userTest)
+      await taskGenerator(
+        'TestTask1',
+        'Test1',
+        'Test1',
+        projectTest.id,
+        100,
+        0,
+        statusToDo,
+        userTest
+      )
+      await taskGenerator(
+        'TestTask2',
+        'Test2',
+        'Test2',
+        projectTest.id,
+        100,
+        0,
+        statusToDo,
+        userTest
+      )
+      await taskGenerator(
+        'TestTask3',
+        'Test3',
+        'Test3',
+        projectTest.id,
+        100,
+        0,
+        inProgress,
+        userTest
+      )
+
+      const result = await server.executeOperation({
+        query: TASKS_BY_STATUS,
+        variables: {
+          statusName: 'To Do',
+        },
+      })
+
+      expect(result.errors).toBeUndefined()
+      expect(result.data?.tasksByStatus).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "assignee": Object {
+              "firstName": "Test",
+            },
+            "comments": Array [],
+            "description": "Test",
+            "expectedDuration": 100,
+            "id": "1",
+            "project": Object {
+              "name": "TestProject",
+            },
+            "shortText": "Test",
+            "status": Object {
+              "name": "To Do",
+            },
+            "subject": "TestTask",
+          },
+          Object {
+            "assignee": Object {
+              "firstName": "Test",
+            },
+            "comments": Array [],
+            "description": "Test1",
+            "expectedDuration": 100,
+            "id": "2",
+            "project": Object {
+              "name": "TestProject",
+            },
+            "shortText": "Test1",
+            "status": Object {
+              "name": "To Do",
+            },
+            "subject": "TestTask1",
+          },
+          Object {
+            "assignee": Object {
+              "firstName": "Test",
+            },
+            "comments": Array [],
+            "description": "Test2",
+            "expectedDuration": 100,
+            "id": "3",
+            "project": Object {
+              "name": "TestProject",
+            },
+            "shortText": "Test2",
+            "status": Object {
+              "name": "To Do",
+            },
+            "subject": "TestTask2",
+          },
+        ]
+      `)
+    })
+  })
   describe('query the task related to a user : mytasks', () => {
     it('query the tasks related to a specific user', async () => {
       const QUERY_TASK_USER = `
