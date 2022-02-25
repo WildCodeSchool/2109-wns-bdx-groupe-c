@@ -1,0 +1,10 @@
+name: CI checks
+on: push
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Back, run CI checks
+        run: ./ci-api.sh

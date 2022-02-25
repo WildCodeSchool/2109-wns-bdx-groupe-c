@@ -626,7 +626,7 @@ describe('TaskResolverResolver', () => {
       `)
     })
   })
-  describe('mutation delete a  task :  ', () => {
+  describe('mutation delete a task :  ', () => {
     it('can delete a task from the database', async () => {
       const DELETE_TASK = `
       mutation Mutation($deleteTaskId: Float!) {

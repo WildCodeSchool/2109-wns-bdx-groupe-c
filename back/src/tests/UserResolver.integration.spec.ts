@@ -113,7 +113,6 @@ describe('UserResolver', () => {
       })
     })
   })
-
   describe('mutation createUser', () => {
     const CREATE_USER = `
     mutation($firstName: String!, $lastName: String!, $email: String!, $password: String!) {
@@ -151,7 +150,6 @@ describe('UserResolver', () => {
       })
     })
   })
-
   describe('mutation change Role', () => {
     it('change the role and return the user', async () => {
       const CHANGE_ROLE_USER = `
@@ -211,7 +209,6 @@ describe('UserResolver', () => {
       `)
     })
   })
-
   describe('mutation change Information', () => {
     it('change the informations user', async () => {
       const CHANGE_INFORMATION_USER = `
@@ -246,7 +243,6 @@ describe('UserResolver', () => {
       `)
     })
   })
-
   describe('mutation delete a user', () => {
     it('update the boolean is active to false', async () => {
       const DELETE_USER = `

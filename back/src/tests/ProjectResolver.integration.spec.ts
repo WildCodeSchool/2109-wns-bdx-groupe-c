@@ -142,7 +142,6 @@ describe('ProjectResolver', () => {
       })
     })
   })
-
   describe('Query One project based on his id', () => {
     it('can fetch one project', async () => {
       const GET_ONE_PROJECT = `
@@ -227,7 +226,6 @@ describe('ProjectResolver', () => {
       `)
     })
   })
-
   describe('Query project and have the numbers of assignee', () => {
     it('can give the distinct numbers of assignee', async () => {
       const GET_ONE_PROJECT = `
@@ -372,7 +370,6 @@ describe('ProjectResolver', () => {
       `)
     })
   })
-
   describe('Mutation update a project', () => {
     it('can update name, description, initial time spent or shortText', async () => {
       const UPDATE_PROJECT = `
@@ -459,7 +456,6 @@ describe('ProjectResolver', () => {
       `)
     })
   })
-
   describe('Mutation update Languages of a project', () => {
     it('can update the languages associated to a project', async () => {
       const UPDATE_LANGUAGES_PROJECT = `
@@ -520,7 +516,6 @@ describe('ProjectResolver', () => {
       `)
     })
   })
-
   describe('Mutation update Status of a project', () => {
     it('can update the status associated to a project', async () => {
       const UPDATE_STATUS_PROJECT = `
@@ -569,7 +564,6 @@ describe('ProjectResolver', () => {
       `)
     })
   })
-
   describe('Mutation delete a project', () => {
     it('can delete a project and delete the tasks associated', async () => {
       const DELETE_PROJECT = `
@@ -632,7 +626,6 @@ describe('ProjectResolver', () => {
       expect(resultGetTasks.data?.allTasks).toMatchInlineSnapshot(`Array []`)
     })
   })
-
   describe('Mutation create a project', () => {
     it('can crate a project and return the project created', async () => {
       const CREATE_PROJECT = `

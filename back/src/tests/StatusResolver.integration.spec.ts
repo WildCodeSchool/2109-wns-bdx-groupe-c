@@ -68,87 +68,112 @@ describe('StatusResolver', () => {
         `)
       })
     })
+  })
+  describe('mutation update status', () => {
+    it('update an existing status', async () => {
+      const UPDATE_STATUS = `
+      mutation UpdateStatusName($updateStatusNameId: Int!, $name: String!) {
+        updateStatusName(id: $updateStatusNameId, name: $name) {
+          id
+          name
+        }
+      }`
 
-    describe('mutation status', () => {
-      it('update an existing status', async () => {
-        const UPDATE_STATUS = `
-        mutation UpdateStatusName($updateStatusNameId: Int!, $name: String!) {
-          updateStatusName(id: $updateStatusNameId, name: $name) {
-            id
-            name
-          }
-        }`
+      const statusTest = await statusGenerator('en cours')
 
-        const statusTest = await statusGenerator('en cours')
-
-        const result = await server.executeOperation({
-          query: UPDATE_STATUS,
-          variables: {
-            updateStatusNameId: statusTest.id,
-            name: 'test status updated',
-          },
-        })
-
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.updateStatusName).toEqual({
-          id: '1',
+      const result = await server.executeOperation({
+        query: UPDATE_STATUS,
+        variables: {
+          updateStatusNameId: statusTest.id,
           name: 'test status updated',
-        })
+        },
+      })
+
+      expect(result.errors).toBeUndefined()
+      expect(result.data?.updateStatusName).toEqual({
+        id: '1',
+        name: 'test status updated',
       })
     })
-
-    describe('mutation status', () => {
-      it('create a  status and return the status created', async () => {
-        const CREATE_STATUS = `
-        mutation CreateStatus($name: String!) {
-          createStatus(name: $name) {
-            id
-            name
-          }
+  })
+  describe('mutation create status', () => {
+    it('create a  status and return the status created', async () => {
+      const CREATE_STATUS = `
+      mutation CreateStatus($name: String!) {
+        createStatus(name: $name) {
+          id
+          name
         }
-        `
-        const result = await server.executeOperation({
-          query: CREATE_STATUS,
-          variables: {
-            name: 'test status created',
-          },
-        })
-
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.createStatus).toMatchInlineSnapshot(`
-          Object {
-            "id": "1",
-            "name": "test status created",
-          }
-        `)
+      }
+      `
+      const result = await server.executeOperation({
+        query: CREATE_STATUS,
+        variables: {
+          name: 'test status created',
+        },
       })
+
+      expect(result.errors).toBeUndefined()
+      expect(result.data?.createStatus).toMatchInlineSnapshot(`
+        Object {
+          "id": "1",
+          "name": "test status created",
+        }
+      `)
     })
-
-    describe('mutation status', () => {
-      it('try to create a status with an existing name give an error', async () => {
-        const CREATE_STATUS = `
-        mutation CreateStatus($name: String!) {
-          createStatus(name: $name) {
-            id
-            name
-          }
+  })
+  describe('mutation delete a status', () => {
+    it('delete a  status and return the status deleted', async () => {
+      const DELETE_STATUS = `
+      mutation DeleteStatus($deleteStatusId: Float!) {
+        deleteStatus(id: $deleteStatusId) {
+          id
+          name
         }
-        `
-        const statusTest = await statusGenerator('test')
+      }
+      `
+      const statusTest = await statusGenerator('en cours')
 
-        const result = await server.executeOperation({
-          query: CREATE_STATUS,
-          variables: {
-            name: 'test',
-          },
-        })
-
-        expect(result.errors).toMatchInlineSnapshot(`
-          Array [
-            [GraphQLError: duplicate key value violates unique constraint "UQ_95ff138b88fdd8a7c9ebdb97a32"],
-          ]
-        `)
+      const result = await server.executeOperation({
+        query: DELETE_STATUS,
+        variables: {
+          deleteStatusId: statusTest.id,
+        },
       })
+
+      expect(result.errors).toBeUndefined()
+      expect(result.data?.deleteStatus).toMatchInlineSnapshot(`
+        Object {
+          "id": "1",
+          "name": "en cours",
+        }
+      `)
+    })
+  })
+  describe('mutation create a status with an existing name', () => {
+    it('try to create a status with an existing name give an error', async () => {
+      const CREATE_STATUS = `
+      mutation CreateStatus($name: String!) {
+        createStatus(name: $name) {
+          id
+          name
+        }
+      }
+      `
+      const statusTest = await statusGenerator('test')
+
+      const result = await server.executeOperation({
+        query: CREATE_STATUS,
+        variables: {
+          name: 'test',
+        },
+      })
+
+      expect(result.errors).toMatchInlineSnapshot(`
+        Array [
+          [GraphQLError: duplicate key value violates unique constraint "UQ_95ff138b88fdd8a7c9ebdb97a32"],
+        ]
+      `)
     })
   })
 })
