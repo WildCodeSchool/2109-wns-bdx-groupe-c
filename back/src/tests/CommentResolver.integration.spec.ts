@@ -101,8 +101,7 @@ describe('TaskResolverResolver', () => {
       })
     })
   })
-
-  describe('mutation createComment', () => {
+  describe('mutation create comment', () => {
     it('create a comment and return the new comment', async () => {
       const CREATE_COMMENT = `
       mutation CreateComment($content: String!, $userId: Int!, $taskId: Int!) {
@@ -144,7 +143,7 @@ describe('TaskResolverResolver', () => {
       })
     })
   })
-  describe('mutation updateComment', () => {
+  describe('mutation update comment', () => {
     it('update an existing comment', async () => {
       const UPDATE_COMMENT = `
       mutation UpdateComment($updateCommentId: Int!, $content: String!) {
@@ -173,7 +172,7 @@ describe('TaskResolverResolver', () => {
       })
     })
   })
-  describe('mutation deleteComment', () => {
+  describe('mutation delete comment', () => {
     it('delete an existing comment', async () => {
       const DELETE_COMMENT = `
       mutation DeleteComment($deleteCommentId: Float!) {

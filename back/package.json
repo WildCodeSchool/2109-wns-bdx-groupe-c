@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm run build && (jest --runInBand)",
     "test:watch": "jest --runInBand --watch",
+    "coverage": "jest --runInBand --coverage",
     "build": "tsc",
     "build:watch": "tsc -w",
     "make:fixtures": "node build/data_fixtures/.",

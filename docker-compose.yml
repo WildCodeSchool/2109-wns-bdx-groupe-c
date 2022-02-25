@@ -3,7 +3,9 @@ version: "3"
 
 services:
   back:
-    build: ./back
+    build:
+      context: ./back
+      target: development
     depends_on:
       - database
       - test-database

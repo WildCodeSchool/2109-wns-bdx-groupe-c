@@ -11,15 +11,41 @@
 docker-compose up --build
 ```
 
-It will launch 3 container :
-- `mysql`
-- `front`
-- `back`
+It will launch 4 container :
+- `db_redlion`
+- `db_test_redlion`
+- `front_redlion`
+- `back_redlion`
 
 ### Just to re-start the containers
 ``` BASH
 docker-compose start
 ```
+
+
+### Congifuration of CI : GitHub actions :
+In the file
+.github/workflows/pûsh.yml
+
+We execute the test on the current branch and we execute the file ./ci-api.sh
+
+### How to run CI Checks
+``` BASH
+./ci-api.sh
+```
+
+CI API just launch the file docker-compose.ci.api.yml and build 2 containers :
+- back
+- test_database
+
+There is just one more information :
+``` BASH
+--exit-code-from back
+```
+
+In order to have the exit code : 0 or 1 from the container back (when we execute the test we have an exit code which is 0 or 1)
+
+
 
 ### Just to go in postgre container
 

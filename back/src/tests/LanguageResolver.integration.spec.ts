@@ -74,7 +74,6 @@ describe('Language Resolver', () => {
       })
     })
   })
-
   describe('mutation create a language', () => {
     it('create a laguage and return the new language', async () => {
       const CREATE_LANGUAGE = `
