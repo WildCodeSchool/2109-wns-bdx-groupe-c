@@ -1,6 +1,5 @@
 import Task from '../models/Task'
 import Project from '../models/Project'
-import User from '../models/AppUser'
 import Status from '../models/Status'
 import ObjectHelpers from '../helpers/ObjectHelper';
 
@@ -64,6 +63,16 @@ class TaskRepository extends Task {
     const taskCopy = ObjectHelpers.deepClone(task);
     await Task.remove(task)
     return taskCopy
+  }
+
+  static async findByStatus(statusName: string) {
+    return await Task.find({
+      relations: ['assignee', 'project', 'status','comments'],
+      where: {
+        status: { name: statusName },
+      },
+      order: {id: 'ASC'}
+    });
   }
 
 
