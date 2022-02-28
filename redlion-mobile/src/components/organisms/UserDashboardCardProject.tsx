@@ -4,14 +4,14 @@ import { Appbar, Menu, Divider } from 'react-native-paper';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from '@react-navigation/native';
 
-import VARIABLES from '../../../../styles/_variables';
+import VARIABLES from '../../../assets/styles/_variables';
 
-import UserDashboardCardStyles from '../../../../styles/components/UserDashboardCardStyle';
+import UserDashboardCardStyles from '../../../assets/styles/UserDashboardCardStyle';
+
+const navigation = useNavigation();
 
 export default function UserDashboardCardProject () {
-
-  const navigation = useNavigation();
-
+  
   const [projectsVisible, setProjectsVisible] = React.useState(false); // HomeCard 3 : Projects ===> menu hide/off
   
   return (
@@ -30,8 +30,8 @@ export default function UserDashboardCardProject () {
           anchor={<Appbar.Action icon={'dots-horizontal'} color={VARIABLES.clrWhite} onPress={() => {setProjectsVisible(!projectsVisible)}} />}>
           <Menu.Item onPress={() => {}} title="Mes projets" titleStyle={UserDashboardCardStyles.homeCardMenuTitle}  />
           <Divider />
-          <Menu.Item onPress={() => {navigation.navigate('ProjectDashboard', {}), setProjectsVisible(!projectsVisible)} } title="Tout voir" titleStyle={UserDashboardCardStyles.homeCardMenuTitle} />
-          <Divider />
+          {/* <Menu.Item onPress={() => {navigation.navigate('ProjectDashboard', {}), setProjectsVisible(!projectsVisible)} } title="Tout voir" titleStyle={UserDashboardCardStyles.homeCardMenuTitle} />
+          <Divider /> */}
           <Menu.Item onPress={() => {}} title="Créer un projet" titleStyle={UserDashboardCardStyles.homeCardMenuTitle} />
         </Menu>
       </View>

@@ -3,9 +3,9 @@ import { View, Text  } from 'react-native';
 import { Appbar, Menu, Divider } from 'react-native-paper';
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import VARIABLES from '../../../../styles/_variables';
+import VARIABLES from '../../../assets/styles/_variables';
 
-import UserDashboardCardStyles from '../../../../styles/components/UserDashboardCardStyle';
+import UserDashboardCardStyles from '../../../assets/styles/UserDashboardCardStyle';
 
 export default function UserDashboardCardTaskScnd () {
 

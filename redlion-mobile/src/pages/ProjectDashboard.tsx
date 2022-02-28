@@ -7,7 +7,7 @@ import VARIABLES from '../../assets/styles/_variables';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ProgressBar } from 'react-native-paper';
 
-import ProjectDashboardCardStyle from '../../assets/styles/components/ProjectDasboardCardStyle';
+import ProjectDashboardCardStyle from '../../assets/styles/ProjectDasboardCardStyle';
 
 export default function ProjectDashboard () {
 

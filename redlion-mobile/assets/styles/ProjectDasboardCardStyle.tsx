@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import VARIABLES from "../_variables";
+import VARIABLES from "./_variables";
 
 const ProjectDashboardCardStyle = StyleSheet.create({
     projectCard: {

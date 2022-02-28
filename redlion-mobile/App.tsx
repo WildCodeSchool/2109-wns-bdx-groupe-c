@@ -5,7 +5,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 
 import VARIABLES from './assets/styles/_variables';
 
-import Navigation from './assets/components/_all/organisms/Navigation';
+import Navigation from './src/components/organisms/Navigation';
 
 const App = () => (
   <PaperProvider>
