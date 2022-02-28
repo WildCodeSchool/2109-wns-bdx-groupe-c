@@ -6,11 +6,11 @@ import { StyleSheet, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
-import VARIABLES from '../../../styles/_variables';
+import VARIABLES from '../../../assets/styles/_variables';
 
-import UserDashboard from '../../../../src/main-screens/UserDashboard';
-import ProjectDashboard from '../../../../src/main-screens/ProjectDashboard';
-import UserProfil from '../../../../src/main-screens/UserProfil';
+import UserDashboard from '../../pages/UserDashboard';
+import ProjectDashboard from '../../pages/ProjectDashboard';
+import UserProfil from '../../pages/UserProfil';
 
 const client = new ApolloClient({
     uri: API_URL,

@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 
 import gql from "graphql-tag";
 
-import { Tasks_tasks as TaskProps } from "../../schemaTypes";
+import { Tasks_tasks as TaskProps } from "../schemaTypes";
 
 const Task = ({ route }) => {
 
@@ -21,7 +21,7 @@ const Task = ({ route }) => {
       description
       status {
         name
-      }
+      } 
       assignee {
         firstName
       }

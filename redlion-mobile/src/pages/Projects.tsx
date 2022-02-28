@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
-import { Project } from "../../schemaTypes";
-import VARIABLES from '../../../assets/styles/_variables';
+import { Project } from "../schemaTypes";
+import VARIABLES from '../../assets/styles/_variables';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ProgressBar } from 'react-native-paper';
 
