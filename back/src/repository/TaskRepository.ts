@@ -21,6 +21,18 @@ class TaskRepository extends Task {
       where: {
         project: { id: projectId },
       },
+      order: {id: 'ASC'}
+    })
+  }
+
+  static async findByUserIdAndStatus(userId: number, statusName: string) {
+    return await Task.find({
+      relations: ['assignee', 'project', 'status','comments'],
+      where: {
+        assignee: { id: userId },
+        status: { name: statusName },
+      },
+      order: {id: 'ASC'}
     })
   }
 
@@ -30,6 +42,7 @@ class TaskRepository extends Task {
       where: {
         assignee: { id: userId },
       },
+      order: {id: 'ASC'}
     })
   }
 

@@ -7,6 +7,7 @@ import { projectGenerator } from '../_mock_/projectGenerator'
 import { userGenerator } from '../_mock_/userGenerator'
 import { userProjectGenerator } from '../_mock_/userProjectGenerator'
 import { projectRoleGenerator } from '../_mock_/projectRoleGenerator'
+import { statusGenerator } from '../_mock_/statusGenerator'
 
 describe('StatusResolver', () => {
   let server: ApolloServer
@@ -98,6 +99,87 @@ describe('StatusResolver', () => {
               },
               "projectRole": Object {
                 "name": "Developpeur",
+              },
+            },
+          ]
+        `)
+      })
+    })
+    describe('Query projects in TO DO associated to a user', () => {
+      it('returns projects in To do', async () => {
+        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+        const statusToDo = await statusGenerator('To Do')
+        const statusTest = await statusGenerator('Test')
+        const projectTest1 = await projectGenerator(
+          'TestProject1',
+          'Test',
+          'Test',
+          0,
+          [],
+          userTest,
+          statusToDo
+        )
+        const projectTest2 = await projectGenerator(
+          'TestProject2',
+          'Test',
+          'Test',
+          0,
+          [],
+          userTest,
+          statusToDo
+        )
+        const projectTest3 = await projectGenerator(
+          'TestProject3',
+          'Test',
+          'Test',
+          0,
+          [],
+          userTest,
+          statusTest
+        )
+        const developpeur = await projectRoleGenerator('Developpeur')
+        await userProjectGenerator(userTest, projectTest1, developpeur)
+        await userProjectGenerator(userTest, projectTest2, developpeur)
+        await userProjectGenerator(userTest, projectTest3, developpeur)
+
+        const GET_MY_PROJECTS_TO_DO = `
+        query MyProjectsToDo($userId: Int!, $statusName: String) {
+          myProjects(userId: $userId, statusName: $statusName) {
+            project {
+              name
+              status {
+                name
+              }
+            }
+          }
+        }
+        `
+
+        const result = await server.executeOperation({
+          query: GET_MY_PROJECTS_TO_DO,
+          variables: {
+            userId: userTest.id,
+            statusName: 'To Do',
+          },
+        })
+        console.log('data', result.data)
+        expect(result.errors).toBeUndefined()
+        expect(result.data?.myProjects).toMatchInlineSnapshot(`
+          Array [
+            Object {
+              "project": Object {
+                "name": "TestProject2",
+                "status": Object {
+                  "name": "To Do",
+                },
+              },
+            },
+            Object {
+              "project": Object {
+                "name": "TestProject1",
+                "status": Object {
+                  "name": "To Do",
+                },
               },
             },
           ]

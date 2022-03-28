@@ -6,7 +6,7 @@ import ObjectHelpers from "../helpers/ObjectHelper";
 
 class ProjectRepository extends Project {
     static async findAll() {
-        return await Project.find({ relations: ['languages', 'createdBy', 'tasks', 'tasks.assignee', 'tasks.status', 'status'] });
+        return await Project.find({ relations: ['languages', 'createdBy', 'tasks', 'tasks.assignee', 'tasks.status', 'status'], order: { id: 'ASC' } });
     }
 
     static async findOneById(id: number) {
