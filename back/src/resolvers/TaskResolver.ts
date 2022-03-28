@@ -23,12 +23,6 @@ class CreateTaskInput {
 }
 
 @ArgsType()
-class DeleteTaskInput {
-  @Field(() => Int)
-  id!: number
-}
-
-@ArgsType()
 class assignUserInput {
   @Field(() => Int)
   id!: number
@@ -59,33 +53,35 @@ class updateTimeSpentInput {
 class MyTaskInput {
   @Field(() => Int)
   userId!: number
+
+  @Field(() => String, { nullable: true })
+  statusName?: string
 }
 
 @ArgsType()
 class TaskByStatusInput {
-  @Field()
+  @Field(() => String)
   statusName!: string
 }
-
 
 @ArgsType()
 class updateTask {
   @Field(() => Int)
   id!: number
 
-  @Field()
+  @Field(() => String, { nullable: true })
   description?: string
 
-  @Field()
+  @Field(() => String, { nullable: true })
   shortText?: string
 
-  @Field()
+  @Field(() => String, { nullable: true })
   subject?: string
 
-  @Field()
+  @Field({ nullable: true })
   expectedDuration?: number
 
-  @Field()
+  @Field(() => Date, { nullable: true })
   dueDate?: Date
 }
 
@@ -97,8 +93,12 @@ class TaskResolver {
   }
 
   @Query(() => [Task])
-  async myTasks(@Args() { userId }: MyTaskInput) {
-    return TaskRepository.findByUserId(userId);
+  async myTasks(@Args() { userId, statusName }: MyTaskInput) {
+    if (statusName) {
+      return TaskRepository.findByUserIdAndStatus(userId,statusName);
+    } else {
+      return TaskRepository.findByUserId(userId);
+    }
   }
 
   @Query(() => [Task])

@@ -3,14 +3,27 @@ import UserProject from '../models/UserProject'
 import User from '../models/AppUser';
 import Project from '../models/Project';
 import ProjectRole from '../models/ProjectRole';
+import Status from '../models/Status';
 
 class UserProjectRepository extends UserProject {
   static async findAll(userId: number) {
     const user = await User.findOne({ id: userId })
     return await UserProject.find({
-      relations: ['user', 'project', 'projectRole', 'project.languages', 'project.tasks', 'project.tasks.assignee'],
+      relations: ['user', 'project', 'projectRole', 'project.languages', 'project.tasks', 'project.tasks.assignee', 'project.status'],
       where: {
         user: user
+      }
+    })
+  }
+
+  static async findByUserIdAndStatusName(userId: number, statusName: string) {
+    const user = await User.findOne({ id: userId })
+    const status = await Status.findOne({ name: statusName })
+    return await UserProject.find({
+      relations: ['user', 'project', 'projectRole', 'project.languages', 'project.tasks', 'project.tasks.assignee', 'project.status'],
+      where: {
+        user: user,
+        project: { status: status }
       }
     })
   }

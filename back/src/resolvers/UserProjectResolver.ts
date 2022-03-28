@@ -12,6 +12,9 @@ import UserProjectRepository from '../repository/UserProjectRepository';
 class MyProjectsInput {
   @Field(() => Int)
   userId!: number
+
+  @Field(() => String, { nullable: true })
+  statusName?: string
 }
 
 @ArgsType()
@@ -45,8 +48,12 @@ class deleteUserProjectInput {
 class UserProjectResolver {
 
   @Query(() => [UserProject])
-  async myProjects(@Args() { userId }: MyProjectsInput) {
-    return UserProjectRepository.findAll(userId);
+  async myProjects(@Args() { userId, statusName }: MyProjectsInput) {
+    if (statusName) {
+      return UserProjectRepository.findByUserIdAndStatusName(userId, statusName);
+    } else {
+      return UserProjectRepository.findAll(userId);
+    }
   }
 
   @Mutation(() => UserProject)
