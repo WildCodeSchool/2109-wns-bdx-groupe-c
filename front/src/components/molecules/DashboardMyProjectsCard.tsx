@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client"
+import { useHistory } from 'react-router-dom';
 
 import  Box  from "@mui/material/Box"
 import  Card  from "@mui/material/Card"
@@ -61,37 +62,37 @@ interface Props {
 
 const DashboardMyProjectsCard = ({ userId = 3 }: Props) => {
     const { loading, data, error } = useQuery(GET_MY_PROJECTS, { variables: { userId } })
+    const history = useHistory();
     const classes = useStyles()
-
-    console.log('error', error)
-    console.log('loading', loading)
-    console.log('data', data)
 
     return (
         <Card className={classes.card} sx={{borderRadius: '20px'}}>
             <CardContent sx={{ backgroundColor: '#0F4473'}}>
-              <Box className={classes.boxTitle}>
+              <Box className={classes.boxTitle} >
                 <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
                 Projects
                 </Typography>
-                <MoreMenu options={['Ajouter une tâche']}/>
+                <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log("click")}/>
               </Box>
                 {data?.myProjects.map((myProject: MyProject) => {
+                  console.log('myProject', myProject)
+                  const{ id, project } = myProject
+                  const {name, shortText, countAssignee, languages} = project
                   return (
-                      <Paper key={myProject.id} className={classes.projectPaper}>
-                        <CardActionArea sx={{ borderRadius: '5px' }} className={classes.projectActionArea}>
+                      <Paper key={id} className={classes.projectPaper}>
+                        <CardActionArea sx={{ borderRadius: '5px' }} className={classes.projectActionArea} onClick={() => history.push(`/project/${id}`)}>
                           <Box padding="15px">
                             <Typography fontWeight="bold" className={classes.projectCardName}>
-                              {myProject.project.name}
+                              {name}
                             </Typography>
-                            <Typography>{myProject.project.shortText}</Typography>
+                            <Typography>{shortText}</Typography>
                             <Box className={classes.projectUserElements}>
                               <PersonIcon />
-                              <Typography>{myProject.project.countAssignee <= 1 ? myProject.project.countAssignee + ' utilisateur' : myProject.project.countAssignee + ' utilisateurs'}</Typography>
+                              <Typography>{countAssignee <= 1 ? countAssignee + ' utilisateur' : countAssignee + ' utilisateurs'}</Typography>
                             </Box>
                             <Box className={classes.projectLanguagesElement}>
                               <LibraryBooksIcon />
-                              {myProject.project.languages.map((language: Language) => {
+                              {languages.map((language: Language) => {
                                 return (
                                   <>
                                     <Typography sx={{marginRight: '5px'}} key={language.id} component='p'>{language.name}</Typography>

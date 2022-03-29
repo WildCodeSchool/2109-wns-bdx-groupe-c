@@ -1,5 +1,8 @@
+import {useState} from 'react'
 import { useQuery } from "@apollo/client"
 
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 import Box from "@mui/material/Box"
 import Card from "@mui/material/Card"
 import CardActionArea from "@mui/material/CardActionArea"
@@ -13,6 +16,7 @@ import MoreMenu from "../atoms/MoreMenu"
 
 import { GET_ALL_TASKS } from "../../queries/task"
 import { Task } from "../../entities/task"
+import { useCallback } from "react";
 
 const useStyles = makeStyles({
     boxTitle: {
@@ -38,24 +42,27 @@ interface Props {
 
 const ProjectAllTasksCard = ({propStatus}: Props) => {
     const { loading, data, error } = useQuery(GET_ALL_TASKS)
+    const [openAddTask, setOpenAddTask] = useState(false);
+
+    const toggleModal = useCallback(() => {
+        setOpenAddTask(!openAddTask);
+    }, [openAddTask]);
 
     const classes = useStyles()
-    console.log('error', error)
-    console.log('loading', loading)
-    console.log('data', data)
 
     return (
-        <Card sx={{overflowY: 'scroll', backgroundColor: '#ffffff00', boxShadow: 'none'}}>
+        <>
+        <Card sx={{overflowY: 'hidden', backgroundColor: '#ffffff00', boxShadow: 'none'}}>
             <CardContent sx={{ backgroundColor: '#0F4473', position: 'relative', borderRadius: '20px'}}>
                 <Box className={classes.boxTitle}>
-                {propStatus && 
+                {propStatus &&
                 (<Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold' }}>
                     {propStatus}
                 </Typography>
                 )}
-                <MoreMenu options={['Ajouter une tâche']}/>
+                <MoreMenu options={['Ajouter une tâche']} onClick={toggleModal}/>
                 </Box>
-            {data?.allTasks.filter((task: Task) => 
+            {data?.allTasks.filter((task: Task) =>
                 task.status.name === propStatus
             ).map((task : Task) => {
                 return (
@@ -73,6 +80,29 @@ const ProjectAllTasksCard = ({propStatus}: Props) => {
             })}
             </CardContent>
         </Card>
+        <Modal
+            hideBackdrop
+            open={openAddTask}
+            onClose={toggleModal}
+            aria-labelledby="child-modal-title"
+            aria-describedby="child-modal-description"
+        >
+            <Box sx={{
+                backgroundColor: '#ffff',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                border: '2px solid #000',            }}>
+            <h2 id="child-modal-title">Text in a child modal</h2>
+            <p id="child-modal-description">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+            </p>
+            <Button onClick={toggleModal}>Close Child Modal</Button>
+            </Box>
+        </Modal>
+        </>
     )
 }
 
