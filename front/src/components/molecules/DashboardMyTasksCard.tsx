@@ -53,7 +53,7 @@ const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
           <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold' }}>
             Tasks &lt; To do
           </Typography>
-          <MoreMenu options={['Ajouter une tâche']}/>
+          <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log('click')}/>
         </Box>
         {data?.tasks.map((task: Task) => {
           return (

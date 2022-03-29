@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, VoidFunctionComponent } from 'react'
 import Box from '@mui/material/Box'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
@@ -8,9 +8,11 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 interface Props {
   options: string[]
   className?: string
+  onClick: () => void
 }
 
-const MoreMenu = ({ options = [], className }: Props) => {
+const MoreMenu = (props: Props) => {
+  const { className, onClick, options = [] } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -42,7 +44,7 @@ const MoreMenu = ({ options = [], className }: Props) => {
         onClose={handleClose}
       >
         {options.map(option => (
-          <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
+          <MenuItem key={option} selected={option === 'Pyxis'} onClick={onClick}>
             {option}
           </MenuItem>
         ))}
