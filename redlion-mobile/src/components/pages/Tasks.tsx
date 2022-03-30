@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, FlatList, Button } from 'react-native';
 
 import { useQuery } from "@apollo/client";
-import { Tasks as TasksProps } from "../schemaTypes";
+import { Tasks as TasksProps } from "../../schemaTypes";
 import gql from "graphql-tag";
+import { useNavigation } from '@react-navigation/native';
 
 
-const Tasks = ({  navigation, route }) => {
+const Tasks = (route: any) => {
 
   const { projectId } = route.params;
 
@@ -34,6 +35,7 @@ const Tasks = ({  navigation, route }) => {
   }
   `;
 
+  const navigation = useNavigation();
 
   const { loading, error, data }= useQuery<TasksProps>(GET_TASKS, {
     variables: {projectId: parseInt(projectId)},
