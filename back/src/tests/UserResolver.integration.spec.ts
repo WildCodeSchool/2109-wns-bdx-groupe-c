@@ -115,9 +115,8 @@ describe('UserResolver', () => {
   })
   describe('mutation createUser', () => {
     const CREATE_USER = `
-    mutation($firstName: String!, $lastName: String!, $email: String!, $password: String!) {
-      createUser(firstName: $firstName, lastName: $lastName, email: $email, password: $password) {
-        id
+    mutation SignUp($firstName: String!, $lastName: String!, $password: String!, $email: String!) {
+      signUp(firstName: $firstName, lastName: $lastName, password: $password, email: $email) {
         firstName
         lastName
         email
@@ -132,7 +131,7 @@ describe('UserResolver', () => {
           firstName: 'Nouveau',
           lastName: 'Nouveau',
           email: 'nouveau@mail.com',
-          password: 'password',
+          password: 'test',
         },
       })
 
@@ -142,8 +141,7 @@ describe('UserResolver', () => {
       )
 
       expect(result.errors).toBeUndefined()
-      expect(result.data?.createUser).toEqual({
-        id: '1',
+      expect(result.data?.signUp).toEqual({
         firstName: 'Nouveau',
         lastName: 'Nouveau',
         email: 'nouveau@mail.com',

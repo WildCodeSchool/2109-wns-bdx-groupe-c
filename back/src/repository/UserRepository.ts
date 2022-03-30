@@ -1,6 +1,6 @@
+import { hash, compare } from "bcrypt";
 import User from '../models/AppUser';
-import Argon2Password from '../helpers/Argon2Password';
-
+import AppUserSessionRepository from './UserSessionRepository';
 class UserRepository extends User {
 
   static async findAll() {
@@ -14,16 +14,41 @@ class UserRepository extends User {
     return await User.findOneOrFail({ id }, { relations: ['projectsCreated','comments','role','tasks'] })
   }
 
-  static async createUser(firstName: string, lastName: string, email: string, password: string) {
-    const user = new User()
-    user.firstName = firstName
-    user.lastName = lastName
-    user.email = email
-    user.password = await Argon2Password.hashPassword(password)
-    user.isActive = true
-    user.createdAt = new Date();
-    user.updatedAt = new Date();
-    return user.save()
+  static async signUp(firstName: string, lastName: string, email: string, password: string): Promise<User | undefined> {
+    const existingUser = await User.findOne({ where: { email } });
+
+    if(existingUser) {
+      throw new Error('Could not sign up with provided email address.');
+    } else {
+      const user = new User()
+      user.firstName = firstName
+      user.lastName = lastName
+      user.email = email
+      user.password = await hash(password, 10)
+      user.isActive = true
+      user.createdAt = new Date();
+      user.updatedAt = new Date();
+      return user.save()
+    }
+  }
+
+  static async signIn(email: string, password: string, onSessionCreated: (sessionId: string) => void): Promise<User> {
+    const ERROR = 'Could not sign in with provided email address and password.';
+
+    const user = await User.findOne({ where: { email } });
+    if(!user) {
+      throw new Error(ERROR);
+    } else {
+      const isPasswordCorrect = await compare(password, user.password);
+      if(!isPasswordCorrect) {
+        throw new Error(ERROR);
+      } else {
+        const session = await AppUserSessionRepository.createSession(user);
+        onSessionCreated(session.id)
+        return user;
+      }
+    }
+    throw new Error(ERROR);
   }
 
   static async deleteUser(id: number) {

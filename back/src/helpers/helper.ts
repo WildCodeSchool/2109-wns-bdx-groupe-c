@@ -1,3 +1,5 @@
+import { randomBytes } from "crypto";
+
 export function toUniqueArray(a: any[]) {
   var newArr = [];
   for (var i = 0; i < a.length; i++) {
@@ -7,3 +9,5 @@ export function toUniqueArray(a: any[]) {
   }
 return newArr;
 }
+
+export const getRandomHexID = (): string => randomBytes(16).toString("hex");
