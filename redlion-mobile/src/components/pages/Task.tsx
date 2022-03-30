@@ -1,16 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-
 import { useQuery } from "@apollo/client";
-
 import gql from "graphql-tag";
 
-import { Tasks_tasks as TaskProps } from "../schemaTypes";
+import { Tasks_tasks as TaskProps } from "../../schemaTypes";
 
-const Task = ({ route }) => {
+const Task = (route: any) => {
 
   const { taskId } = route.params;
-
 
   const GET_TASK = gql`
   query Task($taskId: Float!) {

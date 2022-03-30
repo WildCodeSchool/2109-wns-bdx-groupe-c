@@ -7,7 +7,7 @@
 // GraphQL query operation: Project
 // ====================================================
 
-export interface Project_projects {
+export interface Project_project {
   __typename: "Project";
   id: string;
   name: string;
@@ -19,7 +19,41 @@ export interface Project_projects {
 }
 
 export interface Project {
-  projects: Project_projects[];
+  project: Project_project;
+}
+
+export interface ProjectVariables {
+  projectId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: Projects
+// ====================================================
+
+export interface Projects_projects {
+  project : {
+    __typename: "Project";
+    id: string;
+    name: string;
+    shortText: string;
+    description: string;
+    initialTimeSpent: number;
+    createdAt: any;
+    updatedAt: any;
+  }
+}
+
+export interface Projects {
+  projects: Projects_projects[];
+}
+
+export interface ProjectsVariables {
+  projectId: number;
 }
 
 /* tslint:disable */
