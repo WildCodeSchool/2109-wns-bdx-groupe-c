@@ -9,7 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import VARIABLES from '../../../../assets/styles/_variables';
 
 import UserView from '../../pages/User/User';
-import ProjectView from '../../pages/Project/Project';
+import ProjectNavigation from '../../pages/Project/ProjectNavigation';
 import ProfilView from '../../pages/Profil/Profil';
 
 const client = new ApolloClient({
@@ -44,7 +44,7 @@ export default function Navigation() {
 
                                 if (route.name === 'UserView') {
                                     iconName = focused ? 'home' : 'home-outline';
-                                } else if (route.name === 'ProjectView') {
+                                } else if (route.name === 'ProjectNavigation') {
                                     iconName = focused ? 'clipboard' : 'clipboard-outline';
                                 } else if (route.name === 'ProfilView') {
                                     iconName = focused ? 'person' : 'person-outline';
@@ -59,7 +59,7 @@ export default function Navigation() {
                     >
                         <Tab.Group>
                             <Tab.Screen name="UserView" component={UserView} />
-                            <Tab.Screen name="ProjectView" component={ProjectView} />
+                            <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} />
                             <Tab.Screen name="ProfilView" component={ProfilView} />
                         </Tab.Group>
                     </Tab.Navigator>
