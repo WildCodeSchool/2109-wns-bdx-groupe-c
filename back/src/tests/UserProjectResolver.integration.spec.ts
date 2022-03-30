@@ -162,7 +162,6 @@ describe('StatusResolver', () => {
             statusName: 'To Do',
           },
         })
-        console.log('data', result.data)
         expect(result.errors).toBeUndefined()
         expect(result.data?.myProjects).toMatchInlineSnapshot(`
           Array [
