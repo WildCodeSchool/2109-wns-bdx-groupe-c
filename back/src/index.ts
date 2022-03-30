@@ -1,8 +1,10 @@
 import dotenv from 'dotenv'
 import 'reflect-metadata'
 
-import getApolloServer from "./apollo-server";
+import { createServer } from "http";
+
 import getDatabaseConnection from "./database-connection";
+import getExpressServer from "./express-server";
 
 dotenv.config()
 
@@ -17,12 +19,17 @@ const runServer = async () => {
   // eslint-disable-next-line no-console
   console.log("Connected to database");
 
-  const server = await getApolloServer();
+  const { expressServer, apolloServer, graphQLSchema } =
+  await getExpressServer();
+
+  const server = createServer(expressServer);
 
   // The `listen` method launches a web server.
-  server.listen({ port: 3004 }).then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
-  });
+  server.listen(3004, () => {
+    console.log(
+      `🚀 Server ready at http://localhost:3004${apolloServer.graphqlPath}`
+    );
+  })
 };
 
 runServer();

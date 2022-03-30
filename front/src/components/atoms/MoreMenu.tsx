@@ -1,4 +1,4 @@
-import { useState, VoidFunctionComponent } from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
