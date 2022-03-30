@@ -65,6 +65,9 @@ const DashboardMyProjectsCard = ({ userId = 3 }: Props) => {
     const history = useHistory();
     const classes = useStyles()
 
+    console.log('loading', loading)
+    console.log('error', error)
+
     return (
         <Card className={classes.card} sx={{borderRadius: '20px'}}>
             <CardContent sx={{ backgroundColor: '#0F4473'}}>

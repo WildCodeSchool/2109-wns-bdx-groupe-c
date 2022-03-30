@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer } from "apollo-server-express";
 import { getConnection } from 'typeorm'
 import getApolloServer from '../apollo-server'
 import getDatabaseConnection from '../database-connection'
@@ -17,7 +17,7 @@ describe('StatusResolver', () => {
       throw Error('TEST_DATABASE_URL must be set in environment.')
     }
     await getDatabaseConnection(process.env.TEST_DATABASE_URL)
-    server = await getApolloServer()
+    server = (await getApolloServer()).server;
   })
   beforeEach(async () => {
     const entities = getConnection().entityMetadatas

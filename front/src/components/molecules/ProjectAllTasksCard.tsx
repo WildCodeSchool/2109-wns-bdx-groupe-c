@@ -50,6 +50,9 @@ const ProjectAllTasksCard = ({propStatus}: Props) => {
 
     const classes = useStyles()
 
+    console.log('loading', loading)
+    console.log('error', error)
+
     return (
         <>
         <Card sx={{overflowY: 'hidden', backgroundColor: '#ffffff00', boxShadow: 'none'}}>

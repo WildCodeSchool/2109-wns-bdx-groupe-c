@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from 'type-graphql'
 
 import CommentResolver from './resolvers/CommentResolver'
@@ -28,5 +28,5 @@ export default async () => {
     ],
   })
   const server = new ApolloServer({ schema })
-  return server
+  return { server, schema };
 }

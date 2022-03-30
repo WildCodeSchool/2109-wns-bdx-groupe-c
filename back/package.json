@@ -27,7 +27,7 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.16.0",
     "@types/jest": "^27.0.3",
-    "apollo-server": "^3.4.0",
+    "apollo-server-express": "^3.6.7",
     "argon2": "^0.28.2",
     "babel-jest": "^27.3.1",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
