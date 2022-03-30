@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ProgressBar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import { Projects } from "../../../schemaTypes";
+import { Projects as ProjectsType } from "../../../schemaTypes";
 
 import VARIABLES from '../../../../assets/styles/_variables';
 import COMPONENTS from '../../../../assets/styles/_components';
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 
 });
 
-export default function ProjectMain() {
+export default function Projects() {
 
   const GET_PROJECTS = gql`
   query Projects {
@@ -31,10 +31,10 @@ export default function ProjectMain() {
   }
   `;
 
-  const { loading, error, data } = useQuery<Projects>(GET_PROJECTS);
+  const { loading, error, data } = useQuery<ProjectsType>(GET_PROJECTS);
 
   const navigation = useNavigation();
-  
+
   return (
     <View style={COMPONENTS.projectsContainer}>
       {loading && <Text>Loading...</Text>}
@@ -44,8 +44,8 @@ export default function ProjectMain() {
         keyExtractor={(project) => project.id}
         renderItem={(project) => {
           return (
-            <TouchableOpacity 
-              onPress={() => navigation.navigate('ProjectRead', {projectId: project.item.id})}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Project', {projectId: project.item.id})}
               activeOpacity={.8}
             >
               <View style={COMPONENTS.projectCard}>
