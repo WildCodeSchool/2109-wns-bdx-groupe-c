@@ -1,10 +1,11 @@
-import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
+import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx } from 'type-graphql'
+import { CustomContext } from "../type";
 import User from '../models/AppUser'
 import Role from '../models/Role'
 import UserRepository from '../repository/UserRepository';
 
 @ArgsType()
-class CreateUserInput {
+class signUpInput {
   @Field()
   firstName!: string
 
@@ -16,6 +17,15 @@ class CreateUserInput {
 
   @Field()
   email!: string
+}
+
+@ArgsType()
+class signInInput {
+  @Field()
+  email!: string
+
+  @Field()
+  password!: string
 }
 
 @ArgsType()
@@ -82,8 +92,16 @@ class UserResolver {
   }
 
   @Mutation(() => User)
-  async createUser(@Args() { firstName, lastName, email, password }: CreateUserInput) {
-    return UserRepository.createUser(firstName, lastName, email, password);
+  async signUp(@Args() { firstName, lastName, email, password }: signUpInput) {
+    return UserRepository.signUp(firstName, lastName, email, password);
+  }
+
+  @Mutation(() => User)
+  async signIn(
+    @Args() { email, password }: signInInput,
+    @Ctx() { onSessionCreated }: CustomContext
+  ): Promise<User | undefined> {
+    return UserRepository.signIn(email, password, onSessionCreated);
   }
 
   @Mutation(() => User)

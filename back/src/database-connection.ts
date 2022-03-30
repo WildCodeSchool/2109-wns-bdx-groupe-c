@@ -9,7 +9,7 @@ import Status from './models/Status';
 import Task from './models/Task';
 import UserLanguage from './models/UserLanguage';
 import UserProject from './models/UserProject';
-
+import AppUserSession from './models/AppUserSession';
 
 import dotenv from 'dotenv'
 
@@ -19,7 +19,19 @@ const getDatabaseConnection = async (url: string, logging = false) => {
   return createConnection({
     type: 'postgres',
     url,
-    entities: [AppUser, Comment, Language, Project, ProjectRole, Role, Status, Task, UserLanguage, UserProject],
+    entities: [
+      AppUser,
+      Comment,
+      Language,
+      Project,
+      ProjectRole,
+      Role,
+      Status,
+      Task,
+      UserLanguage,
+      UserProject,
+      AppUserSession,
+    ],
     synchronize: true,
     logging
   })

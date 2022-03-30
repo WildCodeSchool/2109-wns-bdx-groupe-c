@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import { useMutation } from "@apollo/client";
+import { SIGN_IN } from "../queries/login"
+
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Box, Button, IconButton, InputAdornment, TextField } from '@mui/material'
 import { makeStyles } from '@mui/styles'
@@ -21,9 +24,20 @@ const Login = ({ setConnectionOn }: loginProps) => {
   const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+
+  const [signIn, { data, error }] = useMutation(SIGN_IN);
+
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    signIn({ variables: { email, password } })
+  }, [signIn, email, password])
+
+  console.log('data', data)
+  console.log('error', error)
+
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column">
           <TextField
             id="email"
