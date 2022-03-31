@@ -79,11 +79,18 @@ class UpdateUserInformationInput {
   password?: string
 }
 
+
+
 @Resolver(User)
 class UserResolver {
   @Query(() => [User])
   async users() {
     return UserRepository.findAll();
+  }
+
+  @Query(() => User, {nullable: true})
+  async myProfile(@Ctx() { user }: CustomContext) {
+    return user;
   }
 
   @Query(() => User)
@@ -102,6 +109,11 @@ class UserResolver {
     @Ctx() { onSessionCreated }: CustomContext
   ): Promise<User | undefined> {
     return UserRepository.signIn(email, password, onSessionCreated);
+  }
+
+  @Mutation(() => Boolean)
+  async logOut(@Ctx() { sessionId }: CustomContext) {
+    return UserRepository.logOut(sessionId);
   }
 
   @Mutation(() => User)

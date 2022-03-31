@@ -51,6 +51,19 @@ class UserRepository extends User {
     throw new Error(ERROR);
   }
 
+  static async logOut(sessionId: string): Promise<Boolean> {
+    const ERROR = 'Could not logout a user without session';
+
+    const session = await AppUserSessionRepository.findOneBySessionId(sessionId);
+    if(!session) {
+      throw new Error(ERROR);
+      return false;
+    } else {
+      await AppUserSessionRepository.deleteSession(sessionId);
+      return true
+    }
+  }
+
   static async deleteUser(id: number) {
     const user = await User.findOneOrFail({ id })
     user.firstName =  '';

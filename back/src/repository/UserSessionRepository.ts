@@ -6,7 +6,7 @@ import User from '../models/AppUser';
 class AppUserSessionRepository extends AppUserSession {
 
   static async findOneBySessionId(sessionId: string): Promise<User | null> {
-    const session = await AppUserSession.findOne({ id: sessionId }, { relations: ['user'] });
+    const session = await AppUserSession.findOne({ id: sessionId }, { relations: ['user', 'user.role'] });
     return session?.user || null;
   }
 
@@ -16,6 +16,10 @@ class AppUserSessionRepository extends AppUserSession {
     session.user = user;
     await session.save();
     return session;
+  }
+
+  static async deleteSession(sessionId: string): Promise<void> {
+    await AppUserSession.delete({ id: sessionId });
   }
 
 }
