@@ -32,6 +32,7 @@ const setUpContext = async (
   return {
     onSessionCreated: setSessionIdInCookie(context.res),
     user: sessionId ? await AppUserSessionRepository.findOneBySessionId(sessionId) : null,
+    sessionId,
   }
 }
 

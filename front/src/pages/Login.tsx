@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useMutation } from "@apollo/client";
 import { SIGN_IN } from "../queries/login"
+import { MY_PROFILE } from '../queries/user';
 
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { Box, Button, IconButton, InputAdornment, TextField } from '@mui/material'
@@ -29,11 +30,11 @@ const Login = ({ setConnectionOn }: loginProps) => {
 
   const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    signIn({ variables: { email, password } })
+    signIn({
+      variables: { email, password },
+      refetchQueries: [ MY_PROFILE ]
+    })
   }, [signIn, email, password])
-
-  console.log('data', data)
-  console.log('error', error)
 
   return (
     <>
