@@ -45,7 +45,7 @@ export default function Projects() {
         renderItem={(project) => {
           return (
             <TouchableOpacity
-              onPress={() => navigation.navigate('Project', {projectId: project.item.id})}
+              onPress={() => navigation.navigate('Project', {projectId: project.item.id, name: project.item.name})}
               activeOpacity={.8}
             >
               <View style={COMPONENTS.projectCard}>

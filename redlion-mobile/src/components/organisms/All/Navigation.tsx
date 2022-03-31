@@ -8,9 +8,9 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 
-import UserView from '../../pages/User/User';
+import UserNavigation from '../../pages/User/UserNavigation';
 import ProjectNavigation from '../../pages/Project/ProjectNavigation';
-import ProfilView from '../../pages/Profil/Profil';
+import ProfilNavigation from '../../pages/Profil/ProfilNavigation';
 
 const client = new ApolloClient({
     uri: API_URL,
@@ -42,11 +42,11 @@ export default function Navigation() {
                             tabBarIcon: ({ focused, color, size }) => {
                                 let iconName;
 
-                                if (route.name === 'UserView') {
+                                if (route.name === 'UserNavigation') {
                                     iconName = focused ? 'home' : 'home-outline';
                                 } else if (route.name === 'ProjectNavigation') {
                                     iconName = focused ? 'clipboard' : 'clipboard-outline';
-                                } else if (route.name === 'ProfilView') {
+                                } else if (route.name === 'ProfilNavigation') {
                                     iconName = focused ? 'person' : 'person-outline';
                                 }
 
@@ -58,9 +58,9 @@ export default function Navigation() {
                         })}
                     >
                         <Tab.Group>
-                            <Tab.Screen name="UserView" component={UserView} />
+                            <Tab.Screen name="UserNavigation" component={UserNavigation} />
                             <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} />
-                            <Tab.Screen name="ProfilView" component={ProfilView} />
+                            <Tab.Screen name="ProfilNavigation" component={ProfilNavigation} />
                         </Tab.Group>
                     </Tab.Navigator>
                 </NavigationContainer>

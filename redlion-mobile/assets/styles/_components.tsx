@@ -29,8 +29,6 @@ const _components = StyleSheet.create({
         },
         shadowOpacity: 0.48,
         shadowRadius: 11.95,
-        
-        elevation: 50,
     },
     homeCardTop: {
         flexDirection: 'row',
@@ -69,6 +67,7 @@ const _components = StyleSheet.create({
     },
     homeCardBodyText: {
         color: VARIABLES.clrWhite,
+        marginBottom: 10,
     },
     
     // -----------------------
@@ -92,7 +91,6 @@ const _components = StyleSheet.create({
         },
         shadowOpacity: 0.32,
         shadowRadius: 5.46,
-        elevation: 9,
     },
     projectCardTopColor: {
         backgroundColor: '#1AE46B',

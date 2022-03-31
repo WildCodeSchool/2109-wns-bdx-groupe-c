@@ -20,13 +20,13 @@ export default function UserDashboardCardProject () {
         <Text style={COMPONENTS.homeCardName}>Projects</Text>
       </View>
       <View style={COMPONENTS.homeCardBody}>
-        <Text style={COMPONENTS.homeCardBodyText}>Vous avez 4 projets en cours</Text>
+        <Text style={[COMPONENTS.homeCardBodyText, {marginBottom: 0}]}>Vous avez 4 projets en cours</Text>
         <Menu
           contentStyle={COMPONENTS.menuBlock}
           visible={projectsVisible}
           onDismiss={() => {setProjectsVisible(!projectsVisible)}}
           anchor={<Appbar.Action icon={'dots-horizontal'} color={VARIABLES.clrWhite} onPress={() => {setProjectsVisible(!projectsVisible)}} />}>
-          <Menu.Item onPress={() => {navigation.navigate('ProjectMain', {}), setProjectsVisible(!projectsVisible)} } title="Tout voir" titleStyle={COMPONENTS.menuTitle} />
+          <Menu.Item onPress={() => {navigation.navigate('Projects', {}), setProjectsVisible(!projectsVisible)} } title="Tout voir" titleStyle={COMPONENTS.menuTitle} />
           <Divider />
           <Menu.Item onPress={() => {navigation.navigate('ProjectCreate'), {}, setProjectsVisible(!projectsVisible)}} title="Créer un projet" titleStyle={COMPONENTS.menuTitle} />
         </Menu>
