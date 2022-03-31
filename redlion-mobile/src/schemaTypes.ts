@@ -45,6 +45,23 @@ export interface Projects_projects {
     initialTimeSpent: number;
     createdAt: any;
     updatedAt: any;
+    createdBy: {
+      firstName: string;
+      lastName: string;
+    }
+    languages: {
+      id: string;
+      name: string;
+    }
+    tasks: {
+      id: string;
+      subject: string;
+      shortText: string;
+      description: string;
+    }
+    status: {
+      name: string;
+    }
   }
 }
 

@@ -28,8 +28,8 @@ export default function ProjectNavigation() {
         })}
     >
       <Stack.Screen name="Projects" component={Projects} options={{headerTitle: 'Projects'}} />
-      <Stack.Screen name="ProjectCreate" component={ProjectCreate} options={{headerTitle: 'Project - Create'}} />
       <Stack.Screen name="Project" component={Project} options={{headerTitle: 'Project : #'}} />
+      <Stack.Screen name="ProjectCreate" component={ProjectCreate} options={{headerTitle: 'Project - Create'}} />
     </Stack.Navigator>
     )
 }

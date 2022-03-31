@@ -1,71 +1,78 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet } from 'react-native';
-
-import ProfilMain from './ProfilMain';
-import ProfilInformations from './ProfilInformations';
-import ProfilStatistiques from './ProfilStatistiques';
-import ProfilSettings from './ProfilSettings';
+import { StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 
 import VARIABLES from '../../../../assets/styles/_variables';
-import COMPONENTS from '../../../../assets/styles/_components';
 
-export default function ProfilView() {
+const styles = StyleSheet.create({
+    profilNavigation: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: VARIABLES.clrBgDark,
+    },
+    profilNavigationButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: VARIABLES.windowWidth - 20,
+        height: 100,
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: VARIABLES.clrTag4,
+        borderRadius: 18,
+    },
+    profilNavigationButtonContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: VARIABLES.windowWidth - 20,
+        height: '100%',
+    },
+    profilNavigationIcon: {
+        fontSize: 30,
+    },
+    profilNavigationText: {
+        fontSize: 14,
+    },
+})
+
+export default function Profil() {
     
-    const Stack = createStackNavigator();
-
-    const styles = StyleSheet.create({
-        profilContainer: {
-            flex: 1,
-            backgroundColor: VARIABLES.clrBgDark,
-        }
-    })
+    const navigation = useNavigation();
 
     return (
-        <Stack.Navigator
-            initialRouteName="Profil"
-            screenOptions={() => ({
-                headerStyle: {
-                    backgroundColor: VARIABLES.clrBgDark, 
-                },
-                headerTintColor: VARIABLES.clrWhite,
-                cardStyle: {
-                    backgroundColor: VARIABLES.clrBgDark,
-                },
-            })}
-        >
-            <Stack.Screen
-                name="ProfilMain"
-                component={ProfilMain}
-                options={{
-                    cardStyle: styles.profilContainer,
-                    headerTitle: 'Profil'
-                }}
-            />
-            <Stack.Screen
-                name="ProfilInformations"
-                component={ProfilInformations}
-                options={{
-                    cardStyle: styles.profilContainer,
-                    headerTitle: 'Informations'
-                }}
-            />
-            <Stack.Screen
-                name="ProfilStatistiques"
-                component={ProfilStatistiques}
-                options={{
-                    cardStyle: styles.profilContainer,
-                    headerTitle: 'Statistiques'
-                }}
-            />
-            <Stack.Screen
-                name="ProfilSettings"
-                component={ProfilSettings}
-                options={{
-                    cardStyle: styles.profilContainer,
-                    headerTitle: 'Settings'
-            }}
-            />
-        </Stack.Navigator>
+        <View style={styles.profilNavigation}>
+            <Button 
+                icon={() => (<Ionicons name={'alert-circle'} style={[styles.profilNavigationIcon, {color: VARIABLES.clrTag4}]}/>)}
+                color={VARIABLES.clrTag4}
+                style={[styles.profilNavigationButton, {borderColor: VARIABLES.clrTag4}]}
+                contentStyle={styles.profilNavigationButtonContent}
+                onPress={() => {navigation.navigate('ProfilInformations')}} 
+            >
+                <Text style={[styles.profilNavigationText, {color: VARIABLES.clrTag4}]}>Informations</Text>
+            </Button>
+            
+            <Button 
+                icon={() => (<Ionicons name={'analytics'} style={[styles.profilNavigationIcon, {color: VARIABLES.clrTag2}]}/>)}
+                color={VARIABLES.clrTag2}
+                style={[styles.profilNavigationButton, {borderColor: VARIABLES.clrTag2}]}
+                contentStyle={styles.profilNavigationButtonContent}
+                onPress={() => {navigation.navigate('ProfilStatistiques')} }
+            >
+                <Text style={[styles.profilNavigationText, {color: VARIABLES.clrTag2}]}>Statistiques</Text>
+            </Button>
+
+            <Button 
+                icon={() => (<Ionicons name={'settings'} style={[styles.profilNavigationIcon, {color: VARIABLES.clrTag3}]}/>)}
+                color={VARIABLES.clrTag3}
+                style={[styles.profilNavigationButton, {borderColor: VARIABLES.clrTag3}]}
+                contentStyle={styles.profilNavigationButtonContent}
+                onPress={() => {navigation.navigate('ProfilSettings')} }
+            >
+                <Text style={[styles.profilNavigationText, {color: VARIABLES.clrTag3}]}>Settings</Text>
+            </Button>
+        </View>
     )
 }

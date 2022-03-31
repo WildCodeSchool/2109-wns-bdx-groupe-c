@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     }
 })
 
-export default function ProjectAppbar({ navigation, back }) {
+export default function ProjectAppbar({ navigation, back, route, params }) {
 
     const [searchActive, setSearchActive] = React.useState(false);
     const [menuActive, setMenuActive] = React.useState(false);
@@ -22,17 +22,27 @@ export default function ProjectAppbar({ navigation, back }) {
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
 
+    console.log('------')
+    console.log('------')
+    console.log(route)
+    console.log('------')
+    console.log('------')
+
     return (
         <Appbar.Header statusBarHeight={0} style={{
             backgroundColor: VARIABLES.clrBgDark,
             justifyContent: 'center',
             position: 'relative',
         }}>
-            {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
-            <Appbar.Content title="Projects" style={{backgroundColor: VARIABLES.clrBgDark
-            }} />
+            {back && route.params.screen != 'ProjectTasks' ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+            {back && route.params.screen == 'ProjectTasks' ? <Appbar.BackAction onPress={() => navigation.pop()} /> : null}
+            {route.name == 'Project' && route.params.screen == undefined ? <Appbar.Content title={`${route.params.name}`} style={{backgroundColor: VARIABLES.clrBgDark}} /> : null}
+            {route.name == 'Project' && route.params.screen != undefined ? <Appbar.Content title={`${route.params.params.name} : Tasks`} style={{backgroundColor: VARIABLES.clrBgDark}} /> : null}
+            {route.name == 'ProjectTasks' ? <Appbar.Content title={'Project tasks'} style={{backgroundColor: VARIABLES.clrBgDark}} /> : null}
+            {route.name == 'ProjectCreate' ? <Appbar.Content title={'Project : create'} style={{backgroundColor: VARIABLES.clrBgDark}} /> : null}
             {!back ? (
                 <>
+                    <Appbar.Content title={'Projets'} style={{backgroundColor: VARIABLES.clrBgDark}} />
                     <Appbar.Action icon="magnify" color={VARIABLES.clrWhite} onPress={() => {setSearchActive(!searchActive)}} />
                     <Menu
                         contentStyle={COMPONENTS.menuBlock}
