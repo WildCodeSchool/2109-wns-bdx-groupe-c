@@ -1,18 +1,18 @@
-import { ApolloServer } from "apollo-server-express";
+import createTestClient from 'supertest'
 import { getConnection } from 'typeorm'
-import getApolloServer from '../apollo-server'
 import getDatabaseConnection from '../database-connection'
-
 import { userGenerator } from '../_mock_/userGenerator'
 import { projectGenerator } from '../_mock_/projectGenerator'
 import { taskGenerator } from '../_mock_/taskGenerator'
 import { commentGenerator } from '../_mock_/commentGenerator'
+import { getExpressServer } from '../express-server'
 
-describe('TaskResolverResolver', () => {
-  let server: ApolloServer
+describe('CommentResolver', () => {
+  let testClient: createTestClient.SuperTest<createTestClient.Test>
 
   beforeAll(async () => {
-    server = (await getApolloServer()).server;
+    const { expressServer } = await getExpressServer()
+    testClient = createTestClient(expressServer)
 
     if (!process.env.TEST_DATABASE_URL) {
       throw Error('TEST_DATABASE_URL must be set in environment.')
@@ -22,7 +22,6 @@ describe('TaskResolverResolver', () => {
   })
   beforeEach(async () => {
     const entities = getConnection().entityMetadatas
-    // eslint-disable-next-line no-restricted-syntax
     for (const entity of entities) {
       const repository = getConnection().getRepository(entity.name)
       await repository.query(`TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`)
@@ -31,52 +30,67 @@ describe('TaskResolverResolver', () => {
   afterAll(() => getConnection().close())
 
   describe('query comments', () => {
-    const GET_Comments = `
-    query Comments($taskId: Float!) {
-      comments(taskId: $taskId) {
-        content
-        task {
-          subject
-        }
-        user {
-          firstName
-        }
-      }
-    }`
-
     describe('when there are no comments in database', () => {
       it('returns empty array', async () => {
         const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-        const taskTest = await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0)
+        const task = await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0)
 
-        const result = await server.executeOperation({
-          query: GET_Comments,
-          variables: {
-            taskId: taskTest.id,
-          },
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            comments(taskId: ${task.id}) {
+              content
+              task {
+                subject
+              }
+              user {
+                firstName
+              }
+            }
+          }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.comments).toEqual([])
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.comments).toEqual([])
       })
     })
     describe('when there are comments in database', () => {
       it('returns all comments in database', async () => {
         const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
         const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-        const taskTest = await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0)
-        const taskTest2 = await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0)
+        const taskTest = await taskGenerator(
+          'Task Text',
+          'Short Text',
+          'Test',
+          projectTest.id,
+          100,
+          0
+        )
+        const taskTest2 = await taskGenerator(
+          'Task Text',
+          'Short Text',
+          'Test',
+          projectTest.id,
+          100,
+          0
+        )
         await commentGenerator('Test', userTest.id, taskTest.id)
         await commentGenerator('Test2', userTest.id, taskTest.id)
         await commentGenerator('Test3', userTest.id, taskTest2.id)
 
-        const result = await server.executeOperation({
-          query: GET_Comments,
-          variables: {
-            taskId: taskTest.id,
-          },
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            comments(taskId: ${taskTest.id}) {
+              content
+              task {
+                subject
+              }
+              user {
+                firstName
+              }
+            }
+          }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.comments).toMatchInlineSnapshot(`
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.comments).toMatchInlineSnapshot(`
           Array [
             Object {
               "content": "Test2",
@@ -103,105 +117,122 @@ describe('TaskResolverResolver', () => {
   })
   describe('mutation create comment', () => {
     it('create a comment and return the new comment', async () => {
-      const CREATE_COMMENT = `
-      mutation CreateComment($content: String!, $userId: Int!, $taskId: Int!) {
-        createComment(content: $content, userId: $userId, taskId: $taskId) {
-          id
-          content
-          user {
-            firstName
-          }
-          task {
-            subject
-          }
-        }
-      }`
-
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-      const taskTest = await taskGenerator('Task Text', 'Short Text', 'Description', projectTest.id, 100, 0)
+      const taskTest = await taskGenerator(
+        'Task Text',
+        'Short Text',
+        'Description',
+        projectTest.id,
+        100,
+        0
+      )
 
-      const result = await server.executeOperation({
-        query: CREATE_COMMENT,
-        variables: {
-          content: 'Test nouveau commentaire',
-          userId: userTest.id,
-          taskId: taskTest.id,
-        },
+      const contentTest = 'test content'
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          createComment(
+              content: "${contentTest}",
+              userId: ${userTest.id},
+              taskId: ${taskTest.id},
+          ){
+              id
+              content
+              user {
+                firstName
+              }
+              task {
+                subject
+              }
+            }
+          }`,
       })
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.createComment).toEqual({
-        content: 'Test nouveau commentaire',
-        id: '1',
-        task: {
-          subject: 'Task Text',
-        },
-        user: {
-          firstName: 'Test',
-        },
-      })
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.createComment).toMatchInlineSnapshot(`
+        Object {
+          "content": "test content",
+          "id": "1",
+          "task": Object {
+            "subject": "Task Text",
+          },
+          "user": Object {
+            "firstName": "Test",
+          },
+        }
+      `)
     })
   })
   describe('mutation update comment', () => {
     it('update an existing comment', async () => {
-      const UPDATE_COMMENT = `
-      mutation UpdateComment($updateCommentId: Int!, $content: String!) {
-        updateComment(id: $updateCommentId, content: $content) {
-          content
-          id
-        }
-      }`
-
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-      const taskTest = await taskGenerator('Task Text', 'Short Text', 'Description', projectTest.id, 100, 0)
+      const taskTest = await taskGenerator(
+        'Task Text',
+        'Short Text',
+        'Description',
+        projectTest.id,
+        100,
+        0
+      )
       const commentTest = await commentGenerator('Test', userTest.id, taskTest.id)
+      const contentTest = 'test content'
 
-      const result = await server.executeOperation({
-        query: UPDATE_COMMENT,
-        variables: {
-          updateCommentId: commentTest.id,
-          content: 'test modification of content',
-        },
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          updateComment(
+              content: "${contentTest}",
+              id: ${commentTest.id},
+          ){
+              id
+              content
+            }
+          }`,
       })
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.updateComment).toEqual({
-        content: 'test modification of content',
-        id: '1',
-      })
+
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.updateComment).toMatchInlineSnapshot(`
+        Object {
+          "content": "test content",
+          "id": "1",
+        }
+      `)
     })
   })
   describe('mutation delete comment', () => {
     it('delete an existing comment', async () => {
-      const DELETE_COMMENT = `
-      mutation DeleteComment($deleteCommentId: Float!) {
-        deleteComment(id: $deleteCommentId) {
-          id
-          content
-        }
-      }`
-
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
-      const taskTest = await taskGenerator('Task Text', 'Short Text', 'Description', projectTest.id, 100, 0)
+      const taskTest = await taskGenerator(
+        'Task Text',
+        'Short Text',
+        'Description',
+        projectTest.id,
+        100,
+        0
+      )
       const commentTest = await commentGenerator(
         'Test commentaire à supprimer',
         userTest.id,
         taskTest.id
       )
 
-      const result = await server.executeOperation({
-        query: DELETE_COMMENT,
-        variables: {
-          deleteCommentId: commentTest.id,
-        },
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          deleteComment(
+              id: ${commentTest.id},
+          ){
+              id
+              content
+            }
+          }`,
       })
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.deleteComment).toEqual({
-        content: 'Test commentaire à supprimer',
-        id: '1',
-      })
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.deleteComment).toMatchInlineSnapshot(`
+        Object {
+          "content": "Test commentaire à supprimer",
+          "id": "1",
+        }
+      `)
     })
   })
 })

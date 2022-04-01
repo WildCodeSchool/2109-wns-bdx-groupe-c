@@ -1,25 +1,26 @@
-import { ApolloServer } from "apollo-server-express";
+import createTestClient from 'supertest'
+import { getExpressServer } from '../express-server'
 import { getConnection } from 'typeorm'
-import getApolloServer from '../apollo-server'
 import getDatabaseConnection from '../database-connection'
-import User from '../models/AppUser'
 
 import { roleGenerator } from '../_mock_/roleGenerator'
 import { userGenerator } from '../_mock_/userGenerator'
 
 describe('UserResolver', () => {
-  let server: ApolloServer
+  let testClient: createTestClient.SuperTest<createTestClient.Test>
 
   beforeAll(async () => {
+    const { expressServer } = await getExpressServer()
+    testClient = createTestClient(expressServer)
+
     if (!process.env.TEST_DATABASE_URL) {
       throw Error('TEST_DATABASE_URL must be set in environment.')
     }
-    await getDatabaseConnection(process.env.TEST_DATABASE_URL)
-    server = (await getApolloServer()).server;
+
+    return getDatabaseConnection(process.env.TEST_DATABASE_URL)
   })
   beforeEach(async () => {
     const entities = getConnection().entityMetadatas
-    // eslint-disable-next-line no-restricted-syntax
     for (const entity of entities) {
       const repository = getConnection().getRepository(entity.name)
       await repository.query(`TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`)
@@ -28,25 +29,22 @@ describe('UserResolver', () => {
   afterAll(() => getConnection().close())
 
   describe('query users', () => {
-    const GET_USERS = `
-    query {
-      users {
-        id
-        firstName
-        lastName
-        email
-        createdAt
-        isActive
-      }
-    }`
-
     describe('when there are no users in database', () => {
       it('returns empty array', async () => {
-        const result = await server.executeOperation({
-          query: GET_USERS,
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            users {
+              id
+              firstName
+              lastName
+              email
+              createdAt
+              isActive
+            }
+          }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.users).toEqual([])
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.users).toMatchInlineSnapshot(`Array []`)
       })
     })
 
@@ -55,11 +53,20 @@ describe('UserResolver', () => {
         await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password')
         await userGenerator('Nouvelle', 'Nouvelle', 'nouvelle@mail.fr', 'password')
 
-        const result = await server.executeOperation({
-          query: GET_USERS,
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            users {
+              id
+              firstName
+              lastName
+              email
+              createdAt
+              isActive
+            }
+          }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.users).toMatchInlineSnapshot(`
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.users).toMatchInlineSnapshot(`
           Array [
             Object {
               "createdAt": "2021-11-23T23:18:00.134Z",
@@ -84,26 +91,20 @@ describe('UserResolver', () => {
 
     describe('when there is users in database', () => {
       it('returns 1 user if needed in the database', async () => {
-        const GET_ONE_USER = `
-        query User($userId: Float!) {
-          user(id: $userId) {
-            firstName
-            lastName
-            email
-          }
-        }`
-
         const test1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password')
         await userGenerator('Nouvelle', 'Nouvelle', 'nouvelle@mail.fr', 'password')
 
-        const result = await server.executeOperation({
-          query: GET_ONE_USER,
-          variables: {
-            userId: test1.id,
-          },
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            user(id: ${test1.id}) {
+              firstName
+              lastName
+              email
+          }
+        }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.user).toMatchInlineSnapshot(`
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.user).toMatchInlineSnapshot(`
           Object {
             "email": "nouveau@mail.com",
             "firstName": "Nouveau",
@@ -114,45 +115,44 @@ describe('UserResolver', () => {
     })
   })
   describe('mutation createUser', () => {
-    const CREATE_USER = `
-    mutation SignUp($firstName: String!, $lastName: String!, $password: String!, $email: String!) {
-      signUp(firstName: $firstName, lastName: $lastName, password: $password, email: $email) {
-        firstName
-        lastName
-        email
-      }
-    }
-    `
-
     it('creates and returns user', async () => {
-      const result = await server.executeOperation({
-        query: CREATE_USER,
-        variables: {
-          firstName: 'Nouveau',
-          lastName: 'Nouveau',
-          email: 'nouveau@mail.com',
-          password: 'test',
-        },
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          signUp(
+            firstName: "Nouveau",
+            lastName: "Nouveau",
+            password: "password",
+            email: "nouveau@mail.com"
+        ) {
+          firstName
+          lastName
+          email
+        }
+      }`,
       })
-
-      expect(await User.findOne({ firstName: 'Nouveau' })).toHaveProperty(
-        'email',
-        'nouveau@mail.com'
-      )
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.signUp).toEqual({
-        firstName: 'Nouveau',
-        lastName: 'Nouveau',
-        email: 'nouveau@mail.com',
-      })
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.signUp).toMatchInlineSnapshot(`
+        Object {
+          "email": "nouveau@mail.com",
+          "firstName": "Nouveau",
+          "lastName": "Nouveau",
+        }
+      `)
     })
   })
   describe('mutation change Role', () => {
     it('change the role and return the user', async () => {
-      const CHANGE_ROLE_USER = `
-      mutation UpdateUserRole($userId: Int!, $roleIdentifier: String!) {
-        updateUserRole(userId: $userId, roleIdentifier: $roleIdentifier) {
+      const role1 = await roleGenerator('test1', 'test1')
+      const role2 = await roleGenerator('test2', 'test2')
+
+      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
+
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          updateUserRole(
+            userId: ${user1.id},
+            roleIdentifier: "${role2.identifier}",
+        ) {
           id
           firstName
           lastName
@@ -173,22 +173,10 @@ describe('UserResolver', () => {
             subject
           }
         }
-      }
-      `
-      const role1 = await roleGenerator('test1', 'test1')
-      const role2 = await roleGenerator('test2', 'test2')
-
-      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
-      const result = await server.executeOperation({
-        query: CHANGE_ROLE_USER,
-        variables: {
-          userId: user1.id,
-          roleIdentifier: role2.identifier,
-        },
+      }`,
       })
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.updateUserRole).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.updateUserRole).toMatchInlineSnapshot(`
         Object {
           "comments": null,
           "email": "nouveau@mail.com",
@@ -209,30 +197,25 @@ describe('UserResolver', () => {
   })
   describe('mutation change Information', () => {
     it('change the informations user', async () => {
-      const CHANGE_INFORMATION_USER = `
-      mutation Mutation($updateUserInformationId: Int!, $firstName: String, $lastName: String, $email: String, $password: String) {
-        updateUserInformation(id: $updateUserInformationId, firstName: $firstName, lastName: $lastName, email: $email, password: $password) {
+      const role1 = await roleGenerator('test1', 'test1')
+      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          updateUserInformation(
+            id: ${user1.id},
+            firstName: "test firstname updated",
+            lastName: "test lastname updated",
+            email: "test email updated",
+            password: "password",
+        ) {
           firstName
           lastName
           email
         }
-      }
-      `
-      const role1 = await roleGenerator('test1', 'test1')
-      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
-      const result = await server.executeOperation({
-        query: CHANGE_INFORMATION_USER,
-        variables: {
-          updateUserInformationId: user1.id,
-          firstName: 'test firstname updated',
-          lastName: 'test lastname updated',
-          email: 'test email updated',
-          password: 'password',
-        },
+      }`,
       })
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.updateUserInformation).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.updateUserInformation).toMatchInlineSnapshot(`
         Object {
           "email": "test email updated",
           "firstName": "test firstname updated",
@@ -243,27 +226,23 @@ describe('UserResolver', () => {
   })
   describe('mutation delete a user', () => {
     it('update the boolean is active to false', async () => {
-      const DELETE_USER = `
-      mutation Mutation($deleteUserId: Int!) {
-        deleteUser(id: $deleteUserId) {
+      const role1 = await roleGenerator('test1', 'test1')
+      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
+
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          deleteUser(
+            id: ${user1.id},
+        ) {
           firstName
           lastName
           email
           isActive
         }
-      }
-      `
-      const role1 = await roleGenerator('test1', 'test1')
-      const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
-      const result = await server.executeOperation({
-        query: DELETE_USER,
-        variables: {
-          deleteUserId: user1.id,
-        },
+      }`,
       })
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.deleteUser).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.deleteUser).toMatchInlineSnapshot(`
         Object {
           "email": "",
           "firstName": "",

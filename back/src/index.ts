@@ -2,9 +2,8 @@ import dotenv from 'dotenv'
 import 'reflect-metadata'
 
 import { createServer } from "http";
-
 import getDatabaseConnection from "./database-connection";
-import getExpressServer from "./express-server";
+import {getExpressServer} from "./express-server";
 
 dotenv.config()
 

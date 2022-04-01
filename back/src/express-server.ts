@@ -3,7 +3,7 @@ import { ApolloServer } from "apollo-server-express";
 import { GraphQLSchema } from "graphql";
 import getApolloServer from "./apollo-server";
 
-export default async (): Promise<{
+export const getExpressServer = async (): Promise<{
   expressServer: Application;
   apolloServer: ApolloServer;
   graphQLSchema: GraphQLSchema;

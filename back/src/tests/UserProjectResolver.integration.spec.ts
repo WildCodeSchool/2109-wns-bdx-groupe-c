@@ -1,6 +1,6 @@
-import { ApolloServer } from "apollo-server-express";
+import createTestClient from 'supertest'
+import { getExpressServer } from '../express-server'
 import { getConnection } from 'typeorm'
-import getApolloServer from '../apollo-server'
 import getDatabaseConnection from '../database-connection'
 
 import { projectGenerator } from '../_mock_/projectGenerator'
@@ -10,18 +10,20 @@ import { projectRoleGenerator } from '../_mock_/projectRoleGenerator'
 import { statusGenerator } from '../_mock_/statusGenerator'
 
 describe('StatusResolver', () => {
-  let server: ApolloServer
+  let testClient: createTestClient.SuperTest<createTestClient.Test>
 
   beforeAll(async () => {
+    const { expressServer } = await getExpressServer()
+    testClient = createTestClient(expressServer)
+
     if (!process.env.TEST_DATABASE_URL) {
       throw Error('TEST_DATABASE_URL must be set in environment.')
     }
-    await getDatabaseConnection(process.env.TEST_DATABASE_URL)
-    server = (await getApolloServer()).server;
+
+    return getDatabaseConnection(process.env.TEST_DATABASE_URL)
   })
   beforeEach(async () => {
     const entities = getConnection().entityMetadatas
-    // eslint-disable-next-line no-restricted-syntax
     for (const entity of entities) {
       const repository = getConnection().getRepository(entity.name)
       await repository.query(`TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`)
@@ -30,31 +32,24 @@ describe('StatusResolver', () => {
   afterAll(() => getConnection().close())
 
   describe('query the project associated to a user : myProjects', () => {
-    const GET_MY_PROJECTS = `
-    query Query($userId: Int!) {
-      myProjects(userId: $userId) {
-        project {
-          name
-        }
-        projectRole {
-          name
-        }
-      }
-    }
-    `
-
     describe('when the user is no associated to any projects', () => {
       it('returns empty array', async () => {
         const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
 
-        const result = await server.executeOperation({
-          query: GET_MY_PROJECTS,
-          variables: {
-            userId: userTest.id,
-          },
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            myProjects(userId: ${userTest.id}) {
+              project {
+                name
+              }
+              projectRole {
+                name
+              }
+          }
+        }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.myProjects).toEqual([])
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.myProjects).toMatchInlineSnapshot(`Array []`)
       })
     })
     describe('when the user is associated to projects', () => {
@@ -68,14 +63,20 @@ describe('StatusResolver', () => {
         await userProjectGenerator(userTest, projectTest2, developpeur)
         await userProjectGenerator(userTest, projectTest3, developpeur)
 
-        const result = await server.executeOperation({
-          query: GET_MY_PROJECTS,
-          variables: {
-            userId: userTest.id,
-          },
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            myProjects(userId: ${userTest.id}) {
+              project {
+                name
+              }
+              projectRole {
+                name
+              }
+          }
+        }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.myProjects).toMatchInlineSnapshot(`
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.myProjects).toMatchInlineSnapshot(`
           Array [
             Object {
               "project": Object {
@@ -142,28 +143,20 @@ describe('StatusResolver', () => {
         await userProjectGenerator(userTest, projectTest2, developpeur)
         await userProjectGenerator(userTest, projectTest3, developpeur)
 
-        const GET_MY_PROJECTS_TO_DO = `
-        query MyProjectsToDo($userId: Int!, $statusName: String) {
-          myProjects(userId: $userId, statusName: $statusName) {
-            project {
-              name
-              status {
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            myProjects(userId: ${userTest.id}, statusName: "To Do") {
+              project {
                 name
-              }
+                status {
+                  name
+                }
             }
           }
-        }
-        `
-
-        const result = await server.executeOperation({
-          query: GET_MY_PROJECTS_TO_DO,
-          variables: {
-            userId: userTest.id,
-            statusName: 'To Do',
-          },
+        }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.myProjects).toMatchInlineSnapshot(`
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.myProjects).toMatchInlineSnapshot(`
           Array [
             Object {
               "project": Object {
@@ -188,9 +181,17 @@ describe('StatusResolver', () => {
   })
   describe('mutation associate user to a project', () => {
     it('add a user to a project', async () => {
-      const ADD_USER_TO_PROJECT = `
-      mutation AssociateUserToProject($userId: Int!, $projectId: Int!, $roleId: Int!) {
-        associateUserToProject(userId: $userId, projectId: $projectId, roleId: $roleId) {
+      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const projectTest1 = await projectGenerator('TestProject', 'Test', 'Test', 0)
+      const developpeur = await projectRoleGenerator('Developpeur')
+
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          associateUserToProject(
+            userId: ${userTest.id},
+            projectId: ${projectTest1.id},
+            roleId: ${developpeur.id}
+        ) {
           project {
             name
           }
@@ -201,22 +202,10 @@ describe('StatusResolver', () => {
             firstName
           }
         }
-      }
-      `
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
-      const projectTest1 = await projectGenerator('TestProject', 'Test', 'Test', 0)
-      const developpeur = await projectRoleGenerator('Developpeur')
-
-      const result = await server.executeOperation({
-        query: ADD_USER_TO_PROJECT,
-        variables: {
-          userId: userTest.id,
-          projectId: projectTest1.id,
-          roleId: developpeur.id,
-        },
+      }`,
       })
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.associateUserToProject).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.associateUserToProject).toMatchInlineSnapshot(`
         Object {
           "project": Object {
             "name": "TestProject",
@@ -233,9 +222,18 @@ describe('StatusResolver', () => {
   })
   describe('mutation update the user role from a project', () => {
     it('update the role', async () => {
-      const UPDATE_USER_ROLE = `
-      mutation UpdateUserRoleToProject($userProjectId: Int!, $roleId: Int!) {
-        updateUserRoleToProject(userProjectId: $userProjectId, roleId: $roleId) {
+      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const projectTest1 = await projectGenerator('TestProject', 'Test', 'Test', 0)
+      const developpeur = await projectRoleGenerator('Developpeur')
+      const userProject = await userProjectGenerator(userTest, projectTest1, developpeur)
+      const test = await projectRoleGenerator('test')
+
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          updateUserRoleToProject(
+            userProjectId: ${userTest.id},
+            roleId: ${test.id}
+        ) {
           user {
             firstName
           }
@@ -246,23 +244,10 @@ describe('StatusResolver', () => {
             name
           }
         }
-      }
-      `
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
-      const projectTest1 = await projectGenerator('TestProject', 'Test', 'Test', 0)
-      const developpeur = await projectRoleGenerator('Developpeur')
-      const userProject = await userProjectGenerator(userTest, projectTest1, developpeur)
-      const test = await projectRoleGenerator('test')
-
-      const result = await server.executeOperation({
-        query: UPDATE_USER_ROLE,
-        variables: {
-          userProjectId: userProject.id,
-          roleId: test.id,
-        },
+      }`,
       })
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.updateUserRoleToProject).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.updateUserRoleToProject).toMatchInlineSnapshot(`
         Object {
           "project": Object {
             "name": "TestProject",
@@ -279,9 +264,16 @@ describe('StatusResolver', () => {
   })
   describe('mutation delete a user from a project', () => {
     it('delete the user from the project', async () => {
-      const DELETE_USER_FROM_PROJECT = `
-      mutation DeleteUserFromProject($userProjectId: Int!) {
-        deleteUserFromProject(userProjectId: $userProjectId) {
+      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const projectTest1 = await projectGenerator('TestProject', 'Test', 'Test', 0)
+      const developpeur = await projectRoleGenerator('Developpeur')
+      const userProject = await userProjectGenerator(userTest, projectTest1, developpeur)
+
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          deleteUserFromProject(
+            userProjectId: ${userTest.id},
+        ) {
           user {
             firstName
           }
@@ -292,21 +284,10 @@ describe('StatusResolver', () => {
             name
           }
         }
-      }
-      `
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
-      const projectTest1 = await projectGenerator('TestProject', 'Test', 'Test', 0)
-      const developpeur = await projectRoleGenerator('Developpeur')
-      const userProject = await userProjectGenerator(userTest, projectTest1, developpeur)
-
-      const result = await server.executeOperation({
-        query: DELETE_USER_FROM_PROJECT,
-        variables: {
-          userProjectId: userProject.id,
-        },
+      }`,
       })
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.deleteUserFromProject).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.deleteUserFromProject).toMatchInlineSnapshot(`
         Object {
           "project": Object {
             "name": "TestProject",
