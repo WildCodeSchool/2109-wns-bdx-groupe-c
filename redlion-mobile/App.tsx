@@ -7,13 +7,20 @@ import VARIABLES from './assets/styles/_variables';
 
 import Navigation from './src/components/organisms/All/Navigation';
 
-const App = () => (
-  <PaperProvider>
-    <View style={{backgroundColor: VARIABLES.clrBgDark, flex: 1}}>
-      <StatusBar backgroundColor={VARIABLES.clrBgDark}/>
-      <Navigation></Navigation>
-    </View>
-  </PaperProvider>
-);
+import ApiUtils from './src/utils/ApiUtils';
+
+const App = () => {
+
+  ApiUtils.signIn('alexis@mail.com', 'test');
+
+  return (
+    <PaperProvider>
+      <View style={{backgroundColor: VARIABLES.clrBgDark, flex: 1}}>
+        <StatusBar backgroundColor={VARIABLES.clrBgDark}/>
+        <Navigation></Navigation>
+      </View>
+    </PaperProvider>
+  )
+};
 
 export default App;
