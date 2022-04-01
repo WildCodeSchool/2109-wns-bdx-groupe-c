@@ -1,6 +1,6 @@
-import { ApolloServer } from "apollo-server-express";
+import createTestClient from 'supertest'
+import { getExpressServer } from '../express-server'
 import { getConnection } from 'typeorm'
-import getApolloServer from '../apollo-server'
 import getDatabaseConnection from '../database-connection'
 
 import { userGenerator } from '../_mock_/userGenerator'
@@ -8,18 +8,20 @@ import { languageGenerator } from '../_mock_/languageGenerator'
 import { userLanguageGenerator } from '../_mock_/userLanguageGenerator'
 
 describe('StatusResolver', () => {
-  let server: ApolloServer
+  let testClient: createTestClient.SuperTest<createTestClient.Test>
 
   beforeAll(async () => {
+    const { expressServer } = await getExpressServer()
+    testClient = createTestClient(expressServer)
+
     if (!process.env.TEST_DATABASE_URL) {
       throw Error('TEST_DATABASE_URL must be set in environment.')
     }
-    await getDatabaseConnection(process.env.TEST_DATABASE_URL)
-    server = (await getApolloServer()).server;
+
+    return getDatabaseConnection(process.env.TEST_DATABASE_URL)
   })
   beforeEach(async () => {
     const entities = getConnection().entityMetadatas
-    // eslint-disable-next-line no-restricted-syntax
     for (const entity of entities) {
       const repository = getConnection().getRepository(entity.name)
       await repository.query(`TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`)
@@ -28,29 +30,23 @@ describe('StatusResolver', () => {
   afterAll(() => getConnection().close())
 
   describe('query the language of users: myLanguages', () => {
-    const GET_LANGUAGE = `
-    query Query($userId: Int!) {
-      myLanguages(userId: $userId) {
-        id
-        rating
-        language {
-          name
-        }
-      }
-    }
-    `
     describe('when there are no languages associated to the user in database', () => {
       it('returns empty array', async () => {
         const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
 
-        const result = await server.executeOperation({
-          query: GET_LANGUAGE,
-          variables: {
-            userId: userTest.id,
-          },
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            myLanguages(userId: ${userTest.id}) {
+              id
+              rating
+              language {
+                name
+              }
+          }
+        }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.myLanguages).toEqual([])
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.myLanguages).toMatchInlineSnapshot(`Array []`)
       })
     })
     describe('when there are languages associated to the user in database', () => {
@@ -63,14 +59,19 @@ describe('StatusResolver', () => {
         await userLanguageGenerator(userTest, languageJS, 4)
         await userLanguageGenerator(userTest, languageTS, 3)
 
-        const result = await server.executeOperation({
-          query: GET_LANGUAGE,
-          variables: {
-            userId: userTest.id,
-          },
+        const result = await testClient.post('/graphql').send({
+          query: `{
+            myLanguages(userId: ${userTest.id}) {
+              id
+              rating
+              language {
+                name
+              }
+          }
+        }`,
         })
-        expect(result.errors).toBeUndefined()
-        expect(result.data?.myLanguages).toMatchInlineSnapshot(`
+        expect(JSON.parse(result.text).errors).toBeUndefined()
+        expect(JSON.parse(result.text).data.myLanguages).toMatchInlineSnapshot(`
           Array [
             Object {
               "id": "1",
@@ -100,27 +101,22 @@ describe('StatusResolver', () => {
   })
   describe('mutation change the rating of a language', () => {
     it('update an existing language to change the rating', async () => {
-      const UPDATE_LANGUAGE = `
-      mutation Mutation($userLanguageId: Int!, $rating: Float!) {
-        updateRatingLanguage(userLanguageId: $userLanguageId, rating: $rating) {
-          rating
-        }
-      }`
-
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const languagePHP = await languageGenerator('PHP')
       const userLanguage = await userLanguageGenerator(userTest, languagePHP, 5)
 
-      const result = await server.executeOperation({
-        query: UPDATE_LANGUAGE,
-        variables: {
-          userLanguageId: userLanguage.id,
-          rating: 10,
-        },
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          updateRatingLanguage(
+            userLanguageId: ${userLanguage.id},
+            rating: 10,
+        ) {
+          rating
+        }
+      }`,
       })
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.updateRatingLanguage).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.updateRatingLanguage).toMatchInlineSnapshot(`
         Object {
           "rating": 10,
         }
@@ -129,27 +125,22 @@ describe('StatusResolver', () => {
   })
   describe('mutation add language to user', () => {
     it('can add a language associated to a user', async () => {
-      const CREATE_LANGUAGE = `
-      mutation Mutation($userId: Int!, $languageId: Int!, $rating: Float!) {
-        addLanguageToUser(userId: $userId, languageId: $languageId, rating: $rating) {
-          rating
-        }
-      }`
-
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const languagePHP = await languageGenerator('PHP')
 
-      const result = await server.executeOperation({
-        query: CREATE_LANGUAGE,
-        variables: {
-          userId: userTest.id,
-          languageId: languagePHP.id,
-          rating: 5,
-        },
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          addLanguageToUser(
+            userId: ${userTest.id},
+            languageId: ${languagePHP.id},
+            rating: 5,
+        ) {
+          rating
+        }
+      }`,
       })
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.addLanguageToUser).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.addLanguageToUser).toMatchInlineSnapshot(`
         Object {
           "rating": 5,
         }
@@ -158,51 +149,39 @@ describe('StatusResolver', () => {
   })
   describe('mutation delete a language associated to a user', () => {
     it('can delete a language associated to a user', async () => {
-      const DELETE_LANGUAGE = `
-      mutation Mutation($userLanguageId: Int!) {
-        deleteLanguageFromUser(userLanguageId: $userLanguageId) {
-          rating
-        }
-      }`
-
-      const GET_LANGUAGE = `
-      query Query($userId: Int!) {
-        myLanguages(userId: $userId) {
-          id
-          rating
-          language {
-            name
-          }
-        }
-      }
-      `
-
       const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
       const languagePHP = await languageGenerator('PHP')
       const userLanguage = await userLanguageGenerator(userTest, languagePHP, 5)
 
-      const result = await server.executeOperation({
-        query: DELETE_LANGUAGE,
-        variables: {
-          userLanguageId: userLanguage.id,
-        },
+      const result = await testClient.post('/graphql').send({
+        query: `mutation {
+          deleteLanguageFromUser(
+            userLanguageId: ${userLanguage.id},
+        ) {
+          rating
+        }
+      }`,
       })
-
-      expect(result.errors).toBeUndefined()
-      expect(result.data?.deleteLanguageFromUser).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.deleteLanguageFromUser).toMatchInlineSnapshot(`
         Object {
           "rating": 5,
         }
       `)
 
-      const resultFetch = await server.executeOperation({
-        query: GET_LANGUAGE,
-        variables: {
-          userId: userTest.id,
-        },
+      const resultFetch = await testClient.post('/graphql').send({
+        query: `{
+          myLanguages(userId: ${userTest.id}) {
+            id
+            rating
+            language {
+              name
+            }
+        }
+      }`,
       })
-      expect(resultFetch.errors).toBeUndefined()
-      expect(resultFetch.data?.myLanguages).toEqual([])
+      expect(JSON.parse(resultFetch.text).errors).toBeUndefined()
+      expect(JSON.parse(resultFetch.text).data.myLanguages).toMatchInlineSnapshot(`Array []`)
     })
   })
 })
