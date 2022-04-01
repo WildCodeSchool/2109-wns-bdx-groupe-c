@@ -14,9 +14,9 @@ export default function UserDashboardCardTaskFrst () {
 
     return (
       <TouchableOpacity
-      onPress={() => {navigation.navigate('UserTasksDoing', {})}}
-      activeOpacity={.8}
-    >
+        onPress={() => {navigation.navigate('UserTasksDoing', {statusName: 'In Progress'})}}
+        activeOpacity={.8}
+      >
       <View style={COMPONENTS.homeCard}>
           <View style={[COMPONENTS.homeCardTopColor, COMPONENTS.homeCardTopColorDoing]}></View>
           <View style={COMPONENTS.homeCardTop}>

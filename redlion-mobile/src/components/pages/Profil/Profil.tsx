@@ -14,21 +14,14 @@ const styles = StyleSheet.create({
         backgroundColor: VARIABLES.clrBgDark,
     },
     profilNavigationButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: VARIABLES.windowWidth - 20,
-        height: 100,
         marginVertical: 10,
         borderWidth: 1,
         borderColor: VARIABLES.clrTag4,
         borderRadius: 18,
     },
     profilNavigationButtonContent: {
-        justifyContent: 'center',
-        alignItems: 'center',
         width: VARIABLES.windowWidth - 20,
-        height: '100%',
+        height: 80,
     },
     profilNavigationIcon: {
         fontSize: 30,

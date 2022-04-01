@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   },
   width: {
     width: VARIABLES.windowWidth - 20,
+    marginBottom: 15,
   },
   rowBlock: {
     display: 'flex',
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
 
 export default function Project (route: any) {
 
-  const { projectId } = route.route.params;
+  const { projectId, projectName, createdBy} = route.route.params;
 
   const GET_PROJECT = gql`
     query Project($projectId: Float!) {
@@ -119,7 +120,6 @@ export default function Project (route: any) {
 
   const [menuTask, setMenuTask] = React.useState(false);
 
-
   return (
     <ScrollView>
       {loading ? <ActivityIndicator /> : null}
@@ -127,65 +127,80 @@ export default function Project (route: any) {
           <View style={styles.project}>
 
               {/* --- INFORMATIONS --- */}
-            <View style={[styles.columnBlock, styles.width, styles.informations]}>
-              <View style={[styles.rowBlock, {padding: 0}]}>
-                <Ionicons name={'folder-open-outline'} color={VARIABLES.clrTag2} size={20} />
-                <Text style={[styles.projectTitle, {marginLeft: 10, color: VARIABLES.clrTag2}]}>Informations</Text>
-              </View>
+              <TouchableOpacity
+                    onPress={() => navigation.navigate('ProjectInformationsUpdate', {projectId: projectId, projectName: projectName})}
+                    activeOpacity={.8}
+              >
+              <View style={[styles.columnBlock, styles.width, styles.informations]}>
+                <View style={[styles.rowBlock, {padding: 0}]}>
+                  <Ionicons name={'folder-open-outline'} color={VARIABLES.clrTag2} size={20} />
+                  <Text style={[styles.projectTitle, {marginLeft: 10, color: VARIABLES.clrTag2}]}>Informations</Text>
+                </View>
 
-              <View style={[styles.columnBlock, styles.width, {padding: 0}]}>
-                <Text style={styles.projectTitle}>{data.project.shortText}</Text>
-              </View>
-              
-              <View style={[styles.columnBlock, styles.width, {padding: 0}]}>
-                <Text style={styles.projectTitle}>{data.project.description}</Text>
-              </View>
-              
-              <View style={[styles.columnBlock, styles.width, {padding: 0}]}>
-                <Text style={styles.projectTitle}>Time spent : {data.project.initialTimeSpent}</Text>
-              </View>
+                <View style={[styles.columnBlock, {padding: 0}]}>
+                  <Text style={styles.projectTitle}>{data.project.shortText}</Text>
+                </View>
+                
+                <View style={[styles.columnBlock, {padding: 0}]}>
+                  <Text style={styles.projectTitle}>{data.project.description}</Text>
+                </View>
+                
+                <View style={[styles.columnBlock, {padding: 0}]}>
+                  <Text style={styles.projectTitle}>Time spent : {data.project.initialTimeSpent}</Text>
+                </View>
 
-              <View style={[styles.columnBlock, styles.width, {padding: 0}]}>
-                <Text style={styles.projectTitle}>Progression : 50%</Text>
-                <ProgressBar progress={0.5} color={VARIABLES.clrThrd} style={[COMPONENTS.projectCardProgressBar, {width:'90%'}]} />
+                <View style={[styles.columnBlock, {padding: 0}]}>
+                  <Text style={styles.projectTitle}>Progression : 50%</Text>
+                  <ProgressBar progress={0.5} color={VARIABLES.clrThrd} style={[COMPONENTS.projectCardProgressBar, {width:'90%'}]} />
+                </View>
               </View>
-            </View>
+            </TouchableOpacity> 
 
             {/* --- USERS --- */}
-            <View style={[styles.columnBlock, styles.width, styles.users]}>
-              <View style={[styles.rowBlock, {padding: 0}]}>
-                <Ionicons name={'folder-open-outline'} color={VARIABLES.clrTag1} size={20} />
-                <Text style={[styles.projectTitle, {marginLeft: 10, color: VARIABLES.clrTag1}]}>Users</Text>
+            <TouchableOpacity
+              onPress={() => {navigation.navigate('ProjectUsersUpdate', {projectId: projectId, projectName: projectName, })}}
+              activeOpacity={.8}
+            >
+              <View style={[styles.columnBlock, styles.width, styles.users]}>
+                <View style={[styles.rowBlock, {padding: 0}]}>
+                  <Ionicons name={'folder-open-outline'} color={VARIABLES.clrTag1} size={20} />
+                  <Text style={[styles.projectTitle, {marginLeft: 10, color: VARIABLES.clrTag1}]}>Users</Text>
+                </View>
+                <Text style={[styles.projectTitle, {padding: 0}]}>
+                  Administrator : {data.project.createdBy.firstName} {data.project.createdBy.lastName}
+                </Text> 
               </View>
-              <Text style={[styles.projectTitle, {padding: 0}]}>
-                Created by : {data.project.createdBy.firstName} {data.project.createdBy.lastName}
-              </Text> 
-            </View>
+            </TouchableOpacity> 
 
             {/* --- LANGUAGES --- */}
-            <View style={[styles.columnBlock, styles.width, styles.languages]}>
-              <View style={[styles.rowBlock, {padding: 0}]}>
-                <Ionicons name={'folder-open-outline'} color={VARIABLES.clrTag3} size={20} />
-                <Text style={[styles.projectTitle, {marginLeft: 10, color: VARIABLES.clrTag3}]}>Languages</Text>
+            <TouchableOpacity
+              onPress={() => {navigation.navigate('ProjectLanguagesUpdate', {projectId: projectId, projectName: projectName, createdBy: createdBy})}}
+              activeOpacity={.8}
+            >
+              <View style={[styles.columnBlock, styles.width, styles.languages]}>
+                <View style={[styles.rowBlock, {padding: 0}]}>
+                  <Ionicons name={'folder-open-outline'} color={VARIABLES.clrTag3} size={20} />
+                  <Text style={[styles.projectTitle, {marginLeft: 10, color: VARIABLES.clrTag3}]}>Languages</Text>
+                </View>
+                <View style={[styles.rowBlock, {padding:0}]}>
+                  <Text style={styles.projectTitle}>{data.project.languages.length}</Text>
+                  <Text style={styles.projectTitle}> languages</Text>
+                </View>
+                <FlatList
+                  data = {data.project.languages.slice(0,20)}
+                  keyExtractor={(language) => language.id}
+                  contentContainerStyle={styles.languagesList}
+                  scrollEnabled={true}
+                  horizontal={true}
+                  renderItem={(language) => {
+                    return (
+                      <>
+                        <Text style={styles.language}>{language.item.name}</Text>
+                      </> 
+                    )}
+                  }/>
               </View>
-              <View style={[styles.rowBlock, {padding:0}]}>
-                <Text style={styles.projectTitle}>Count : </Text>
-                <Text style={styles.projectTitle}>{data.project.languages.length}</Text>
-              </View>
-              <FlatList
-                data = {data.project.languages.slice(0,20)}
-                keyExtractor={(language) => language.id}
-                contentContainerStyle={styles.languagesList}
-                scrollEnabled={true}
-                horizontal={true}
-                renderItem={(language) => {
-                  return (
-                    <>
-                      <Text style={styles.language}>{language.item.name}</Text>
-                    </> 
-                  )}
-                }/>
-            </View>
+            </TouchableOpacity> 
 
             {/* --- TASKS --- */}
             <View style={[styles.columnBlock, styles.width, styles.tasks]}>
@@ -201,16 +216,23 @@ export default function Project (route: any) {
                   anchor={<Appbar.Action icon={'dots-horizontal'} color={VARIABLES.clrTag4} style={{margin: 0}} onPress={() => {setMenuTask(!menuTask)}} />}>
                   <Menu.Item
                     onPress={() => {
-                      navigation.navigate('Project', {screen: 'ProjectTasks', params: {projectId: data.project.id, name: data.project.name}})
+                      navigation.navigate('ProjectTasks', {projectId: data.project.id, projectName: data.project.name});
+                      setMenuTask(!menuTask);
                     }}
                     title="Tout voir"
                     titleStyle={[COMPONENTS.menuTitle]} />
                   <Divider />
-                  <Menu.Item onPress={() => {}} title="Créer une tâche" titleStyle={[COMPONENTS.menuTitle]} />
+                  <Menu.Item
+                    onPress={() => {
+                      navigation.navigate('ProjectTaskCreate', {projectName: data.project.name});
+                      setMenuTask(!menuTask);
+                    }}
+                    title="Créer une tâche"
+                    titleStyle={[COMPONENTS.menuTitle]} />
                 </Menu>
               </View>
               <View style={[styles.rowBlock, {padding: 0}]}>
-                <Text style={styles.projectTitle}>Count : {data.project.tasks.length}</Text>
+                <Text style={styles.projectTitle}>{data.project.tasks.length} tasks</Text>
               </View>
               <FlatList
                 data = {data.project.tasks.slice(0,20)}
@@ -221,7 +243,7 @@ export default function Project (route: any) {
                 renderItem={(task) => {
                   return (
                     <TouchableOpacity
-                    onPress={() => {console.log(true)}}
+                    onPress={() => navigation.navigate('ProjectTask', {taskId: task.item.id, projectName: route.route.params.projectName})}
                     activeOpacity={.8}
                   >
                       <Text style={styles.task}>{task.item.subject}</Text>

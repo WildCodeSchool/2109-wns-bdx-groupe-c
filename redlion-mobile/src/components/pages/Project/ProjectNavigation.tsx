@@ -5,13 +5,24 @@ import VARIABLES from '../../../../assets/styles/_variables';
 
 import ProjectAppbar from '../../organisms/Project/ProjectAppbar';
 import Projects from './Projects';
-import ProjectCreate from './ProjectCreate';
 import Project from './Project';
-
+import ProjectCreate from './ProjectCreate';
+import ProjectTasks from './Task/ProjectTasks';
+import ProjectTask from './Task/ProjectTask';
+import ProjectTaskCreate from './Task/ProjectTaskCreate';
+import ProjectInformationsUpdate from './Information/ProjectInformationsUpdate';
+import ProjectUsersUpdate from './User/ProjectUsersUpdate';
+import ProjectLanguagesUpdate from './Language/ProjectLanguagesUpdate';
 
 export default function ProjectNavigation() {
 
     const Stack = createStackNavigator();
+
+    const forFade = ({ current }) => ({
+        cardStyle: {
+            opacity: current.progress,
+        },
+    });
 
     return (
         <Stack.Navigator
@@ -27,9 +38,15 @@ export default function ProjectNavigation() {
             header: (props) => <ProjectAppbar {...props} />,
         })}
     >
-      <Stack.Screen name="Projects" component={Projects} options={{headerTitle: 'Projects'}} />
-      <Stack.Screen name="Project" component={Project} options={{headerTitle: 'Project : #'}} />
-      <Stack.Screen name="ProjectCreate" component={ProjectCreate} options={{headerTitle: 'Project - Create'}} />
+      <Stack.Screen name="Projects" component={Projects} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="Project" component={Project} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectCreate" component={ProjectCreate} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectInformationsUpdate" component={ProjectInformationsUpdate} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectUsersUpdate" component={ProjectUsersUpdate} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectLanguagesUpdate" component={ProjectLanguagesUpdate} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectTasks" component={ProjectTasks} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectTask" component={ProjectTask} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectTaskCreate" component={ProjectTaskCreate} options={{cardStyleInterpolator: forFade}} />
     </Stack.Navigator>
     )
 }

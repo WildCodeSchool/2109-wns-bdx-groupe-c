@@ -14,7 +14,7 @@ export default function UserDashboardCardTaskScnd () {
 
   return (
     <TouchableOpacity
-    onPress={() => {navigation.navigate('UserTasksToDo', {})}}
+    onPress={() => {navigation.navigate('UserTasksToDo', {statusName: 'To Do'})}}
     activeOpacity={.8}
     >
       <View style={COMPONENTS.homeCard}>

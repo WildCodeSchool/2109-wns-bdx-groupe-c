@@ -26,9 +26,9 @@ export default function UserDashboardCardProject () {
           visible={projectsVisible}
           onDismiss={() => {setProjectsVisible(!projectsVisible)}}
           anchor={<Appbar.Action icon={'dots-horizontal'} color={VARIABLES.clrWhite} onPress={() => {setProjectsVisible(!projectsVisible)}} />}>
-          <Menu.Item onPress={() => {navigation.navigate('Projects', {}), setProjectsVisible(!projectsVisible)} } title="Tout voir" titleStyle={COMPONENTS.menuTitle} />
+          <Menu.Item onPress={() => {navigation.navigate('ProjectNavigation', {screen: 'Projects'}), setProjectsVisible(!projectsVisible)} } title="Tout voir" titleStyle={COMPONENTS.menuTitle} />
           <Divider />
-          <Menu.Item onPress={() => {navigation.navigate('ProjectCreate'), {}, setProjectsVisible(!projectsVisible)}} title="Créer un projet" titleStyle={COMPONENTS.menuTitle} />
+          <Menu.Item onPress={() => {navigation.navigate('ProjectNavigation', {screen: 'ProjectCreate'}), {}, setProjectsVisible(!projectsVisible)}} title="Créer un projet" titleStyle={COMPONENTS.menuTitle} />
         </Menu>
       </View>
     </View>
