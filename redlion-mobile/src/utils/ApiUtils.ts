@@ -38,19 +38,25 @@ mutation LogOut {
 // insider my login handler
 class ApiUtils {
 
-  static async signIn (email: string, password: string) : Promise<void> {
+  static async signIn (email: string, password: string) : Promise<Boolean> {
     console.log('je rentre dans le signIn')
-    customAxios.post(API_URL, {
+    return customAxios.post(API_URL, {
       query: print(SIGN_IN),
       variables: {
         email: email,
         password: password,
       },
     }).then((response) => {
-      console.log('RESULTAT DE LA MUTATION DE LOGIN', response.data.signIn)
-      this.myProfile()
+      console.log('RESULTAT DE LA MUTATION DE LOGIN', response.data)
+      if (response.data === null) {
+        return false
+      } else {
+        return true
+      }
+      // this.myProfile()
     }).catch((error) => {
       console.log('ERREUR DE LA MUTATION DE LOGIN', error.message)
+      return false;
     });
   }
 
@@ -64,6 +70,7 @@ class ApiUtils {
       console.log('ERREUR DE LA MUTATION SUR MON PROFIL', error.message)
     });
   }
+
 }
 
 export default ApiUtils;

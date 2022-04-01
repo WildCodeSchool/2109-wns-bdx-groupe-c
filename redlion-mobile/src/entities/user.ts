@@ -25,3 +25,8 @@ export interface UserLanguage {
   user: User
   language: Language
 }
+
+export interface SignIn {
+  id: number
+  email: string
+}
