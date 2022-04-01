@@ -8,10 +8,10 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 
+import LogIn from '../../pages/Login/LogIn';
 import UserNavigation from '../../pages/User/UserNavigation';
 import ProjectNavigation from '../../pages/Project/ProjectNavigation';
 import ProfilNavigation from '../../pages/Profil/ProfilNavigation';
-import { DarkTheme } from 'react-native-paper';
 
 const client = new ApolloClient({
     uri: API_URL,
@@ -32,7 +32,7 @@ export default function Navigation() {
     return (
         <View style={styles.navigation}>
             <ApolloProvider client={client}>
-                <NavigationContainer theme={DarkTheme}>
+                <NavigationContainer>
                     <Tab.Navigator
                         screenOptions={({ route }) => ({
                             headerShown: false,
@@ -59,6 +59,7 @@ export default function Navigation() {
                         })}
                     >
                         <Tab.Group>
+                            <Tab.Screen name="LogIn" component={LogIn} options={{tabBarItemStyle: {display: 'none'}, tabBarStyle: {display: 'none'}}} />
                             <Tab.Screen name="UserNavigation" component={UserNavigation} />
                             <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} />
                             <Tab.Screen name="ProfilNavigation" component={ProfilNavigation} />
