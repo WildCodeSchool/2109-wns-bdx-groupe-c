@@ -7,11 +7,7 @@ import VARIABLES from './assets/styles/_variables';
 
 import Navigation from './src/components/organisms/All/Navigation';
 
-import ApiUtils from './src/utils/ApiUtils';
-
 const App = () => {
-
-  ApiUtils.signIn('alexis@mail.com', 'test');
 
   return (
     <PaperProvider>

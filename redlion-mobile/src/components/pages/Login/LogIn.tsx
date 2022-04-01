@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-import * as React from 'react';
+import {useState, useCallback} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Button, TextInput, HelperText } from 'react-native-paper';
+import ApiUtils from '../../../utils/ApiUtils';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 
@@ -60,7 +61,20 @@ export default function LogIn () {
 
     const navigation = useNavigation();
 
-    const [text, setText] = React.useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(false);
+
+    const handleClick = useCallback(async () => {
+        const onLoginSuccess = await ApiUtils.signIn(email, password);
+        if (onLoginSuccess) {
+            setError(false);
+            navigation.navigate('UserNavigation');
+
+        } else {
+            setError(true);
+        }
+    }, [error, email, password]);
 
     const theme = {
         colors: {
@@ -88,10 +102,10 @@ export default function LogIn () {
                     placeholderTextColor={VARIABLES.clrThrd}
                     activeUnderlineColor={VARIABLES.clrThrd}
                     selectionColor={VARIABLES.clrThrd}
-                    label="Login"
-                    value={text}
+                    label="Email"
+                    value={email}
                     autoComplete={true}
-                    onChangeText={text => setText(text)}
+                    onChangeText={text => setEmail(text)}
                     />
                 <TextInput
                     style={[styles.input]}
@@ -101,15 +115,18 @@ export default function LogIn () {
                     activeUnderlineColor={VARIABLES.clrThrd}
                     selectionColor={VARIABLES.clrThrd}
                     label="Password"
-                    value={text}
+                    value={password}
                     autoComplete={true}
-                    onChangeText={text => setText(text)}
+                    onChangeText={text => setPassword(text)}
                 />
+                <HelperText type="error" visible={error}>
+                    Could not sign up with provided email address.
+                </HelperText>
                 <Button
                     style={styles.button}
                     contentStyle={styles.buttonContent}
                     color={VARIABLES.clrWhite}
-                    onPress={() => {navigation.navigate('UserNavigation')}}
+                    onPress={handleClick}
                 >
                     Connection
                 </Button>
