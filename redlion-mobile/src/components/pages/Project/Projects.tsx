@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 
 });
 
-export default function Projects() {
+export default function Projects(route: any) {
 
   const GET_PROJECTS = gql`
   query Projects {
@@ -45,7 +45,7 @@ export default function Projects() {
         renderItem={(project) => {
           return (
             <TouchableOpacity
-              onPress={() => navigation.navigate('Project', {projectId: project.item.id, name: project.item.name})}
+              onPress={() => navigation.navigate('Project', {projectId: project.item.id, projectName: project.item.name})}
               activeOpacity={.8}
             >
               <View style={COMPONENTS.projectCard}>

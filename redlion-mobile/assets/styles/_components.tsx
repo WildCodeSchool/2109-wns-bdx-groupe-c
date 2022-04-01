@@ -37,7 +37,7 @@ const _components = StyleSheet.create({
     },
     homeCardTopColor: {
         height: 15,
-        width: '70%',
+        width: '50%',
         borderTopLeftRadius: 18,
         borderBottomRightRadius: 18,
     },

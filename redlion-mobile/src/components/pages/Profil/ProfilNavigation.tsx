@@ -21,6 +21,12 @@ export default function ProfilNavigation() {
         }
     })
 
+    const forFade = ({ current }) => ({
+        cardStyle: {
+            opacity: current.progress,
+        },
+    });
+
     return (
         <Stack.Navigator
             initialRouteName="Profil"
@@ -39,7 +45,8 @@ export default function ProfilNavigation() {
                 component={Profil}
                 options={{
                     cardStyle: styles.profilContainer,
-                    headerTitle: 'Profil'
+                    headerTitle: 'Profil',
+                    cardStyleInterpolator: forFade,
                 }}
             />
             <Stack.Screen
@@ -47,7 +54,8 @@ export default function ProfilNavigation() {
                 component={ProfilInformations}
                 options={{
                     cardStyle: styles.profilContainer,
-                    headerTitle: 'Informations'
+                    headerTitle: 'Informations',
+                    cardStyleInterpolator: forFade,
                 }}
             />
             <Stack.Screen
@@ -55,7 +63,8 @@ export default function ProfilNavigation() {
                 component={ProfilStatistiques}
                 options={{
                     cardStyle: styles.profilContainer,
-                    headerTitle: 'Statistiques'
+                    headerTitle: 'Statistiques',
+                    cardStyleInterpolator: forFade,
                 }}
             />
             <Stack.Screen
@@ -63,7 +72,8 @@ export default function ProfilNavigation() {
                 component={ProfilSettings}
                 options={{
                     cardStyle: styles.profilContainer,
-                    headerTitle: 'Settings'
+                    headerTitle: 'Settings',
+                    cardStyleInterpolator: forFade,
             }}
             />
         </Stack.Navigator>

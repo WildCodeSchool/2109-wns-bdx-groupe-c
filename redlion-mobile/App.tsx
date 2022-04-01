@@ -9,7 +9,7 @@ import Navigation from './src/components/organisms/All/Navigation';
 
 const App = () => (
   <PaperProvider>
-    <View style={{backgroundColor: 'red', flex: 1}}>
+    <View style={{backgroundColor: VARIABLES.clrBgDark, flex: 1}}>
       <StatusBar backgroundColor={VARIABLES.clrBgDark}/>
       <Navigation></Navigation>
     </View>

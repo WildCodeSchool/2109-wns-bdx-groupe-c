@@ -11,6 +11,7 @@ import VARIABLES from '../../../../assets/styles/_variables';
 import UserNavigation from '../../pages/User/UserNavigation';
 import ProjectNavigation from '../../pages/Project/ProjectNavigation';
 import ProfilNavigation from '../../pages/Profil/ProfilNavigation';
+import { DarkTheme } from 'react-native-paper';
 
 const client = new ApolloClient({
     uri: API_URL,
@@ -31,7 +32,7 @@ export default function Navigation() {
     return (
         <View style={styles.navigation}>
             <ApolloProvider client={client}>
-                <NavigationContainer>
+                <NavigationContainer theme={DarkTheme}>
                     <Tab.Navigator
                         screenOptions={({ route }) => ({
                             headerShown: false,
