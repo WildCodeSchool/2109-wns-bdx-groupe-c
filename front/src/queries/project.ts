@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const GET_MY_PROJECTS = gql`
-  query Query($userId: Int!) {
-    myProjects(userId: $userId) {
+  query Query {
+    myProjects {
       id
       user {
         firstName

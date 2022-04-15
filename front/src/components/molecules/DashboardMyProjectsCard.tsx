@@ -55,13 +55,9 @@ const useStyles = makeStyles({
     }
 })
 
-interface Props {
-    userId: number
-  }
 
-
-const DashboardMyProjectsCard = ({ userId = 3 }: Props) => {
-    const { loading, data, error } = useQuery(GET_MY_PROJECTS, { variables: { userId } })
+const DashboardMyProjectsCard = () => {
+    const { loading, data, error } = useQuery(GET_MY_PROJECTS)
     const history = useHistory();
     const classes = useStyles()
 

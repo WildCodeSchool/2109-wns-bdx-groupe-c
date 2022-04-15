@@ -134,7 +134,7 @@ const Dashboard = ({}) => {
       </Menu>
       <Box className={classes.mainContainer}>
           <DashboardMyTasksCard projectId={1} />
-          <DashboardMyProjectsCard userId={3} />
+          <DashboardMyProjectsCard />
       </Box>
       {!myProfile && (
           <Redirect  to={{ pathname: "/" }} />
