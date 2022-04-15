@@ -1,4 +1,5 @@
-import { Arg, Args, ArgsType, Mutation, Query, Resolver, Field, Int } from 'type-graphql'
+import { Arg, Args, ArgsType, Mutation, Query, Resolver, Field, Int, Ctx } from 'type-graphql'
+import { CustomContext } from "../type";
 import Comment from '../models/Comment'
 import CommentRepository from '../repository/CommentRepository'
 
@@ -6,9 +7,6 @@ import CommentRepository from '../repository/CommentRepository'
 class CreateCommentInput {
   @Field()
   content!: string
-
-  @Field(() => Int)
-  userId!: number
 
   @Field(() => Int)
   taskId!: number
@@ -29,8 +27,11 @@ class CommentResolver {
   }
 
   @Mutation(() => Comment)
-  async createComment(@Args() { content, userId, taskId }: CreateCommentInput) {
-    return await CommentRepository.createComment(content, userId, taskId)
+  async createComment(
+    @Args() { content, taskId }: CreateCommentInput,
+    @Ctx() { user }: CustomContext
+  ) {
+    return await CommentRepository.createComment(content, user, taskId)
   }
 
   @Mutation(() => Comment)

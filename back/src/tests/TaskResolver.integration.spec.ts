@@ -1,8 +1,11 @@
-import createTestClient from 'supertest'
-import { getExpressServer } from '../express-server'
 import { getConnection } from 'typeorm'
-import getDatabaseConnection from '../database-connection'
+import createTestClient from 'supertest'
 
+import { getExpressServer } from '../express-server'
+import getDatabaseConnection from '../database-connection'
+import AppUserSessionRepository from '../repository/UserSessionRepository'
+
+import { roleGenerator } from '../_mock_/roleGenerator'
 import { projectGenerator } from '../_mock_/projectGenerator'
 import { statusGenerator } from '../_mock_/statusGenerator'
 import { taskGenerator } from '../_mock_/taskGenerator'
@@ -312,9 +315,11 @@ describe('TaskResolverResolver', () => {
         `)
       })
     })
-    describe('query the task related to a user : mytasks', () => {
+    describe('query the task related to a user : myTasks', () => {
       it('query the tasks related to a specific user', async () => {
-        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+        const role1 = await roleGenerator('test1', 'test1')
+        const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+        const session = await AppUserSessionRepository.createSession(userTest)
         const statusToDo = await statusGenerator('To Do')
         const projectTest = await projectGenerator('TestProject', 'Test', 'Test', 0)
         await taskGenerator(
@@ -348,9 +353,12 @@ describe('TaskResolverResolver', () => {
           userTest
         )
 
-        const result = await testClient.post('/graphql').send({
-          query: `{
-            myTasks(userId: ${userTest.id}) {
+        const result = await testClient
+          .post('/graphql')
+          .set('Cookie', `sessionId=${session.id}`)
+          .send({
+            query: `{
+            myTasks {
               subject
               shortText
               description
@@ -367,7 +375,7 @@ describe('TaskResolverResolver', () => {
               }
           }
         }`,
-        })
+          })
         expect(JSON.parse(result.text).errors).toBeUndefined()
         expect(JSON.parse(result.text).data.myTasks).toMatchInlineSnapshot(`
           Array [
@@ -419,7 +427,9 @@ describe('TaskResolverResolver', () => {
     })
     describe('query the task related to a user in toDo', () => {
       it('query the tasks related to a specific user', async () => {
-        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+        const role1 = await roleGenerator('test1', 'test1')
+        const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+        const session = await AppUserSessionRepository.createSession(userTest)
         const statusToDo = await statusGenerator('To Do')
         const statusTest = await statusGenerator('test')
         const projectTest = await projectGenerator('TestProject', 'Test', 'Test', 0)
@@ -454,9 +464,12 @@ describe('TaskResolverResolver', () => {
           userTest
         )
 
-        const result = await testClient.post('/graphql').send({
-          query: `{
-            myTasks(userId: ${userTest.id}, statusName: "To Do") {
+        const result = await testClient
+          .post('/graphql')
+          .set('Cookie', `sessionId=${session.id}`)
+          .send({
+            query: `{
+            myTasks(statusName: "To Do") {
               subject
               shortText
               description
@@ -465,7 +478,7 @@ describe('TaskResolverResolver', () => {
               }
           }
         }`,
-        })
+          })
         expect(JSON.parse(result.text).errors).toBeUndefined()
         expect(JSON.parse(result.text).data.myTasks).toMatchInlineSnapshot(`
           Array [

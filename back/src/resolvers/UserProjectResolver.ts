@@ -1,18 +1,12 @@
-import { Args, ArgsType, Field, Query, Resolver, Int, Mutation } from 'type-graphql'
+import { Args, ArgsType, Field, Query, Resolver, Int, Mutation, Ctx } from 'type-graphql'
+import { CustomContext } from "../type";
 
 import UserProject from '../models/UserProject'
-import User from '../models/AppUser';
-import Project from '../models/Project';
-import ProjectRole from '../models/ProjectRole';
-import ObjectHelpers from '../helpers/ObjectHelper';
 
 import UserProjectRepository from '../repository/UserProjectRepository';
 
 @ArgsType()
 class MyProjectsInput {
-  @Field(() => Int)
-  userId!: number
-
   @Field(() => String, { nullable: true })
   statusName?: string
 }
@@ -48,11 +42,14 @@ class deleteUserProjectInput {
 class UserProjectResolver {
 
   @Query(() => [UserProject])
-  async myProjects(@Args() { userId, statusName }: MyProjectsInput) {
+  async myProjects(
+    @Args() { statusName }: MyProjectsInput,
+    @Ctx() { user }: CustomContext
+    ) {
     if (statusName) {
-      return UserProjectRepository.findByUserIdAndStatusName(userId, statusName);
+      return UserProjectRepository.findByUserIdAndStatusName(user, statusName);
     } else {
-      return UserProjectRepository.findAll(userId);
+      return UserProjectRepository.findAll(user);
     }
   }
 

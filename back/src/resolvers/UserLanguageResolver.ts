@@ -1,15 +1,8 @@
-import { Args, ArgsType, Field, Query, Resolver, Int, Mutation } from 'type-graphql'
-
-import User from '../models/AppUser';
-import Language from '../models/Language';
+import { Args, ArgsType, Field, Query, Resolver, Int, Mutation, Ctx } from 'type-graphql'
+import { CustomContext } from "../type";
 import UserLanguage from '../models/UserLanguage';
 
 import UserLanguageRepository from '../repository/UserLanguageRepository';
-@ArgsType()
-class myLanguagesInput {
-  @Field(() => Int)
-  userId!: number
-}
 
 @ArgsType()
 class updateLanguageInput {
@@ -22,9 +15,6 @@ class updateLanguageInput {
 
 @ArgsType()
 class addLanguageToUserInput {
-  @Field(() => Int)
-  userId!: number
-
   @Field(() => Int)
   languageId!: number
 
@@ -44,8 +34,8 @@ class deleteLanguageFromUserInput {
 class UserLanguageResolver {
 
   @Query(() => [UserLanguage])
-  async myLanguages(@Args() { userId }: myLanguagesInput) {
-    return UserLanguageRepository.findAll(userId);
+  async myLanguages(@Ctx() { user }: CustomContext) {
+    return UserLanguageRepository.findAll(user);
   }
 
   @Mutation(() => UserLanguage)
@@ -55,8 +45,11 @@ class UserLanguageResolver {
   }
 
   @Mutation(() => UserLanguage)
-  async addLanguageToUser(@Args() { userId, rating, languageId }: addLanguageToUserInput) {
-    return UserLanguageRepository.addLanguageToUser(userId, rating, languageId);
+  async addLanguageToMe(
+    @Args() { rating, languageId }: addLanguageToUserInput,
+    @Ctx() { user }: CustomContext
+  ) {
+    return UserLanguageRepository.addLanguageToUser(user, rating, languageId);
   }
 
   @Mutation(() => UserLanguage)

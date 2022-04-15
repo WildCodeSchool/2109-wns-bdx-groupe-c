@@ -1,6 +1,8 @@
-import createTestClient from 'supertest'
-import { getExpressServer } from '../express-server'
 import { getConnection } from 'typeorm'
+import createTestClient from 'supertest'
+
+import AppUserSessionRepository from '../repository/UserSessionRepository'
+import { getExpressServer } from '../express-server'
 import getDatabaseConnection from '../database-connection'
 
 import { projectGenerator } from '../_mock_/projectGenerator'
@@ -8,6 +10,7 @@ import { userGenerator } from '../_mock_/userGenerator'
 import { userProjectGenerator } from '../_mock_/userProjectGenerator'
 import { projectRoleGenerator } from '../_mock_/projectRoleGenerator'
 import { statusGenerator } from '../_mock_/statusGenerator'
+import { roleGenerator } from '../_mock_/roleGenerator'
 
 describe('StatusResolver', () => {
   let testClient: createTestClient.SuperTest<createTestClient.Test>
@@ -34,11 +37,16 @@ describe('StatusResolver', () => {
   describe('query the project associated to a user : myProjects', () => {
     describe('when the user is no associated to any projects', () => {
       it('returns empty array', async () => {
-        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+        const role1 = await roleGenerator('test1', 'test1')
+        const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+        const session = await AppUserSessionRepository.createSession(userTest)
 
-        const result = await testClient.post('/graphql').send({
-          query: `{
-            myProjects(userId: ${userTest.id}) {
+        const result = await testClient
+          .post('/graphql')
+          .set('Cookie', `sessionId=${session.id}`)
+          .send({
+            query: `{
+            myProjects {
               project {
                 name
               }
@@ -47,14 +55,16 @@ describe('StatusResolver', () => {
               }
           }
         }`,
-        })
+          })
         expect(JSON.parse(result.text).errors).toBeUndefined()
         expect(JSON.parse(result.text).data.myProjects).toMatchInlineSnapshot(`Array []`)
       })
     })
     describe('when the user is associated to projects', () => {
       it('returns all projects', async () => {
-        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+        const role1 = await roleGenerator('test1', 'test1')
+        const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+        const session = await AppUserSessionRepository.createSession(userTest)
         const projectTest1 = await projectGenerator('TestProject', 'Test', 'Test', 0)
         const projectTest2 = await projectGenerator('TestProject', 'Test', 'Test', 0)
         const projectTest3 = await projectGenerator('TestProject', 'Test', 'Test', 0)
@@ -63,9 +73,12 @@ describe('StatusResolver', () => {
         await userProjectGenerator(userTest, projectTest2, developpeur)
         await userProjectGenerator(userTest, projectTest3, developpeur)
 
-        const result = await testClient.post('/graphql').send({
-          query: `{
-            myProjects(userId: ${userTest.id}) {
+        const result = await testClient
+          .post('/graphql')
+          .set('Cookie', `sessionId=${session.id}`)
+          .send({
+            query: `{
+            myProjects {
               project {
                 name
               }
@@ -74,7 +87,7 @@ describe('StatusResolver', () => {
               }
           }
         }`,
-        })
+          })
         expect(JSON.parse(result.text).errors).toBeUndefined()
         expect(JSON.parse(result.text).data.myProjects).toMatchInlineSnapshot(`
           Array [
@@ -108,7 +121,9 @@ describe('StatusResolver', () => {
     })
     describe('Query projects in TO DO associated to a user', () => {
       it('returns projects in To do', async () => {
-        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+        const role1 = await roleGenerator('test1', 'test1')
+        const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+        const session = await AppUserSessionRepository.createSession(userTest)
         const statusToDo = await statusGenerator('To Do')
         const statusTest = await statusGenerator('Test')
         const projectTest1 = await projectGenerator(
@@ -143,9 +158,12 @@ describe('StatusResolver', () => {
         await userProjectGenerator(userTest, projectTest2, developpeur)
         await userProjectGenerator(userTest, projectTest3, developpeur)
 
-        const result = await testClient.post('/graphql').send({
-          query: `{
-            myProjects(userId: ${userTest.id}, statusName: "To Do") {
+        const result = await testClient
+          .post('/graphql')
+          .set('Cookie', `sessionId=${session.id}`)
+          .send({
+            query: `{
+            myProjects(statusName: "To Do") {
               project {
                 name
                 status {
@@ -154,7 +172,7 @@ describe('StatusResolver', () => {
             }
           }
         }`,
-        })
+          })
         expect(JSON.parse(result.text).errors).toBeUndefined()
         expect(JSON.parse(result.text).data.myProjects).toMatchInlineSnapshot(`
           Array [

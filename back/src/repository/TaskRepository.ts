@@ -1,4 +1,5 @@
 import Task from '../models/Task'
+import User from '../models/AppUser';
 import Project from '../models/Project'
 import Status from '../models/Status'
 import ObjectHelpers from '../helpers/ObjectHelper';
@@ -25,22 +26,28 @@ class TaskRepository extends Task {
     })
   }
 
-  static async findByUserIdAndStatus(userId: number, statusName: string) {
+  static async findByUserIdAndStatus(user: User | null, statusName: string) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     return await Task.find({
       relations: ['assignee', 'project', 'status','comments'],
       where: {
-        assignee: { id: userId },
+        assignee: user,
         status: { name: statusName },
       },
       order: {id: 'ASC'}
     })
   }
 
-  static async findByUserId(userId: number) {
+  static async findByUserId(user: User | null) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     return await Task.find({
       relations: ['assignee', 'project', 'status','comments'],
       where: {
-        assignee: { id: userId },
+        assignee: user,
       },
       order: {id: 'ASC'}
     })

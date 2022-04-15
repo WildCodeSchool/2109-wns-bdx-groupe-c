@@ -1,11 +1,15 @@
-import createTestClient from 'supertest'
 import { getConnection } from 'typeorm'
+import createTestClient from 'supertest'
+
+import AppUserSessionRepository from '../repository/UserSessionRepository'
+import { getExpressServer } from '../express-server'
 import getDatabaseConnection from '../database-connection'
-import { userGenerator } from '../_mock_/userGenerator'
+
 import { projectGenerator } from '../_mock_/projectGenerator'
 import { taskGenerator } from '../_mock_/taskGenerator'
 import { commentGenerator } from '../_mock_/commentGenerator'
-import { getExpressServer } from '../express-server'
+import { roleGenerator } from '../_mock_/roleGenerator'
+import { userGenerator } from '../_mock_/userGenerator'
 
 describe('CommentResolver', () => {
   let testClient: createTestClient.SuperTest<createTestClient.Test>
@@ -117,7 +121,9 @@ describe('CommentResolver', () => {
   })
   describe('mutation create comment', () => {
     it('create a comment and return the new comment', async () => {
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const role1 = await roleGenerator('test1', 'test1')
+      const user1 = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+      const session = await AppUserSessionRepository.createSession(user1)
       const projectTest = await projectGenerator('Test', 'Test', 'Test', 0)
       const taskTest = await taskGenerator(
         'Task Text',
@@ -129,11 +135,13 @@ describe('CommentResolver', () => {
       )
 
       const contentTest = 'test content'
-      const result = await testClient.post('/graphql').send({
-        query: `mutation {
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${session.id}`)
+        .send({
+          query: `mutation {
           createComment(
               content: "${contentTest}",
-              userId: ${userTest.id},
               taskId: ${taskTest.id},
           ){
               id
@@ -146,7 +154,7 @@ describe('CommentResolver', () => {
               }
             }
           }`,
-      })
+        })
       expect(JSON.parse(result.text).errors).toBeUndefined()
       expect(JSON.parse(result.text).data.createComment).toMatchInlineSnapshot(`
         Object {
@@ -156,7 +164,7 @@ describe('CommentResolver', () => {
             "subject": "Task Text",
           },
           "user": Object {
-            "firstName": "Test",
+            "firstName": "test",
           },
         }
       `)

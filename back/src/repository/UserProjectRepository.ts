@@ -6,8 +6,10 @@ import ProjectRole from '../models/ProjectRole';
 import Status from '../models/Status';
 
 class UserProjectRepository extends UserProject {
-  static async findAll(userId: number) {
-    const user = await User.findOne({ id: userId })
+  static async findAll(user: User | null) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     return await UserProject.find({
       relations: ['user', 'project', 'projectRole', 'project.languages', 'project.tasks', 'project.tasks.assignee', 'project.status'],
       where: {
@@ -16,8 +18,10 @@ class UserProjectRepository extends UserProject {
     })
   }
 
-  static async findByUserIdAndStatusName(userId: number, statusName: string) {
-    const user = await User.findOne({ id: userId })
+  static async findByUserIdAndStatusName(user: User | null, statusName: string) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     const status = await Status.findOne({ name: statusName })
     return await UserProject.find({
       relations: ['user', 'project', 'projectRole', 'project.languages', 'project.tasks', 'project.tasks.assignee', 'project.status'],
