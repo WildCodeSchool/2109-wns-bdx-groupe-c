@@ -63,9 +63,6 @@ class UpdateUserInput {
 
 @ArgsType()
 class UpdateUserInformationInput {
-  @Field(() => Int)
-  id!: number
-
   @Field({ nullable: true })
   firstName?: string
 
@@ -129,9 +126,11 @@ class UserResolver {
   }
 
   @Mutation(() => User)
-  async updateUserInformation(@Args() { id, firstName, lastName, email, password }: UpdateUserInformationInput) {
-    const user = await User.findOneOrFail( id )
-    return user.updateInformation(firstName, lastName, email, password);
+  async updateMyInformations(
+    @Args() { firstName, lastName, email, password }: UpdateUserInformationInput,
+    @Ctx() { user }: CustomContext
+  ) {
+    return UserRepository.updateMyInformations(user, firstName, lastName, email, password);
   }
 }
 

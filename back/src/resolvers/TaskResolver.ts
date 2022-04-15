@@ -1,4 +1,5 @@
-import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
+import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx } from 'type-graphql'
+import { CustomContext } from "../type";
 import Task from '../models/Task'
 import TaskRepository from '../repository/TaskRepository';
 @ArgsType()
@@ -51,9 +52,6 @@ class updateTimeSpentInput {
 
 @ArgsType()
 class MyTaskInput {
-  @Field(() => Int)
-  userId!: number
-
   @Field(() => String, { nullable: true })
   statusName?: string
 }
@@ -93,11 +91,14 @@ class TaskResolver {
   }
 
   @Query(() => [Task])
-  async myTasks(@Args() { userId, statusName }: MyTaskInput) {
+  async myTasks(
+    @Args() { statusName }: MyTaskInput,
+    @Ctx() { user }: CustomContext
+  ) {
     if (statusName) {
-      return TaskRepository.findByUserIdAndStatus(userId,statusName);
+      return TaskRepository.findByUserIdAndStatus(user,statusName);
     } else {
-      return TaskRepository.findByUserId(userId);
+      return TaskRepository.findByUserId(user);
     }
   }
 

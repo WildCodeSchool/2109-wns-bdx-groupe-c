@@ -1,4 +1,5 @@
-import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx } from 'type-graphql'
+import { CustomContext } from "../type";
 
 import ProjectRepository from '../repository/ProjectRepository'
 
@@ -18,9 +19,6 @@ class CreateProjectInput {
 
   @Field()
   initialTimeSpent!: number
-
-  @Field()
-  createdBy!: number
 }
 
 @ArgsType()
@@ -73,8 +71,11 @@ class ProjectResolver {
   }
 
   @Mutation(() => Project)
-  async createProject(@Args() { name, shortText, description, initialTimeSpent, createdBy }: CreateProjectInput) {
-    return ProjectRepository.createProject(name, shortText, description, initialTimeSpent, createdBy);
+  async createProject(
+    @Args() { name, shortText, description, initialTimeSpent }: CreateProjectInput,
+    @Ctx() { user }: CustomContext
+  ) {
+    return ProjectRepository.createProject(name, shortText, description, initialTimeSpent, user);
   }
 
   @Mutation(() => Project)

@@ -8,9 +8,11 @@ class CommentRepository extends Comment {
     return await Comment.find({ relations: ['user', 'task'], where:   { task: { id: taskId } } })
   }
 
-  static async createComment(content: string, userId: number, taskId: number) {
+  static async createComment(content: string, user: User | null, taskId: number) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     const comment = new Comment()
-    const user = await User.findOneOrFail({ id: userId })
     const task = await Task.findOneOrFail({ id: taskId })
 
     comment.content = content

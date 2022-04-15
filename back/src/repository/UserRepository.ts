@@ -74,6 +74,19 @@ class UserRepository extends User {
     return user.save();
   }
 
+  static async updateMyInformations(
+    user: User | null,
+    firstName: string | undefined,
+    lastName: string | undefined,
+    email: string | undefined,
+    password: string | undefined
+  ) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
+    return user.updateInformation(firstName, lastName, email, password);
+  }
+
 }
 
 export default UserRepository

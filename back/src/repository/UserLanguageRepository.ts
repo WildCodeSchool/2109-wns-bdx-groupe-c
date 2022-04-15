@@ -4,8 +4,10 @@ import Language from '../models/Language';
 import ObjectHelpers from '../helpers/ObjectHelper';
 
 class UserLanguageRepository extends UserLanguage {
-  static async findAll(userId: number) {
-    const user = await User.findOneOrFail({ id: userId })
+  static async findAll(user: User | null) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     return await UserLanguage.find({
       relations: ['user', 'language'],
       where: {
@@ -14,10 +16,12 @@ class UserLanguageRepository extends UserLanguage {
     });
   }
 
-  static async addLanguageToUser(userId: number, rating: number, languageId: number) {
+  static async addLanguageToUser(user: User | null, rating: number, languageId: number) {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     const userLanguage = new UserLanguage();
     const language = await Language.findOneOrFail({ id: languageId })
-    const user = await User.findOneOrFail({ id: userId })
     userLanguage.rating = rating;
     userLanguage.language = language;
     userLanguage.user = user;

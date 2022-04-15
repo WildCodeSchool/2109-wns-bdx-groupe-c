@@ -1,11 +1,14 @@
-import createTestClient from 'supertest'
-import { getExpressServer } from '../express-server'
 import { getConnection } from 'typeorm'
+import createTestClient from 'supertest'
+
+import { getExpressServer } from '../express-server'
 import getDatabaseConnection from '../database-connection'
+import AppUserSessionRepository from '../repository/UserSessionRepository'
 
 import { projectGenerator } from '../_mock_/projectGenerator'
 import { taskGenerator } from '../_mock_/taskGenerator'
 import { userGenerator } from '../_mock_/userGenerator'
+import { roleGenerator } from '../_mock_/roleGenerator'
 import { languageGenerator } from '../_mock_/languageGenerator'
 import { statusGenerator } from '../_mock_/statusGenerator'
 
@@ -625,17 +628,21 @@ describe('ProjectResolver', () => {
   })
   describe('Mutation create a project', () => {
     it('can crate a project and return the project created', async () => {
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const role1 = await roleGenerator('test1', 'test1')
+      const user1 = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+      const session = await AppUserSessionRepository.createSession(user1)
       await statusGenerator('To Do')
 
-      const result = await testClient.post('/graphql').send({
-        query: `mutation {
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${session.id}`)
+        .send({
+          query: `mutation {
           createProject(
             name: "test name",
             shortText: "test shortText",
             description: "test description",
             initialTimeSpent: 100,
-            createdBy: ${userTest.id}
         ) {
           id
           name
@@ -650,12 +657,12 @@ describe('ProjectResolver', () => {
           }
         }
       }`,
-      })
+        })
       expect(JSON.parse(result.text).errors).toBeUndefined()
       expect(JSON.parse(result.text).data.createProject).toMatchInlineSnapshot(`
         Object {
           "createdBy": Object {
-            "firstName": "Test",
+            "firstName": "test",
           },
           "description": "test description",
           "id": "1",

@@ -1,13 +1,16 @@
-import createTestClient from 'supertest'
-import { getExpressServer } from '../express-server'
 import { getConnection } from 'typeorm'
+import createTestClient from 'supertest'
+
+import { getExpressServer } from '../express-server'
 import getDatabaseConnection from '../database-connection'
+import AppUserSessionRepository from '../repository/UserSessionRepository'
 
 import { userGenerator } from '../_mock_/userGenerator'
 import { languageGenerator } from '../_mock_/languageGenerator'
 import { userLanguageGenerator } from '../_mock_/userLanguageGenerator'
+import { roleGenerator } from '../_mock_/roleGenerator'
 
-describe('StatusResolver', () => {
+describe('UserLanguageResolver', () => {
   let testClient: createTestClient.SuperTest<createTestClient.Test>
 
   beforeAll(async () => {
@@ -32,11 +35,15 @@ describe('StatusResolver', () => {
   describe('query the language of users: myLanguages', () => {
     describe('when there are no languages associated to the user in database', () => {
       it('returns empty array', async () => {
-        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
-
-        const result = await testClient.post('/graphql').send({
-          query: `{
-            myLanguages(userId: ${userTest.id}) {
+        const role1 = await roleGenerator('test1', 'test1')
+        const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+        const session = await AppUserSessionRepository.createSession(userTest)
+        const result = await testClient
+          .post('/graphql')
+          .set('Cookie', `sessionId=${session.id}`)
+          .send({
+            query: `{
+            myLanguages {
               id
               rating
               language {
@@ -44,7 +51,7 @@ describe('StatusResolver', () => {
               }
           }
         }`,
-        })
+          })
         expect(JSON.parse(result.text).errors).toBeUndefined()
         expect(JSON.parse(result.text).data.myLanguages).toMatchInlineSnapshot(`Array []`)
       })
@@ -54,14 +61,19 @@ describe('StatusResolver', () => {
         const languagePHP = await languageGenerator('PHP')
         const languageJS = await languageGenerator('JS')
         const languageTS = await languageGenerator('TS')
-        const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+        const role1 = await roleGenerator('test1', 'test1')
+        const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+        const session = await AppUserSessionRepository.createSession(userTest)
         await userLanguageGenerator(userTest, languagePHP, 5)
         await userLanguageGenerator(userTest, languageJS, 4)
         await userLanguageGenerator(userTest, languageTS, 3)
 
-        const result = await testClient.post('/graphql').send({
-          query: `{
-            myLanguages(userId: ${userTest.id}) {
+        const result = await testClient
+          .post('/graphql')
+          .set('Cookie', `sessionId=${session.id}`)
+          .send({
+            query: `{
+            myLanguages {
               id
               rating
               language {
@@ -69,7 +81,7 @@ describe('StatusResolver', () => {
               }
           }
         }`,
-        })
+          })
         expect(JSON.parse(result.text).errors).toBeUndefined()
         expect(JSON.parse(result.text).data.myLanguages).toMatchInlineSnapshot(`
           Array [
@@ -123,24 +135,28 @@ describe('StatusResolver', () => {
       `)
     })
   })
-  describe('mutation add language to user', () => {
+  describe('mutation add language to user : me', () => {
     it('can add a language associated to a user', async () => {
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const role1 = await roleGenerator('test1', 'test1')
+      const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+      const session = await AppUserSessionRepository.createSession(userTest)
       const languagePHP = await languageGenerator('PHP')
 
-      const result = await testClient.post('/graphql').send({
-        query: `mutation {
-          addLanguageToUser(
-            userId: ${userTest.id},
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${session.id}`)
+        .send({
+          query: `mutation {
+          addLanguageToMe(
             languageId: ${languagePHP.id},
             rating: 5,
         ) {
           rating
         }
       }`,
-      })
+        })
       expect(JSON.parse(result.text).errors).toBeUndefined()
-      expect(JSON.parse(result.text).data.addLanguageToUser).toMatchInlineSnapshot(`
+      expect(JSON.parse(result.text).data.addLanguageToMe).toMatchInlineSnapshot(`
         Object {
           "rating": 5,
         }
@@ -149,7 +165,9 @@ describe('StatusResolver', () => {
   })
   describe('mutation delete a language associated to a user', () => {
     it('can delete a language associated to a user', async () => {
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const role1 = await roleGenerator('test1', 'test1')
+      const userTest = await userGenerator('test', 'test', 'test@mail.com', 'test', role1)
+      const session = await AppUserSessionRepository.createSession(userTest)
       const languagePHP = await languageGenerator('PHP')
       const userLanguage = await userLanguageGenerator(userTest, languagePHP, 5)
 
@@ -169,9 +187,12 @@ describe('StatusResolver', () => {
         }
       `)
 
-      const resultFetch = await testClient.post('/graphql').send({
-        query: `{
-          myLanguages(userId: ${userTest.id}) {
+      const resultFetch = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${session.id}`)
+        .send({
+          query: `{
+          myLanguages {
             id
             rating
             language {
@@ -179,7 +200,7 @@ describe('StatusResolver', () => {
             }
         }
       }`,
-      })
+        })
       expect(JSON.parse(resultFetch.text).errors).toBeUndefined()
       expect(JSON.parse(resultFetch.text).data.myLanguages).toMatchInlineSnapshot(`Array []`)
     })

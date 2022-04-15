@@ -13,9 +13,13 @@ class ProjectRepository extends Project {
       return await Project.findOneOrFail({ id }, { relations: ['languages', 'createdBy', 'tasks', 'tasks.assignee', 'tasks.status', 'status'], order: {id: 'ASC'} } )
     }
 
-    static async createProject(name: string, shortText: string, description: string, initialTimeSpent: number, createdBy: number) {
+    static async createProject(name: string, shortText: string, description: string, initialTimeSpent: number, user: User | null) {
+
+      if (!user) {
+        throw new Error('User is not logged in')
+      }
+
       const project = new Project()
-      const user = await User.findOneOrFail({id: createdBy});
       const toDo = await Status.findOneOrFail({name: 'To Do'});
       project.name = name
       project.shortText = shortText
