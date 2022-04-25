@@ -6,6 +6,7 @@ import { MY_PROFILE } from '../queries/user'
 import Home from '../pages/Home'
 import Dashboard from '../pages/Dashboard'
 import Project from '../pages/Project'
+import DragList from './DragNDrop/DragList'
 
 const Routes = () => {
   const history = useHistory()
@@ -32,8 +33,9 @@ const Routes = () => {
         )}
         {!isAuthenticated && (
           <>
+            <Route exact path="/test" component={DragList} />
             <Route path="/login" component={Home} />
-            <Redirect to={{ pathname: '/login' }} />
+            {/* <Redirect to={{ pathname: '/login' }} /> */}
           </>
         )}
       </Switch>
