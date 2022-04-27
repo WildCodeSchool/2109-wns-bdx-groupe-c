@@ -1,4 +1,5 @@
 # docker-compose.yml
+# Docker-compose que l'on utilise lorsque l'on développe !
 version: "3.4"
 
 services:
@@ -11,6 +12,8 @@ services:
       - test-database
     ports:
       - 3004:3004
+    # Volumes permettant d'avoir le live-reloading ici on synchronise le dossier /back
+    # avec le dossier /app c'est ça qui permettait d'avoir les modifs en temps réel
     volumes:
       - ./back:/app
       - /app/node_modules
@@ -27,6 +30,8 @@ services:
       - database-volume:/var/lib/postgresql/data
     container_name: db_redlion
 
+
+  # Conteneur qui tourne pour les tests du back !
   test-database:
     image: postgres
     environment:
@@ -34,14 +39,22 @@ services:
     container_name: db_test_redlion
 
   front:
-    build: ./front
+    # En développement on utilise npm Start car on a un serveur de front (accessible au port 3000)
+    # En prod on utilise juste npm run build car on veut juste des fichiers statiques on ne
+    # veut pas faire tourner un serveur
+    build:
+      context: ./front
+      target: development
     ports:
       - 3000:3000
+    # Volumes permettant d'avoir le live-reloading ici on synchronise le dossier /front
+    # avec le dossier /app c'est ça qui permettait d'avoir les modifs en temps réel
     volumes:
       - ./front:/app
       - /app/node_modules
     container_name: front_redlion
 
-#volume qui n'est pas stocke dans le repertoire courant
+# Volume persisté et mis en dehors du repertoire
+# Ici l'idée est de persister la base de donnée
 volumes:
   database-volume:

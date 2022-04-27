@@ -17,6 +17,12 @@ It will launch 4 container :
 - `front_redlion`
 - `back_redlion`
 
+
+### To launch the docker-compose in production
+``` BASH
+GATEWAY_PORT=8000 docker-compose -f docker-compose.prod.yml up --build
+```
+
 ### Just to re-start the containers
 ``` BASH
 docker-compose start

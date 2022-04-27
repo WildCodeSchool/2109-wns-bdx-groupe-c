@@ -1,0 +1,16 @@
+2022/04/27 08:57:13 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2022/04/27 08:57:14 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2022/04/27 08:57:15 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2022/04/27 08:57:16 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2022/04/27 08:57:17 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2022/04/27 08:57:19 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2022/04/27 08:57:23 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2022/04/27 08:57:52 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:57:53 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:57:53 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:57:54 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:57:55 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:57:57 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:58:01 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:58:08 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
+2022/04/27 08:59:59 [error] 24#24: *1 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8000"
