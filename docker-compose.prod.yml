@@ -4,9 +4,8 @@ version: "3.4"
 
 services:
   back:
-    # build:
-    #   context: ./back
-    #   target: production
+    # On ne build pas ici, on utilise directement l'image sur Docker Hub
+    image: alexisvib/staging-server-redlion
     depends_on:
       - database
     expose:
@@ -27,9 +26,8 @@ services:
     container_name: db_redlion_production
 
   front:
-    # build:
-    #   context: ./front
-    #   target: production
+    # On ne build pas ici, on utilise directement l'image sur Docker Hub
+    image: alexisvib/staging-client-redlion
     # Il n'y a plus de serveur en front
     # On fait tourner npm run build
     # Le dossier /build ne contient QUE des fichiers statiques

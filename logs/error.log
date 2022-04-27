@@ -14,3 +14,14 @@
 2022/04/27 08:58:01 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
 2022/04/27 08:58:08 [emerg] 1#1: unknown directive "back" in /etc/nginx/nginx.conf:6
 2022/04/27 08:59:59 [error] 24#24: *1 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:04 [error] 31#31: *1 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:09 [error] 31#31: *2 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:20 [error] 31#31: *3 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:21 [error] 31#31: *4 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:21 [error] 31#31: *5 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:22 [error] 31#31: *6 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:22 [error] 31#31: *7 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:22 [error] 31#31: *8 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:22 [error] 31#31: *9 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:23 [error] 31#31: *10 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
+2022/04/27 09:17:23 [error] 31#31: *11 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.26.0.1, server: , request: "GET /login HTTP/1.1", host: "localhost:8000"
