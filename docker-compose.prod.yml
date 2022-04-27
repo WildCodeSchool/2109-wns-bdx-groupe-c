@@ -15,7 +15,6 @@ services:
       # ou pas d'interet à partager des fichiers avec d'autres conteneurs
     environment:
       - DATABASE_URL=postgres://postgres:root@database:5432/postgres
-    container_name: back_redlion_production
 
   database:
     image: postgres
@@ -23,7 +22,6 @@ services:
       POSTGRES_PASSWORD: root
     volumes:
       - database-volume:/var/lib/postgresql/data
-    container_name: db_redlion_production
 
   front:
     # On ne build pas ici, on utilise directement l'image sur Docker Hub
@@ -35,7 +33,6 @@ services:
     # Il faut juste rendre accessible le dossier /app/build du conteneur à nginx
     volumes:
       - web-client-build:/app/build
-    container_name: front_redlion_production
 
   nginx:
     image: nginx:1.21.3
