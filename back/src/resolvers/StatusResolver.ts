@@ -12,11 +12,21 @@ class UpdateStatusInput {
   name!: string
 }
 
+@ArgsType()
+class taskByStatusByProjectInput {
+  @Field(() => Int)
+  projectId!: number
+}
+
 @Resolver(Status)
 class StatusResolver {
   @Query(() => [Status])
   async status() {
     return StatusRepository.findAll();
+  }
+  @Query(() => [Status])
+  async taskByStatusByProject(@Args() { projectId }: taskByStatusByProjectInput) {
+    return StatusRepository.findTaskByStatusByProject(projectId);
   }
   @Mutation(()=>Status)
   async createStatus(@Arg("name") name:string) {

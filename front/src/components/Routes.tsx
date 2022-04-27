@@ -12,9 +12,6 @@ const Routes = () => {
   const history = useHistory()
 
   const { loading, data, error } = useQuery(MY_PROFILE)
-  console.log('loading venant du profil', loading)
-  console.log('DATA VENANT DU PROFILE', data)
-  console.log('error venant du profil', error)
 
   const isAuthenticated = data && data.myProfile
   return (
@@ -22,20 +19,22 @@ const Routes = () => {
       <Switch>
         {isAuthenticated && (
           <>
+            <Route exact path="/test">
+              <DragList />
+            </Route>
+            <Route exact path="/project/:id">
+              <Project />
+            </Route>
             <Route exact path="/">
               <Dashboard />
             </Route>
             <Redirect to={{ pathname: '/' }} />
-            <Route exact path="/project/:id">
-              <Project />
-            </Route>
           </>
         )}
         {!isAuthenticated && (
           <>
-            <Route exact path="/test" component={DragList} />
             <Route path="/login" component={Home} />
-            {/* <Redirect to={{ pathname: '/login' }} /> */}
+            <Redirect to={{ pathname: '/login' }} />
           </>
         )}
       </Switch>

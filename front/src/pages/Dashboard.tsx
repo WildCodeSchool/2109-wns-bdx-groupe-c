@@ -47,8 +47,6 @@ const Dashboard = ({}) => {
   const {role} = myProfile;
   const {name} = role;
 
-  console.log(' ------------------ MY PROFILE ----------------', myProfile)
-
   const handleLogout = () => {
     logOut();
   }
