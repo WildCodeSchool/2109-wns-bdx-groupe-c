@@ -1,4 +1,6 @@
-### Launch the project
+<b>[RETOUR AU MENU PRINCIPAL](../README.MD)</b>
+
+## Install the project
 
 ```bash
 yarn install
@@ -10,14 +12,14 @@ You need to replace  http://<u style="color:red">192.168.1.27</u>:3004/graphql
 By the IP of your computer, you can find it in the network tab of your computer. It's the IPV4 address.
 It's <u style="color:red">Based on your WIFI</u>
 
-### Requirements
+## Requirements
 
 You need to have expo install in cli
 
 
-### Run the project
+## Run the project
 
 ```bash
 expo start --tunnel
 ```
-
+Il faut l'application expo pour pouvoir voir le résultat sur le mobile

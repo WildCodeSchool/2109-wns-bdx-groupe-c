@@ -1,6 +1,18 @@
-# Getting Started with Create React App
+<b>[RETOUR AU MENU PRINCIPAL](../README.MD)</b>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Technologies
+
+1. TypeScript
+2. Apollo Client pour gérer côté client le graphql
+3. Material UI comme framework pour les composants
+4. jest pour les tests
+5. graphql pour les requêtes
+6. react-beautiful-dnd pour les drag and drop
+7. react-router-dom pour les routes
+
+
+## Installation
+Rien => on utilise docker-compose à l'installation
 
 ## Available Scripts
 

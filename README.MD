@@ -1,4 +1,10 @@
-# NOTICE
+# README
+
+## Sommaire
+
+- [BACK](back/README.MD)
+- [FRONT](front/README.MD)
+- [MOBILE](redlion-mobile/README.MD)
 
 ## How to start the project
 

@@ -100,6 +100,7 @@ class Project extends BaseEntity {
     await this.save();
     return this;
   }
+
 }
 
 export default Project
