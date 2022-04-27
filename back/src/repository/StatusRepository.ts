@@ -18,6 +18,19 @@ class StatusRepository extends Status {
     await Status.remove(status)
     return statusCopy
   }
+
+  static async findTaskByStatusByProject(projectId: number) {
+    const statusFound =  await Status.find({
+      relations: ['tasks', 'tasks.project'],
+      order: {id: 'ASC'}
+    })
+    return statusFound
+    .map((status) => {
+      return {
+        ...status, tasks: status.tasks && status.tasks.filter((task) => task.project.id === projectId)
+      }
+    });
+  }
 }
 
 export default StatusRepository

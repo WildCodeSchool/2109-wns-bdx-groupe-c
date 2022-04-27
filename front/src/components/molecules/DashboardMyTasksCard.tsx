@@ -43,9 +43,7 @@ const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
   const { loading, data, error } = useQuery(GET_TASKS_BY_PROJECT, { variables: { projectId } })
 
   const classes = useStyles()
-  console.log('error', error)
-  console.log('loading', loading)
-  console.log('data', data)
+
   return (
     <Card className={classes.card} sx={{borderRadius: '20px'}}>
       <CardContent sx={{ backgroundColor: '#0F4473', position: 'relative'}}>

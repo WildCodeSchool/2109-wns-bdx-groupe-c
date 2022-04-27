@@ -61,9 +61,6 @@ const DashboardMyProjectsCard = () => {
     const history = useHistory();
     const classes = useStyles()
 
-    console.log('loading', loading)
-    console.log('error', error)
-
     return (
         <Card className={classes.card} sx={{borderRadius: '20px'}}>
             <CardContent sx={{ backgroundColor: '#0F4473'}}>
@@ -74,7 +71,6 @@ const DashboardMyProjectsCard = () => {
                 <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log("click")}/>
               </Box>
                 {data?.myProjects.map((myProject: MyProject) => {
-                  console.log('myProject', myProject)
                   const{ id, project } = myProject
                   const {name, shortText, countAssignee, languages} = project
                   return (

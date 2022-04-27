@@ -7,3 +7,17 @@ export const GET_ALL_STATUS = gql`
     }
   }
 `
+
+
+export const GET_TASKS_BY_STATUS_BY_PROJECTID = gql`
+query TaskByStatusByProject($projectId: Int!) {
+  taskByStatusByProject(projectId: $projectId) {
+    id
+    name
+    tasks {
+      subject
+      shortText
+    }
+  }
+}
+`
