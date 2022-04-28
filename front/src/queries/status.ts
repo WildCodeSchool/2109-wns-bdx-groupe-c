@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export const GET_ALL_STATUS = gql`
   query Query {
     status {
+      id
       name
     }
   }
@@ -15,6 +16,7 @@ query TaskByStatusByProject($projectId: Int!) {
     id
     name
     tasks {
+      id
       subject
       shortText
     }
