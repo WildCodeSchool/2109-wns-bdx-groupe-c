@@ -49,6 +49,9 @@ In the file
 
 We execute the test on the current branch and we execute the file ./ci-api.sh
 
+### To obtain a dump from the database in local
+docker exec -i db_redlion /bin/bash -c "PGPASSWORD=root pg_dump --username postgres postgres" > /home/avibert/Projets/Projet Alternance/dump.sql
+
 ### How to run CI Checks
 ``` BASH
 ./ci-api.sh

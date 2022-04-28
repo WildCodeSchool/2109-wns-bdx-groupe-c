@@ -3,7 +3,7 @@ import { User } from './user'
 import { Project } from './project'
 import { Comment } from './comment'
 export interface Task {
-  id: number
+  id: string
   subject: string
   shortText: string
   description: string

@@ -1,6 +1,6 @@
 import { Task } from './task';
 export interface Status {
-  id: number
+  id: string
   name: string
   tasks: Task[] | null
 }

@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react'
-import { useQuery } from "@apollo/client"
+import { useQuery, useMutation } from "@apollo/client"
 import { useParams } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import Box from "@mui/material/Box"
 import {makeStyles} from "@mui/styles"
 import ObjectHelpers from '../helpers/ObjectHelper';
 import { Task } from '../entities/task';
+import { Status } from '../entities/status';
 
 // import ProjectAllTasksCard from "../components/molecules/ProjectAllTasksCard"
 import StatusColumn from '../components/molecules/StatusColumn';
 
-
-import { GET_TASKS_BY_STATUS_BY_PROJECTID } from "../queries/status"
-import { Status } from "../entities/status"
+import {
+    GET_TASKS_BY_STATUS_BY_PROJECTID,
+    GET_ALL_STATUS,
+} from "../queries/status"
+import { MUTATION_UPDATE_STATUS_TASK } from "../queries/task"
 
 const useStyles = makeStyles({
     mainContainer: {
@@ -59,6 +62,7 @@ interface dragListType {
 }
 
 interface TaskTest {
+    id: string,
     shortText: string
     subject: string
 }
@@ -66,9 +70,30 @@ interface TaskTest {
 const Project = () => {
     const classes = useStyles()
     const { id } = useParams<UseParamProps>();
+
+    const { data: statusData } = useQuery(GET_ALL_STATUS)
+
     const { loading, data } = useQuery(GET_TASKS_BY_STATUS_BY_PROJECTID, {
         variables: {projectId: id ? parseInt(id, 10) : 0}
     })
+
+    const [updateStatusTask] = useMutation(MUTATION_UPDATE_STATUS_TASK)
+
+    /*
+  const [logOut] = useMutation(LOG_OUT, {refetchQueries: [{query: MY_PROFILE}]});
+  const [signIn, { data, error }] = useMutation(SIGN_IN);
+
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    signIn({
+      variables: { email, password },
+      refetchQueries: [ MY_PROFILE ]
+    })
+  }, [signIn, email, password])
+
+
+
+    */
 
     const [statusColumns, setStatusColumns] = useState<dragListType | null>(null)
 
@@ -76,13 +101,12 @@ const Project = () => {
         if(data) {
             const { taskByStatusByProject } = data
             const taskByStatusByProjectFormatted = ObjectHelpers.ArrayToObject(taskByStatusByProject, 'name')
-            console.log('taskByStatusByProjectFormatted', taskByStatusByProjectFormatted);
             setStatusColumns(taskByStatusByProjectFormatted);
         }
     }, [data])
 
     const onDragEnd = ({ source, destination }: DropResult) => {
-        if (statusColumns) {
+        if (statusColumns && statusData) {
             // Make sure we have a valid destination
             if (destination === undefined || destination === null) return null
 
@@ -118,8 +142,25 @@ const Project = () => {
 
             } else {
               let newColEnd;
-              const elementToMove: TaskTest = statusColumns[sourceDroppableId].tasks[source.index]
+              const elementToMove: Task = statusColumns[sourceDroppableId].tasks[source.index]
               console.log('elementToMove', elementToMove);
+              console.log('destination', destination);
+              const statusTable: Status[] = statusData.status
+              const statusId = statusTable.find(status => status.name === destinationDroppableId)?.id
+              const taskId = elementToMove.id
+
+
+              if ( statusId && taskId ) {
+                const statusIdFormatted = parseInt(statusId, 10);
+                const taskIdFormatted = parseInt(taskId, 10);
+                updateStatusTask({
+                    variables:{
+                        updateStatusId: taskIdFormatted,
+                        statusId: statusIdFormatted
+                    },
+                    // refetchQueries: [ GET_TASKS_BY_STATUS_BY_PROJECTID ]
+                })
+              }
               if (statusColumns[destinationDroppableId].tasks.length === 0) {
                 // Si pas d'élement dans le tableau le nouveau tableau a juste l'élément
                 newColEnd = [elementToMove];
