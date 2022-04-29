@@ -2,6 +2,7 @@ import { API_URL } from '@env';
 import { print } from 'graphql';
 import customAxios from './CustomAxios';
 import gql from 'graphql-tag';
+import { User } from '../entities/user';
 
 export const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
@@ -13,26 +14,40 @@ export const SIGN_IN = gql`
 `;
 
 export const MY_PROFILE = gql`
-query MyProfile {
-  myProfile {
-    firstName
-    lastName
-    email
-    role {
-      name
-      identifier
+  query MyProfile {
+    myProfile {
+      firstName
+      lastName
+      email
+      role {
+        name
+        identifier
+      }
     }
   }
-}
 `;
 
 
 export const LOG_OUT = gql`
-mutation LogOut {
-  logOut
-}
+  mutation LogOut {
+    logOut
+  }
 `;
 
+
+export const MY_PROJECTS = gql`
+  query MyProjects {
+    myProjects {
+      project {
+        name
+        shortText
+      }
+      projectRole {
+        name
+      }
+    }
+  }
+`;
 
 // insider my login handler
 class ApiUtils {
@@ -55,17 +70,40 @@ class ApiUtils {
     });
   }
 
-  static async myProfile () : Promise<Boolean | null> {
+
+  // PLUTOT QUE DE RENVOYER TRUE ==> Renvoyer un USER | null  puisque response.data.myProfile ==> User
+  static async myProfile () : Promise< User | null> {
     return customAxios.post(API_URL, {
       query: print(MY_PROFILE)
     }).then((response) => {
-      console.log('----------------RESULTAT SUR MON PROFIL---------------', response.data.myProfile)
-      return true
+      if (response.data === null) {
+        return null
+      } else {
+        return response.data.myProfile
+      }
     }).catch((error) => {
       return null
       console.log('ERREUR DE LA MUTATION SUR MON PROFIL', error.message)
     });
   }
+
+  static async myProjects () : Promise<Boolean | null> {
+    return customAxios.post(API_URL, {
+      query: print(MY_PROJECTS)
+    }).then((response) => {
+      console.log('************ response', response)
+      if (response.data === null) {
+        return false
+      } else {
+        console.log('***************response.data', response.data.myProjects)
+        return true
+      }
+    }).catch((error) => {
+      return null
+      console.log('ERREUR DE LA MUTATION SUR MY PROFIL', error.message)
+    });
+  }
+
 
 }
 

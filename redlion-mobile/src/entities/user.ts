@@ -13,7 +13,7 @@ export interface User {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
-  role?: Role
+  role: Role
   comments?: Comment[]
   projectsCreated?: Project[]
   tasks?: Task[]

@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import ApiUtils from '../../../utils/ApiUtils';
-
-import { User as UserType } from "../../../schemaTypes";
-
-
 import VARIABLES from '../../../../assets/styles/_variables';
+import useMyProfile from '../../customHook/useMyProfile';
 
 const styles = StyleSheet.create({
     profilInformationsContainer: {
@@ -26,76 +22,48 @@ const styles = StyleSheet.create({
 
 export default function ProfilInformations() {
 
-    /*
-    const allQueries = () => {
-        const userProfilQuery = useQuery(GET_USER_PROFIL);
+    const [user, loading] = useMyProfile()
 
+    const firstName = useMemo(() => {
+        if (user && typeof user !== 'boolean') {
+            return user.firstName;
+        }
+        return '';
+    }, [user])
 
+    const lastName = useMemo(() => {
+        if (user && typeof user !== 'boolean') {
+            return user.lastName;
+        }
+        return '';
+    }, [user])
 
-        const userQuery = useQuery<UserType>(GET_USER, {
-            variables: {userId: parseInt(userId)},
-        });
+    const email = useMemo(() => {
+        if (user && typeof user !== 'boolean') {
+            return user.email;
+        }
+        return '';
+    }, [user])
 
-        return [userProfilQuery, userQuery];
-    }
-    */
-
-    /*
-    const [
-        {loading: loading1, data: data1},
-        {loading: loading2, data: data2},
-    ] = allQueries();
-    */
-   console.log('PROFIL INFORMATION');
-   const [userProfil, setUserProfil] = useState<any>(null);
-
-    useEffect(() => {
-        console.log('JE LANCE LE FETCH SUR MY PROFILE')
-        const myProfile = ApiUtils.myProfile();
-        setUserProfil(myProfile);
-    }, [])
-
-    useEffect(() => {
-        console.log('JE LANCE LE FETCH SUR MY PROFILE')
-        const myProfile = ApiUtils.myProfile();
-        setUserProfil(myProfile);
-    }, [])
-
-
-
-    // console.log('*************** error MY PROFLE ********************** :', error);
-    // console.log('*********** data MY PROFILE **************** :', data ? data.myProfile : 'PAS DE REPONSE');
-
-    // const [inputFirstname, setInputFirstname] = React.useState("");
-    // const [inputLastname, setInputLastname] = React.useState("");
-
-    const loading2 = true;
-    const data2 = {};
+    const role = useMemo(() => {
+        if (user && typeof user !== 'boolean') {
+            return user.role.name;
+        }
+        return '';
+    }, [user])
 
     return (
 
         <View style={styles.profilInformationsContainer}>
-            {loading2 ? <ActivityIndicator /> : null}
-            {data2 &&
+            {loading ? <ActivityIndicator /> : null}
+            {!loading && user &&
                 <>
-                    {/* <ProjectInput props={{
-                        label: 'Firstname',
-                        project: data2.user.firstName,
-                        value: inputFirstname,
-                        setInputText: inputFirstname => setInputFirstname(inputFirstname),
-                    }}/>
-
-                    <ProjectInput props={{
-                        label: 'Lastname',
-                        project: data2.user.lastName,
-                        value: inputLastname,
-                        setInputText: inputLastname => setInputLastname(inputLastname),
-                    }}/> */}
-
-                    {/* <View style={styles.profilInformationsBlock}>
-                        <Text style={styles.profilInformationsTitle}>Regsitered since :</Text>
-                        <Text style={{color: VARIABLES.clrWhite}}>{data2.user.createdAt}</Text>
-                    </View>  */}
+                    <View style={styles.profilInformationsBlock}>
+                        <Text style={styles.profilInformationsTitle}>{firstName}</Text>
+                        <Text style={styles.profilInformationsTitle}>{lastName}</Text>
+                        <Text style={styles.profilInformationsTitle}>{email}</Text>
+                        <Text style={styles.profilInformationsTitle}>{role}</Text>
+                    </View>
                 </>
             }
         </View>
