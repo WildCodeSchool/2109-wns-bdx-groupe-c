@@ -7,6 +7,10 @@ import Dashboard from '../pages/Dashboard'
 import Project from '../pages/Project'
 
 import { MY_PROFILE } from '../queries/user'
+import ProjectDashboardInfo from '../pages/ProjectDashboardInfo'
+import ProjectDashboardUser from '../pages/ProjectDashboardUser'
+import ProjectDashboardComment from '../pages/ProjectDashboardComment'
+import ProjectDashboardSetting from '../pages/ProjectDashboardSetting'
 
 const Routes = () => {
   const history = useHistory()
@@ -25,6 +29,18 @@ const Routes = () => {
           <>
             <Route path="/project/:id">
               <Project />
+            </Route>
+            <Route exact path="/project/:id/infos">
+              <ProjectDashboardInfo />
+            </Route>
+            <Route exact path="/project/:id/users">
+              <ProjectDashboardUser />
+            </Route>
+            <Route exact path="/project/:id/comments">
+              <ProjectDashboardComment />
+            </Route>
+            <Route exact path="/project/:id/settings">
+              <ProjectDashboardSetting />
             </Route>
             <Route exact path="/">
               <Dashboard />
