@@ -19,6 +19,7 @@ import { makeStyles } from '@mui/styles'
 
 import DashboardMyProjectsCard from '../components/molecules/DashboardMyProjectsCard'
 import DashboardMyTasksCard from '../components/molecules/DashboardMyTasksCard'
+import DashboardProjectsCard from '../components/molecules/DashboardProjectsCard';
 
 const useStyles = makeStyles({
   mainContainer: {
@@ -133,6 +134,7 @@ const Dashboard = ({}) => {
       <Box className={classes.mainContainer}>
           <DashboardMyTasksCard projectId={1} />
           <DashboardMyProjectsCard />
+          <DashboardProjectsCard />
       </Box>
       {!myProfile && (
           <Redirect  to={{ pathname: "/" }} />
