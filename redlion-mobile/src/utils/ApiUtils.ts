@@ -34,7 +34,6 @@ export const LOG_OUT = gql`
   }
 `;
 
-
 export const MY_PROJECTS = gql`
   query MyProjects {
     myProjects {
