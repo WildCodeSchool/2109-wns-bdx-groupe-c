@@ -5,7 +5,8 @@ import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { Projects_projects } from "../../../schemaTypes";
+import { Project_project } from "../../../schemaTypes";
+import { GET_PROJECT_ALL } from '../../../queries/project';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 import COMPONENTS from '../../../../assets/styles/_components';
@@ -81,40 +82,9 @@ export default function Project (route: any) {
 
   const { projectId, projectName, createdBy} = route.route.params;
 
-  const GET_PROJECT = gql`
-    query Project($projectId: Float!) {
-      project(id: $projectId) {
-        id
-        name
-        shortText
-        description
-        initialTimeSpent
-        createdAt
-        updatedAt
-        createdBy {
-          firstName
-          lastName
-        }
-        languages {
-          id
-          name
-        }
-        tasks {
-          id
-          subject
-          shortText
-          description
-        }
-        status {
-          name
-        }
-      }
-    }
-  `;
-
   const navigation = useNavigation();
 
-  const { loading, error, data } = useQuery<Projects_projects>(GET_PROJECT, {
+  const { loading, error, data } = useQuery<Project_project>(GET_PROJECT_ALL, {
     variables: {projectId: parseInt(projectId)},
   });
 

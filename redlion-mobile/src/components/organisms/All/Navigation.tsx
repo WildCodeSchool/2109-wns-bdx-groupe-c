@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
 })
 
 export default function Navigation() {
+
     return (
         <View style={styles.navigation}>
             <ApolloProvider client={client}>

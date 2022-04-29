@@ -5,6 +5,8 @@ import { gql, useQuery } from '@apollo/client';
 
 import { Projects_projects } from '../../../../schemaTypes';
 
+import { GET_PROJECT_PART } from '../../../../queries/project';
+
 import VARIABLES from '../../../../../assets/styles/_variables';
 import ProjectUpdateSectionStyles from '../../../organisms/Project/ProjectUpdateSection';
 
@@ -18,21 +20,8 @@ export default function ProjectLanguagesUpdate(route: any) {
 
     const { projectId, projectName } = route.route.params;
 
-    const GET_PROJECT = gql`
-    query Project($projectId: Float!) {
-      project(id: $projectId) {
-        id
-        name
-        languages {
-            id
-            name
-        }
-      }
-    }
-    `;
-    
-    const { loading, error, data } = useQuery<Projects_projects>(GET_PROJECT, {
-    variables: {projectId: parseInt(projectId)},
+    const { loading, error, data } = useQuery<Projects_projects>(GET_PROJECT_PART, {
+        variables: {projectId: parseInt(projectId)},
     });
 
     return (

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
-import { Projects_projects } from "../../../../schemaTypes";
 import { Button } from 'react-native-paper';
+
+import { Projects_projects } from "../../../../schemaTypes";
+import { GET_PROJECT_MORE } from '../../../../queries/project';
 
 import VARIABLES from '../../../../../assets/styles/_variables';
 import ProjectUpdateSectionStyles from '../../../organisms/Project/ProjectUpdateSection';
@@ -18,21 +19,8 @@ export default function ProjectInformationsUpdate (route: any) {
     
     const { projectId, createdBy } = route.route.params;
 
-    const GET_PROJECT = gql`
-    query Project($projectId: Float!) {
-      project(id: $projectId) {
-        id
-        name
-        createdBy {
-            firstName
-            lastName
-        }
-      }
-    }
-    `;
-    
-    const { loading, error, data } = useQuery<Projects_projects>(GET_PROJECT, {
-    variables: {projectId: parseInt(projectId)},
+    const { loading, error, data } = useQuery<Projects_projects>(GET_PROJECT_MORE, {
+        variables: {projectId: parseInt(projectId)},
     });
 
     return (
@@ -43,21 +31,6 @@ export default function ProjectInformationsUpdate (route: any) {
                 <View style={[STYLES.list]}>
                     <View style={STYLES.listElement}>
                         <Text style={STYLES.text}>{data.project.createdBy.firstName} {data.project.createdBy.lastName}</Text>
-                    </View>
-                    <View style={STYLES.listElement}>
-                        <Text style={STYLES.text}>User #2</Text>
-                    </View>
-                    <View style={STYLES.listElement}>
-                        <Text style={STYLES.text}>User #3</Text>
-                    </View>
-                    <View style={STYLES.listElement}>
-                        <Text style={STYLES.text}>User #4</Text>
-                    </View>
-                    <View style={STYLES.listElement}>
-                        <Text style={STYLES.text}>User #5</Text>
-                    </View>
-                    <View style={STYLES.listElement}>
-                        <Text style={STYLES.text}>User #6</Text>
                     </View>
                 </View>
                 <Button

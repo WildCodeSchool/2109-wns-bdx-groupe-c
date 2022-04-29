@@ -22,6 +22,11 @@ export default function ProjectAppbar({ navigation, back, route, params }) {
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
 
+    const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+    const onToggleSwitch = () => {
+        setIsSwitchOn(!isSwitchOn);
+    }
+
     return (
         <Appbar.Header statusBarHeight={0} style={{
             backgroundColor: VARIABLES.clrBgDark,
@@ -35,17 +40,7 @@ export default function ProjectAppbar({ navigation, back, route, params }) {
                 <>
                     <Appbar.Content title={'Projets'} style={{backgroundColor: VARIABLES.clrBgDark}} />
                     <Appbar.Action icon="magnify" color={VARIABLES.clrWhite} onPress={() => {setSearchActive(!searchActive)}} />
-                    <Menu
-                        contentStyle={COMPONENTS.menuBlock}
-                        visible={menuActive}
-                        onDismiss={() => setMenuActive(!menuActive)}
-                        anchor={
-                            <Appbar.Action icon="dots-vertical" color={VARIABLES.clrWhite} onPress={() => setMenuActive(!menuActive)} />
-                        }
-                        >
-                        <Menu.Item onPress={() => {navigation.navigate('ProjectCreate'); setMenuActive(!menuActive)}} title="Create project" titleStyle={COMPONENTS.menuTitle}  />
-                        <Menu.Item onPress={() => {navigation.navigate('ProjectCreate'); setMenuActive(!menuActive)}} title="Manage project" titleStyle={COMPONENTS.menuTitle} />
-                    </Menu>
+                    <Appbar.Action icon="plus" color={VARIABLES.clrWhite} onPress={() => {navigation.navigate('ProjectCreate')}} />
                 </>
             ) : null} 
 
@@ -92,8 +87,6 @@ export default function ProjectAppbar({ navigation, back, route, params }) {
 
             {/* --- CREATE TASK --- */}
             {route.name == 'ProjectTaskCreate' ? <Appbar.Content title={`${route.params.projectName} : Create task`} style={{backgroundColor: VARIABLES.clrBgDark}} /> : null}
-            
-            
 
             {searchActive ? (
                 <Searchbar

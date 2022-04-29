@@ -1,58 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import { useQuery } from "@apollo/client";
-import { Tasks as TasksProps } from "../../../../schemaTypes";
-import gql from "graphql-tag";
 import { useNavigation } from '@react-navigation/native';
+
+import { Tasks_tasks } from '../../../../schemaTypes';
+import { GET_TASKS_BY_STATUS_AND_USER } from '../../../../queries/task';
 
 import VARIABLES from '../../../../../assets/styles/_variables';
 
-const UserTasksDoing = (route: any) => {
+const UserTasksDoing = (route: any, { userId = 3 }) => {
     
   const { statusName } = route.route.params;
 
-  const GET_TASKS = gql`
-  query Tasks($statusName: String!) {
-    tasksByStatus(statusName: $statusName) {
-        id
-        shortText
-        subject
-        status {
-          name
-        }
-        description
-        project {
-          name
-          shortText
-        }
-        assignee {
-          id
-          firstName
-          lastName
-        }
-        createdAt
-        updatedAt
-        dueDate
-        expectedDuration
-        spentTime
-        comments {
-          content
-          createdAt
-          updatedAt
-          user {
-            firstName
-            lastName
-          }
-        }
-      }
-  }
-  `;
+  const { loading, error, data } = useQuery<Tasks_tasks>(GET_TASKS_BY_STATUS_AND_USER, {
+    variables: { userId, statusName },
+  });
 
   const navigation = useNavigation();
-
-  const { loading, error, data }= useQuery<TasksProps>(GET_TASKS, {
-    variables: {statusName: statusName},
-  });
 
   const styles = StyleSheet.create({
     container: {
@@ -85,7 +49,7 @@ const UserTasksDoing = (route: any) => {
       {loading ? <ActivityIndicator /> : null}
       {data &&
         <FlatList
-        data = {data.tasksByStatus}
+        data = {data.myTasks}
         keyExtractor={(task) => task.id}
         renderItem={(task) => {
           return (

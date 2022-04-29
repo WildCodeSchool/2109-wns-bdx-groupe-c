@@ -13,6 +13,7 @@ import ProjectTaskCreate from './Task/ProjectTaskCreate';
 import ProjectInformationsUpdate from './Information/ProjectInformationsUpdate';
 import ProjectUsersUpdate from './User/ProjectUsersUpdate';
 import ProjectLanguagesUpdate from './Language/ProjectLanguagesUpdate';
+import ProjectTasksNavigation from './Task/ProjectTasksNavigation';
 
 export default function ProjectNavigation() {
 
@@ -35,7 +36,7 @@ export default function ProjectNavigation() {
             cardStyle: {
                 backgroundColor: VARIABLES.clrBgDark,
             },
-            header: (props) => <ProjectAppbar {...props} />,
+            header: (props) => <ProjectAppbar params={undefined} {...props} />,
         })}
     >
       <Stack.Screen name="Projects" component={Projects} options={{cardStyleInterpolator: forFade}} />
@@ -44,7 +45,7 @@ export default function ProjectNavigation() {
       <Stack.Screen name="ProjectInformationsUpdate" component={ProjectInformationsUpdate} options={{cardStyleInterpolator: forFade}} />
       <Stack.Screen name="ProjectUsersUpdate" component={ProjectUsersUpdate} options={{cardStyleInterpolator: forFade}} />
       <Stack.Screen name="ProjectLanguagesUpdate" component={ProjectLanguagesUpdate} options={{cardStyleInterpolator: forFade}} />
-      <Stack.Screen name="ProjectTasks" component={ProjectTasks} options={{cardStyleInterpolator: forFade}} />
+      <Stack.Screen name="ProjectTasks" component={ProjectTasksNavigation} options={{cardStyleInterpolator: forFade}} />
       <Stack.Screen name="ProjectTask" component={ProjectTask} options={{cardStyleInterpolator: forFade}} />
       <Stack.Screen name="ProjectTaskCreate" component={ProjectTaskCreate} options={{cardStyleInterpolator: forFade}} />
     </Stack.Navigator>

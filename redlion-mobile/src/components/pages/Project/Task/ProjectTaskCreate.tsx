@@ -4,15 +4,19 @@ import { StyleSheet, Text, View } from 'react-native';
 import VARIABLES from '../../../../../assets/styles/_variables';
 
 const styles = StyleSheet.create({
-    projectTaskCreate: {
-
-    }
+    container: {
+        flex: 1,
+        padding: 10,
+    },
+    text: {
+        color: VARIABLES.clrWhite,
+    },
 })
 
 export default function ProjectTaskCreate() {
     return (
-        <View style={styles.projectTaskCreate}>
-            <Text>Page pour créer un projet</Text>
+        <View style={styles.container}>
+            <Text style={styles.text}>Page pour créer une tâche</Text>
         </View>
     )
 }
