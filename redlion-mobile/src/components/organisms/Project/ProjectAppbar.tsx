@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
 
 export default function ProjectAppbar({ navigation, back, route, params }: any) {
 
+    const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+    const onToggleSwitch = () => {
+        setIsSwitchOn(!isSwitchOn);
+    }
+
     return (
         <Appbar.Header statusBarHeight={0} style={[styles.header]}>
 

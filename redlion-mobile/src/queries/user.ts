@@ -39,3 +39,14 @@ export const GET_USER = gql`
         }
     } 
 `;
+
+export const GET_USER_COMMENTS = gql`
+    query MyProfile($userId: Float!) {
+        user(id: $userId) {
+            id
+            comments {
+                id
+            }
+        }
+    }
+`;

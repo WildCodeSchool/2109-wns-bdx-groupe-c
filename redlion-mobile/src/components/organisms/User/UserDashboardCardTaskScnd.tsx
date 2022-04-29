@@ -2,12 +2,16 @@ import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useQuery } from '@apollo/client';
+
+import { Tasks_tasks } from '../../../schemaTypes';
+import { GET_TASKS_BY_STATUS_AND_USER } from '../../../queries/task';
 
 import useMyTasks from '../../customHook/userMyTasks';
 
 import COMPONENTS from '../../../../assets/styles/_components';
 
-export default function UserDashboardCardTaskScnd () {
+export default function UserDashboardCardTaskScnd ({ userId = 3 , statusName = 'To Do' }) {
 
   const statusName = 'To Do';
 
