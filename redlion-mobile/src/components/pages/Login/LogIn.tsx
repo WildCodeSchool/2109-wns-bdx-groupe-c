@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import {useState, useCallback} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
 import ApiUtils from '../../../utils/ApiUtils';
 
@@ -81,13 +81,6 @@ export default function LogIn () {
         }
     }, [error, email, password]);
 
-    const theme = {
-        colors: {
-          text: "orange",
-          placeHolder: 'orange'
-        }
-      };
-
     return (
         <View style={styles.container}>
 
@@ -121,9 +114,10 @@ export default function LogIn () {
                     label="Password"
                     value={password}
                     autoComplete={true}
+                    secureTextEntry={true}
                     onChangeText={text => setPassword(text)}
                 />
-                <HelperText type="error" visible={error}>
+                <HelperText type="error" visible={error} onPressIn={()=>{}} onPressOut={()=>{}}>
                     Could not sign up with provided email address.
                 </HelperText>
                 <Button

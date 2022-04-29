@@ -1,11 +1,9 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { useQuery } from '@apollo/client';
+import ApiUtils from '../../../utils/ApiUtils';
 
 import { User as UserType } from "../../../schemaTypes";
-import { GET_USER, GET_USER_PROFIL } from '../../../queries/user';
 
-import ProjectInput from '../../molecules/PojectInput';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 
@@ -26,14 +24,14 @@ const styles = StyleSheet.create({
     }
 })
 
-export default function ProfilInformations({ userId = '1'}) {
+export default function ProfilInformations() {
 
     /*
     const allQueries = () => {
         const userProfilQuery = useQuery(GET_USER_PROFIL);
 
 
-        
+
         const userQuery = useQuery<UserType>(GET_USER, {
             variables: {userId: parseInt(userId)},
         });
@@ -48,19 +46,34 @@ export default function ProfilInformations({ userId = '1'}) {
         {loading: loading2, data: data2},
     ] = allQueries();
     */
+   console.log('PROFIL INFORMATION');
+   const [userProfil, setUserProfil] = useState<any>(null);
 
-    const { loading, data, error } = useQuery(GET_USER_PROFIL)
-    console.log('***************error MY PROFLE ********************** :', error);
-    console.log('*********** data MY PROFILE **************** :', data ? data.myProfile : 'PAS DE REPONSE');
+    useEffect(() => {
+        console.log('JE LANCE LE FETCH SUR MY PROFILE')
+        const myProfile = ApiUtils.myProfile();
+        setUserProfil(myProfile);
+    }, [])
 
-    const [inputFirstname, setInputFirstname] = React.useState("");
-    const [inputLastname, setInputLastname] = React.useState("");
+    useEffect(() => {
+        console.log('JE LANCE LE FETCH SUR MY PROFILE')
+        const myProfile = ApiUtils.myProfile();
+        setUserProfil(myProfile);
+    }, [])
+
+
+
+    // console.log('*************** error MY PROFLE ********************** :', error);
+    // console.log('*********** data MY PROFILE **************** :', data ? data.myProfile : 'PAS DE REPONSE');
+
+    // const [inputFirstname, setInputFirstname] = React.useState("");
+    // const [inputLastname, setInputLastname] = React.useState("");
 
     const loading2 = true;
     const data2 = {};
 
     return (
-        
+
         <View style={styles.profilInformationsContainer}>
             {loading2 ? <ActivityIndicator /> : null}
             {data2 &&

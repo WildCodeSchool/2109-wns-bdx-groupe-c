@@ -3,7 +3,6 @@ import { print } from 'graphql';
 import customAxios from './CustomAxios';
 import gql from 'graphql-tag';
 
-
 export const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
     signIn(email: $email, password: $password) {
@@ -51,18 +50,19 @@ class ApiUtils {
       } else {
         return true
       }
-      // this.myProfile()
     }).catch((error) => {
       return false;
     });
   }
 
-  static async myProfile () : Promise<void> {
-    customAxios.post(API_URL, {
+  static async myProfile () : Promise<Boolean | null> {
+    return customAxios.post(API_URL, {
       query: print(MY_PROFILE)
     }).then((response) => {
-      console.log('RESULTAT SUR MON PROFIL', response.data.myProfile)
+      console.log('----------------RESULTAT SUR MON PROFIL---------------', response.data.myProfile)
+      return true
     }).catch((error) => {
+      return null
       console.log('ERREUR DE LA MUTATION SUR MON PROFIL', error.message)
     });
   }
