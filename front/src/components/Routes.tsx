@@ -28,7 +28,7 @@ const Routes = () => {
       <Switch>
         {isAuthenticated && (
           <>
-            <Route path="/project/:id">
+            <Route path="/project/:id/tasks">
               <Project />
             </Route>
             <Route exact path="/project/:id/infos">
