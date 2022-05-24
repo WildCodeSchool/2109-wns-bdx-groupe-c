@@ -22,15 +22,19 @@ const useStyles = makeStyles({
     top: '40%',
   },
   connectionButton: {
-    backgroundColor: '#7273FF',
+    backgroundColor: 'red',
     color: '#061B2E',
+    '&:hover': {
+      backgroundColor: 'yellow',
+      color: 'red',
+    },
   },
 })
 
 const Home = () => {
   const classes = useStyles()
   const history = useHistory()
-  
+
   const [connectionOn, setConnectionOn] = useState(false)
 
   return (
