@@ -5,24 +5,32 @@ import customAxios from '../../utils/CustomAxios';
 import gql from 'graphql-tag';
 import { User } from '../../entities/user';
 
-const MY_PROFILE = gql`
-  query MyProfile {
-      myProfile {
-          firstName
-          lastName
-          email
-          role {
-            name
-            identifier
-          }
-          comments {
-            id
-          }
+const MY_TASKS = gql`
+  query MyProjects($statusName: String) {
+    myProjects(statusName: $statusName) {
+      id
+      user {
+        id
+        firstName
+        lastName
       }
+      projectRole {
+        name
+      }
+      project {
+        id
+        name
+        shortText
+        description
+        status {
+          name
+        }
+      }
+    }
   }
 `;
 
-const useMyProfile = () => {
+const useMyProjectsByStatus = (statusName: String) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -32,7 +40,7 @@ const useMyProfile = () => {
       customAxios
           .post(
               API_URL, {
-              query: print(MY_PROFILE)
+              query: print(MY_TASKS)
             }
           )
           .then((response) => {
@@ -40,7 +48,7 @@ const useMyProfile = () => {
                 setUser(null)
                 setLoading(false)
               } else {
-                setUser(response.data.myProfile)
+                setUser(response.data.myProjects.filter((project) => project.project.status.name === statusName))
                 setLoading(false)
               }
             })
@@ -51,7 +59,7 @@ const useMyProfile = () => {
             });
       }, [])
 
-return [user, loading];
+    return [user, loading];
 }
 
-export default useMyProfile;
+export default useMyProjectsByStatus;

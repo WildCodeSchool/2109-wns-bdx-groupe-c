@@ -112,32 +112,43 @@ export const GET_TASKS_BY_USER = gql`
 `
 
 export const GET_TASKS_BY_STATUS_AND_USER = gql`
-    query MyTasks($userId: Int!, $statusName: String) {
-        myTasks(userId: $userId, statusName: $statusName) {
+    query Query($statusName: String) {
+        myTasks(statusName: $statusName) {
             id
             subject
             shortText
             description
-            status {
-                name
-            }
-            project {
-                id
-                name
-            }
-            assignee {
-                id
-                firstName
-                lastName
-            }
-            createdAt
-            updatedAt
-            dueDate
-            expectedDuration
-            spentTime
         }
     }
 `;
+
+// export const GET_TASKS_BY_STATUS_AND_USER = gql`
+//     query MyTasks($userId: Int!, $statusName: String) {
+//         myTasks(userId: $userId, statusName: $statusName) {
+//             id
+//             subject
+//             shortText
+//             description
+//             status {
+//                 name
+//             }
+//             project {
+//                 id
+//                 name
+//             }
+//             assignee {
+//                 id
+//                 firstName
+//                 lastName
+//             }
+//             createdAt
+//             updatedAt
+//             dueDate
+//             expectedDuration
+//             spentTime
+//         }
+//     }
+// `;
 
 export const GET_TASKS_BY_STATUS_AND_PROJECT = gql`
     query TaskByStatusByProject($projectId: Int!) {

@@ -1,32 +1,33 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useQuery } from '@apollo/client';
 
-import { Tasks_tasks } from '../../../schemaTypes';
-import { GET_TASKS_BY_STATUS_AND_USER } from '../../../queries/task';
-
-import VARIABLES from '../../../../assets/styles/_variables';
 import COMPONENTS from '../../../../assets/styles/_components';
+import useMyTasks from '../../customHook/userMyTasks';
 
-export default function UserDashboardCardTaskFrst ({ userId = 3 , statusName = 'In Progress' }) {
+export default function UserDashboardCardTaskFrst () {
 
-    const [tasksDoingVisible, setTasksDoingVisible] = React.useState(false); // HomeCard 1 : Tasks > Doing ===> menu hide/off
-
+    const statusName = 'In Progress';
+    
     const navigation = useNavigation();
 
-    const { loading, error, data } = useQuery<Tasks_tasks>(GET_TASKS_BY_STATUS_AND_USER, {
-      variables: { userId, statusName },
-    });
+    const [tasks, loading] = useMyTasks(statusName);
+
+    const myTasks = useMemo(() => {
+        if (tasks && typeof tasks !== 'boolean') {
+            return tasks;
+        }
+        return '';
+    }, [tasks])
 
     return (
       <TouchableOpacity
-        onPress={() => {navigation.navigate('UserTasksDoing', {statusName: 'In Progress'})}}
+        onPress={() => {navigation.navigate('UserTasksDoing', {statusName: statusName})}}
         activeOpacity={.8}
       >
       {loading ? <ActivityIndicator /> : null}
-      {data &&
+      {tasks &&
         <View style={COMPONENTS.homeCard}>
           <View style={[COMPONENTS.homeCardTopColor, COMPONENTS.homeCardTopColorDoing]}></View>
           <View style={COMPONENTS.homeCardTop}>
@@ -34,7 +35,7 @@ export default function UserDashboardCardTaskFrst ({ userId = 3 , statusName = '
             <Text style={COMPONENTS.homeCardName}>Tasks : Doing</Text>
           </View>
           <View style={COMPONENTS.homeCardBody}>
-            <Text style={COMPONENTS.homeCardBodyText}>Vous avez {data.myTasks.length} tâches en cours</Text>
+            <Text style={COMPONENTS.homeCardBodyText}>Vous avez {myTasks.length} tâches en cours</Text>
           </View>
         </View>
       }

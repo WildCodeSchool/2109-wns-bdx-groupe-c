@@ -6,10 +6,11 @@ import { ProgressBar, Switch } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 import { Projects as ProjectsType } from "../../../schemaTypes";
-import { GET_PROJECTS, GET_PROJECTS_BY_USER } from '../../../queries/project';
+import { GET_PROJECTS } from '../../../queries/project';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 import COMPONENTS from '../../../../assets/styles/_components';
+import useMyProjects from '../../customHook/userMyProjects';
 
 const styles = StyleSheet.create({
   userProjectsContainer: {
@@ -34,17 +35,9 @@ export default function Projects(route: any) {
 
   const navigation = useNavigation();
 
-  const allQueries = () => {
-    const queryProjectsByUser = useQuery<ProjectsType>(GET_PROJECTS_BY_USER, {variables: {userId: 3}});
-    const queryAllProjects = useQuery<ProjectsType>(GET_PROJECTS);
+  const [userProjects, loadingUserProjects] = useMyProjects();
 
-    return [queryProjectsByUser, queryAllProjects]
-  }
-
-  const [
-    { loading: loading1, data: data1 },
-    { loading: loading2, data: data2 },
-  ] = allQueries();
+  const {loading, data} = useQuery<ProjectsType>(GET_PROJECTS);
 
   const [isUserProjectsActive, setIsUserProjectsActive] = React.useState(true);
   const [isAllProjectsActive, setIsAllProjectsActive] = React.useState(false);
@@ -59,10 +52,10 @@ export default function Projects(route: any) {
   const UserProjects = () => {
     return (
       <>
-        {loading1 && <Text>Loading...</Text>}
-        {data1 &&
+        {loadingUserProjects && <Text>Loading...</Text>}
+        {userProjects &&
           <FlatList
-          data = {data1.myProjects}
+          data = {userProjects}
           keyExtractor={(project) => project.id}
           renderItem={(project) => {
             return (
@@ -97,10 +90,10 @@ export default function Projects(route: any) {
   const AllProjects = () => {
     return (
       <>
-        {loading2 && <Text>Loading...</Text>}
-        {data2 &&
+        {loading && <Text>Loading...</Text>}
+        {data &&
           <FlatList
-          data = {data2.projects}
+          data = {data.projects}
           keyExtractor={(project) => project.id}
           renderItem={(project) => {
             return (

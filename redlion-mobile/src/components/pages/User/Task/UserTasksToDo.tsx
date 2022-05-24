@@ -1,22 +1,18 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
-import { useQuery } from "@apollo/client";
 import { useNavigation } from '@react-navigation/native';
 
-import { Tasks_tasks } from '../../../../schemaTypes';
-import { GET_TASKS_BY_STATUS_AND_USER } from '../../../../queries/task';
+import useMyTasks from '../../../customHook/userMyTasks';
 
 import VARIABLES from '../../../../../assets/styles/_variables';
 
-const UserTasksToDo = (route: any, { userId = 3 }) => {
+const UserTasksToDo = () => {
     
-  const { statusName } = route.route.params;
-
-  const { loading, error, data } = useQuery<Tasks_tasks>(GET_TASKS_BY_STATUS_AND_USER, {
-    variables: { userId, statusName },
-  });
+  const statusName = 'To Do';
 
   const navigation = useNavigation();
+
+  const [tasks, loading] = useMyTasks(statusName);
 
   const styles = StyleSheet.create({
     container: {
@@ -47,9 +43,9 @@ const UserTasksToDo = (route: any, { userId = 3 }) => {
   return (
     <View style={styles.container}>
       {loading ? <ActivityIndicator /> : null}
-      {data &&
+      {tasks &&
         <FlatList
-        data = {data.myTasks}
+        data = {tasks}
         keyExtractor={(task) => task.id}
         renderItem={(task) => {
           return (

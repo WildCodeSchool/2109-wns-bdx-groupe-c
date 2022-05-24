@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { useQuery } from '@apollo/client';
 
-import { Projects_projects, Tasks_tasks } from "../../../schemaTypes";
-import { GET_USER_COMMENTS } from '../../../queries/user';
-import { GET_TASKS_BY_STATUS_AND_USER } from '../../../queries/task';
-import { GET_PROJECTS_BY_STATUS_AND_USER } from '../../../queries/project';
+import useMyProjectsByStatus from '../../customHook/userMyProjectsByStatus';
+import useMyTasks from '../../customHook/userMyTasks';
 
 import VARIABLES from '../../../../assets/styles/_variables';
+import useMyProfile from '../../customHook/useMyProfile';
 
 const styles = StyleSheet.create({
     profilStatistiquesContainer: {
@@ -30,85 +28,96 @@ const styles = StyleSheet.create({
     }
 })
 
-export default function ProfilStatistiques() {
+export default function ProfilStatistiques(userId: Number) {
+
+    const [projectsDone, loadingProjectsDone] = useMyProjectsByStatus('Done');
+    const myProjectsDone = React.useMemo(() => {
+        if (projectsDone && typeof projectsDone !== 'boolean') {
+            return projectsDone;
+        }
+        return '';
+    }, [projectsDone])
 
 
-    const allQueries = (userId: Number) => {
+    const [projectsInProgress, loadingProjectsInProgress] = useMyProjectsByStatus('Done');
+    const myProjectsInProgress = React.useMemo(() => {
+        if (projectsInProgress && typeof projectsInProgress !== 'boolean') {
+            return projectsInProgress;
+        }
+        return '';
+    }, [projectsInProgress])
 
-        const queryCompletedProjects = useQuery<Projects_projects>(GET_PROJECTS_BY_STATUS_AND_USER, {
-            variables: { userId, statusName: 'Done' },
-        });
 
-        const queryInProgressProjects = useQuery<Projects_projects>(GET_PROJECTS_BY_STATUS_AND_USER, {
-            variables: { userId, statusName: 'In Progress' },
-        });
+    const [tasksDone, loadingTasksDone] = useMyTasks('Done');
+    const myTasksDone = React.useMemo(() => {
+        if (tasksDone && typeof tasksDone !== 'boolean') {
+            return tasksDone;
+        }
+        return '';
+    }, [tasksDone])
 
-        const queryCompletedTasks = useQuery<Tasks_tasks>(GET_TASKS_BY_STATUS_AND_USER, {
-            variables: { userId, statusName: 'Done' },
-        });
 
-        const queryInProgressTasks = useQuery<Tasks_tasks>(GET_TASKS_BY_STATUS_AND_USER, {
-            variables: { userId, statusName: 'In Progress' },
-        });
+    const [tasksInProgress, loadingTasksInProgress] = useMyTasks('Done');
+    const myTasksInProgress = React.useMemo(() => {
+        if (tasksInProgress && typeof tasksInProgress !== 'boolean') {
+            return tasksInProgress;
+        }
+        return '';
+    }, [tasksInProgress])
 
-        const queryPublishedComments = useQuery(GET_USER_COMMENTS, {variables: { userId }});
-
-        return [
-            queryCompletedProjects, queryInProgressProjects,
-            queryCompletedTasks, queryInProgressTasks, queryPublishedComments,
-        ];
-    }
-
-    const [
-        { loading: loading1, data: data1 },
-        { loading: loading2, data: data2 },
-        { loading: loading3, data: data3 },
-        { loading: loading4, data: data4 },
-        { loading: loading5, data: data5 },
-    ] = allQueries(3)
+    
+    const [user, loadingComments] = useMyProfile();
+    const myUser = React.useMemo(() => {
+        if (user && typeof user !== 'boolean') {
+            return user;
+        }
+        return '';
+    }, [user])
 
     return (
         <View style={styles.profilStatistiquesContainer}>
             <View style={styles.profilStatistiquesBlock}>
-                {loading1 ? <ActivityIndicator /> : null}
-                {data1 &&
+                {loadingProjectsDone ? <ActivityIndicator /> : null}
+                {projectsDone &&
                     <View style={styles.profilStatistiquesElement}>
                             <Text style={styles.profilStatistiquesTitle}>Completed projects :</Text>
-                            <Text style={{color: VARIABLES.clrWhite}}>{data1.myProjects.length}</Text>
+                            <Text style={{color: VARIABLES.clrWhite}}>{myProjectsDone.length}</Text>
                     </View> 
                 }   
-                {loading2 ? <ActivityIndicator /> : null}
-                {data2 &&
+                {loadingProjectsInProgress ? <ActivityIndicator /> : null}
+                {projectsInProgress &&
                     <View style={styles.profilStatistiquesElement}>
                             <Text style={styles.profilStatistiquesTitle}>In progress projects  :</Text>
-                            <Text style={{color: VARIABLES.clrWhite}}>{data2.myProjects.length}</Text>
+                            <Text style={{color: VARIABLES.clrWhite}}>{myProjectsInProgress.length}</Text>
                     </View> 
                 }
             </View>
 
             <View style={styles.profilStatistiquesBlock}>
-                {loading3 ? <ActivityIndicator /> : null}
-                {data3 &&
+                {loadingTasksDone ? <ActivityIndicator /> : null}
+                {tasksDone &&
                     <View style={styles.profilStatistiquesElement}>
                         <Text style={styles.profilStatistiquesTitle}>Completed tasks :</Text>
-                        <Text style={{color: VARIABLES.clrWhite}}>{data3.myTasks.length}</Text>
+                        <Text style={{color: VARIABLES.clrWhite}}>{myTasksDone.length}</Text>
                     </View> 
                 }
-                {loading4 ? <ActivityIndicator /> : null}
-                {data4 &&
+                {loadingTasksInProgress ? <ActivityIndicator /> : null}
+                {tasksInProgress &&
                     <View style={styles.profilStatistiquesElement}>
                         <Text style={styles.profilStatistiquesTitle}>In progress tasks :</Text>
-                        <Text style={{color: VARIABLES.clrWhite}}>{data4.myTasks.length}</Text>
+                        <Text style={{color: VARIABLES.clrWhite}}>{myTasksInProgress.length}</Text>
                     </View> 
                 }
             </View>
 
-            {loading5 ? <ActivityIndicator /> : null}
-            {data5 &&
+            {loadingComments ? <ActivityIndicator /> : null}
+            {user &&
                 <View style={styles.profilStatistiquesBlock}>
                     <View style={styles.profilStatistiquesElement}>
                         <Text style={styles.profilStatistiquesTitle}>Published comments :</Text>
-                        <Text style={{color: VARIABLES.clrWhite}}>{data5.user.comments.length}</Text>
+                        <Text style={{color: VARIABLES.clrWhite}}>
+                            {myUser.comments !== null ? myUser.comments.length : 0}
+                        </Text>
                     </View>
                 </View> 
             }
