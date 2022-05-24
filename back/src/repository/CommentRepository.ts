@@ -26,6 +26,7 @@ class CommentRepository extends Comment {
   }
 
   static async deleteComment(id: number) {
+    //TODO VERFIER QUE C'EST UN ADMIN OU L'AUTEUR DU COMMENTAIRE
     const comment = await Comment.findOneOrFail({ id }, { relations: ['user', 'task'] })
     const commentCopy = ObjectHelpers.deepClone(comment);
     await Comment.remove(comment)

@@ -1,5 +1,4 @@
 import getDatabaseConnection from '../database-connection'
-import dotenv from 'dotenv'
 import { userGenerator } from "../_mock_/userGenerator";
 import { commentGenerator } from "../_mock_/commentGenerator";
 import { projectGenerator } from "../_mock_/projectGenerator";

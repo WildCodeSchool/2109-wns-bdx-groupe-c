@@ -1,24 +1,35 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import React from 'react'
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+
 
 import { Draggable } from 'react-beautiful-dnd'
 import Box from '@mui/material/Box'
 import {makeStyles} from "@mui/styles"
 
-interface TaskTest {
-  shortText: string
-  subject: string
-}
+
+import { Task } from "../../entities/task"
 
 interface ItemProps {
-  task: TaskTest
+  task: Task
   index: number
 }
 
 const useStyles = makeStyles({
-  mainContainer: {
-      backgroundColor: '#FF0000', //RED
-      marginBottom: '10px',
-  }
+  taskPaper: {
+    maxWidth: '100%',
+    minHeight: '70px',
+    padding: '0',
+    margin: '10px 0',
+  },
+  cardContainer: {
+    display: 'flex',
+  },
+  title: {
+    fontWeight: 'bold',
+  },
 })
 
 const TaskCard: React.FC<ItemProps> = ({ task, index }) => {
@@ -27,14 +38,31 @@ const TaskCard: React.FC<ItemProps> = ({ task, index }) => {
   return (
     <Draggable draggableId={shortText} index={index} >
       {provided => (
-        <Box
-          className={classes.mainContainer}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          {shortText}
-        </Box>
+          <Paper
+            className={classes.taskPaper}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <Box padding="15px" className={classes.cardContainer}>
+              <Box>
+                <Typography className={classes.title}>{ subject }</Typography>
+                <Typography>{ shortText }</Typography>
+              </Box>
+              <Box>
+                <FontAwesomeIcon
+                    icon={faPencil}
+                    onClick={() => console.log('test')}
+                    color="#00bcd4"
+                  />
+                <FontAwesomeIcon
+                    icon={faTrash}
+                    onClick={() => console.log('test')}
+                    color="#00bcd4"
+                />
+              </Box>
+            </Box>
+          </Paper>
       )}
     </Draggable>
   )

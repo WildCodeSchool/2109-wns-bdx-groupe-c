@@ -1,19 +1,40 @@
 import React from 'react'
 import { Droppable } from 'react-beautiful-dnd'
-import TaskCard from './TaskCard'
+import makeStyles from "@mui/styles/makeStyles";
+import Card from "@mui/material/Card";
 
+import TaskCard from './TaskCard'
 import Box from '@mui/material/Box'
 
-interface TaskTest {
-    shortText: string
-    subject: string
-}
+import { Task } from "../../entities/task"
+
+const useStyles = makeStyles({
+  cardTitle: {
+      minHeight: '275px',
+      backgroundColor: '#0F4473',
+      marginTop: '25px',
+      height: 'auto',
+      border: '1px solid white'
+  },
+  title: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  cardContent: {
+    backgroundColor: '#0F4473',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '500px'
+  }
+})
+
 
 interface ColumnProps {
   column: {
     id: string,
     name: string,
-    tasks: TaskTest[]
+    tasks: Task[]
   }
 }
 
@@ -27,27 +48,21 @@ On doit fournir au Dropable :
 */
 
 const StatusColumn: React.FC<ColumnProps> =  ({ column: {id, name, tasks} }) => {
+  const classes = useStyles()
   return (
     <Droppable droppableId={name}>
-      {(provided, snapshot) => (
-        <Box
-          style={{
-            backgroundColor: "#D800E2", //PINK
-            display: 'flex',
-            flexDirection: 'column'
+      {(provided) => (
+        <Card
+          className={classes.cardTitle}
+          sx={{
+          borderRadius: '20px'
           }}
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
-          <h2>{name}</h2>
+          <h2 className={classes.title}>{name}</h2>
           <Box
-            style={{
-              backgroundColor: "#37E200", // Green
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: '500px'
-              //When using multiple columns, it's important to have a minimum height on the element that takes provided.droppableProps.
-            }}
+            className={classes.cardContent}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
@@ -56,7 +71,7 @@ const StatusColumn: React.FC<ColumnProps> =  ({ column: {id, name, tasks} }) => 
             ))}
             {provided.placeholder}
           </Box>
-        </Box>
+        </Card>
       )}
     </Droppable>
   )
