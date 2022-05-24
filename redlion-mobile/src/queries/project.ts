@@ -78,6 +78,7 @@ export const GET_PROJECTS = gql`
         }
     }
 `;
+<<<<<<< HEAD
 
 export const GET_PROJECTS_BY_USER = gql`
     query Query($userId: Int!) {
@@ -152,3 +153,5 @@ export const GET_PROJECTS_BY_STATUS_AND_USER = gql`
         }
     }
 `;
+=======
+>>>>>>> [MOBILE] setting up the pages

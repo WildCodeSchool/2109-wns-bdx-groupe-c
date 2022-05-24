@@ -118,23 +118,6 @@ export const GET_TASKS_BY_STATUS_AND_USER = gql`
             subject
             shortText
             description
-            status {
-                name
-            }
-            project {
-                id
-                name
-            }
-            assignee {
-                id
-                firstName
-                lastName
-            }
-            createdAt
-            updatedAt
-            dueDate
-            expectedDuration
-            spentTime
         }
     }
 `;
