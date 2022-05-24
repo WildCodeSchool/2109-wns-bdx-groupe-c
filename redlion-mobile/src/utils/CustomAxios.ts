@@ -3,7 +3,7 @@ import setCookie from 'set-cookie-parser';
 import axios from 'axios';
 import { API_URL } from '@env';
 
-let headers = {};
+let headers = {};
 
 const customAxios = axios.create({
   baseURL: API_URL,

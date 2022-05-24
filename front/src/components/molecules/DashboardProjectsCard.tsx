@@ -32,7 +32,6 @@ const useStyles = makeStyles({
       padding: '0',
       margin: '10px 0',
       backgroundColor: '#7273FF',
-      overflowY: 'scroll',
     },
     projectActionArea: {
       maxWidth: '400px',
@@ -73,7 +72,7 @@ const DashboardProjectsCard = () => {
                 <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log("click")}/>
               </Box>
                 <Box sx={{
-                    display: 'grid', 
+                    display: 'grid',
                     gridTemplateColumns: 'repeat(4, 1fr)',
                     gap: 1
                     }}>

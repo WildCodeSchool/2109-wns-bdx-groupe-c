@@ -16,3 +16,5 @@ const getDatabaseConnection = async (url: string, logging = false) => {
 }
 
 export default getDatabaseConnection
+
+

@@ -22,6 +22,7 @@ const Routes = () => {
   if (loading) {
     return <CircularProgress />
   }
+
   return (
     <Router history={history}>
       <Switch>

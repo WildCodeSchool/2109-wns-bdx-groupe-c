@@ -4,7 +4,7 @@ import Language from '../models/Language';
 import ObjectHelpers from '../helpers/ObjectHelper';
 
 class UserLanguageRepository extends UserLanguage {
-  static async findAll(user: User | null) {
+  static async findAll(user: User | null) {
     if (!user) {
       throw new Error('User is not logged in')
     }
@@ -16,7 +16,7 @@ class UserLanguageRepository extends UserLanguage {
     });
   }
 
-  static async addLanguageToUser(user: User | null, rating: number, languageId: number) {
+  static async addLanguageToUser(user: User | null, rating: number, languageId: number) {
     if (!user) {
       throw new Error('User is not logged in')
     }

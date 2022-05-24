@@ -39,7 +39,6 @@ mutation LogOut {
 class ApiUtils {
 
   static async signIn (email: string, password: string) : Promise<Boolean> {
-    console.log('je rentre dans le signIn')
     return customAxios.post(API_URL, {
       query: print(SIGN_IN),
       variables: {
@@ -47,7 +46,6 @@ class ApiUtils {
         password: password,
       },
     }).then((response) => {
-      console.log('RESULTAT DE LA MUTATION DE LOGIN', response.data)
       if (response.data === null) {
         return false
       } else {
@@ -55,13 +53,11 @@ class ApiUtils {
       }
       // this.myProfile()
     }).catch((error) => {
-      console.log('ERREUR DE LA MUTATION DE LOGIN', error.message)
       return false;
     });
   }
 
   static async myProfile () : Promise<void> {
-    console.log('je rentre dans le fetch myProfile')
     customAxios.post(API_URL, {
       query: print(MY_PROFILE)
     }).then((response) => {
