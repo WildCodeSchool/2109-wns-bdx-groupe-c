@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useQuery, useMutation } from "@apollo/client"
 import { useParams } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
@@ -7,6 +7,8 @@ import {makeStyles} from "@mui/styles"
 import ObjectHelpers from '../helpers/ObjectHelper';
 import { Task } from '../entities/task';
 import { Status } from '../entities/status';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 
 import StatusColumn from '../components/molecules/StatusColumn';
 
@@ -15,6 +17,8 @@ import {
     GET_ALL_STATUS,
 } from "../queries/status"
 import { MUTATION_UPDATE_STATUS_TASK } from "../queries/task"
+import ModalAddTask from '../components/molecules/Task/ModalAddTask';
+import Toast from '../components/molecules/Toast';
 
 const useStyles = makeStyles({
     containerWrapper: {
@@ -28,6 +32,13 @@ const useStyles = makeStyles({
         margin: '24px auto',
         width: '80%',
         gap: '15px'
+    },
+    addTaskButton: {
+        backgroundColor: '#1F84E1',
+        color: 'white',
+        '&:hover': {
+            backgroundColor: '#145591',
+        },
     }
 })
 
@@ -68,9 +79,28 @@ const Project = () => {
         variables: {projectId: id ? parseInt(id, 10) : 0}
     })
 
-    const [updateStatusTask] = useMutation(MUTATION_UPDATE_STATUS_TASK)
+    const [openAddTask, setOpenAddTask] = useState(false);
 
-    const [statusColumns, setStatusColumns] = useState<dragListType | null>(null)
+    const toggleAddTaskModal = useCallback(() => {
+        setOpenAddTask(!openAddTask);
+      },[openAddTask]);
+
+    const [showSuccessTaskDeleted, setShowSuccessTaskDeleted] = useState<boolean>(false)
+
+    const handleCloseToast = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setShowSuccessTaskDeleted(false);
+    }
+
+    const openToastSuccessTaskDeleted = () => {
+        setShowSuccessTaskDeleted(true);
+    };
+
+
+    const [updateStatusTask] = useMutation(MUTATION_UPDATE_STATUS_TASK)
+    const [statusColumns, setStatusColumns] = useState<dragListType | null>(null)
 
     useEffect(() => {
         if(data) {
@@ -166,12 +196,28 @@ const Project = () => {
                         {Object.values(statusColumns).map(status => {
                             const { id } = status
                             return (
-                                <StatusColumn column={status} key={id} />
+                                <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted}/>
                             )
                         })}
                     </Box>
                 )}
             </DragDropContext>
+            <Button
+                className={classes.addTaskButton}
+                onClick={toggleAddTaskModal}
+            >
+              Ajouter une tâche
+            </Button>
+            <ModalAddTask
+                openAddTask={openAddTask}
+                toggleAddTaskModal={toggleAddTaskModal}
+            />
+            <Toast
+            handleClose={handleCloseToast}
+            open={showSuccessTaskDeleted}
+            severity="success"
+            message="Task deleted successfully"
+            />
         </Box>
     )
 }

@@ -14,7 +14,15 @@ export interface Task {
   spentTime: number
   status: Status
   project: Project
-  assignee: User
+  assignee?: User
   comments: Comment[]
+}
 
+export interface createTaskType {
+  subject: string
+  shortText: string
+  description: string
+  projectId: number | null
+  dueDate: string
+  expectedDuration: string
 }

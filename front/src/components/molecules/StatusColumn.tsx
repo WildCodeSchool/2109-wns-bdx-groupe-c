@@ -30,12 +30,13 @@ const useStyles = makeStyles({
 })
 
 
-interface ColumnProps {
+interface StatusColumnProps {
   column: {
     id: string,
     name: string,
-    tasks: Task[]
-  }
+    tasks: Task[],
+  },
+  openToastSuccessTaskDeleted: () => void,
 }
 
 
@@ -47,7 +48,7 @@ On doit fournir au Dropable :
 à la <div> retourné  ainsi que le {provided.placeholder}
 */
 
-const StatusColumn: React.FC<ColumnProps> =  ({ column: {id, name, tasks} }) => {
+const StatusColumn: React.FC<StatusColumnProps> =  ({ column: {id, name, tasks}, openToastSuccessTaskDeleted }) => {
   const classes = useStyles()
   return (
     <Droppable droppableId={name}>
@@ -67,7 +68,7 @@ const StatusColumn: React.FC<ColumnProps> =  ({ column: {id, name, tasks} }) => 
             ref={provided.innerRef}
           >
             {tasks.map((task, index) => (
-              <TaskCard key={task.shortText} task={task} index={index} />
+              <TaskCard key={task.shortText} task={task} index={index} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted} />
             ))}
             {provided.placeholder}
           </Box>
