@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import {useState, useCallback} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
 import ApiUtils from '../../../utils/ApiUtils';
 
@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 20,
     },
+    image: {
+        height: 40,
+        width: '80%',
+        resizeMode: 'contain'
+    },
     title: {
         paddingHorizontal: 10,
         paddingVertical: 5,
@@ -42,8 +47,8 @@ const styles = StyleSheet.create({
         color: VARIABLES.clrWhite,
     },
     input: {
-        height: 50,
-        maxHeight: 50,
+        height: 60,
+        maxHeight: 60,
         minWidth: '70%',
         marginBottom: 20,
         backgroundColor: 'transparent',
@@ -76,28 +81,20 @@ export default function LogIn () {
         }
     }, [error, email, password]);
 
-    const theme = {
-        colors: {
-          text: "orange",
-          placeHolder: 'orange'
-        }
-      };
-
     return (
         <View style={styles.container}>
 
             <View style={styles.block}>
                 <View style={styles.blockTitle}>
-                    <Text style={[styles.title, styles.titleRed]}>Red</Text>
-                    <Text style={[styles.title]}>Lion</Text>
+                    <Image style={styles.image} source={require('../../../../assets/images/logo.png')} />
                 </View>
-                <Text style={styles.titleText}>"Think kion, not kitty"</Text>
+                <Text style={styles.titleText}>" Think lion, not kitty "</Text>
             </View>
 
             <View style={[styles.block]}>
                 <TextInput
                     style={[styles.input]}
-                    theme={{colors: {placeholder: VARIABLES.clrWhite}}}
+                    theme={{colors: {placeholder: VARIABLES.clrWhite, text: VARIABLES.clrWhite}}}
                     underlineColor={VARIABLES.clrWhite}
                     placeholderTextColor={VARIABLES.clrThrd}
                     activeUnderlineColor={VARIABLES.clrThrd}
@@ -109,7 +106,7 @@ export default function LogIn () {
                     />
                 <TextInput
                     style={[styles.input]}
-                    theme={{colors: {placeholder: VARIABLES.clrWhite}}}
+                    theme={{colors: {placeholder: VARIABLES.clrWhite, text: VARIABLES.clrWhite}}}
                     underlineColor={VARIABLES.clrWhite}
                     placeholderTextColor={VARIABLES.clrThrd}
                     activeUnderlineColor={VARIABLES.clrThrd}
@@ -117,9 +114,10 @@ export default function LogIn () {
                     label="Password"
                     value={password}
                     autoComplete={true}
+                    secureTextEntry={true}
                     onChangeText={text => setPassword(text)}
                 />
-                <HelperText type="error" visible={error}>
+                <HelperText type="error" visible={error} onPressIn={()=>{}} onPressOut={()=>{}}>
                     Could not sign up with provided email address.
                 </HelperText>
                 <Button
@@ -130,6 +128,7 @@ export default function LogIn () {
                 >
                     Connection
                 </Button>
+
             </View>
 
         </View>

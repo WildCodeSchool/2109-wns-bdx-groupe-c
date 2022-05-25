@@ -41,4 +41,3 @@ customAxios.interceptors.response.use(
 );
 
 export default customAxios;
-

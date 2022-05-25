@@ -77,6 +77,8 @@ const _components = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: VARIABLES.clrBgDark,
+        zIndex: -1,
+        elevation: -1,
     },
     projectCard: {
         flex: 1,

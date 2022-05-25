@@ -1,38 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useQuery } from "@apollo/client";
-import gql from "graphql-tag";
 
-import { Tasks_tasks as TaskProps } from "../../../../schemaTypes";
+import { Tasks_tasks } from "../../../../schemaTypes";
+import { GET_TASK } from '../../../../queries/task';
+
 import VARIABLES from '../../../../../assets/styles/_variables';
 
 const ProjectTask = (route: any) => {
 
   const { taskId } = route.route.params;
 
-  const GET_TASK = gql`
-  query Task($taskId: Float!) {
-    task(id: $taskId) {
-      id
-      subject
-      shortText
-      description
-      status {
-        name
-      } 
-      assignee {
-        firstName
-      }
-      createdAt
-      updatedAt
-      dueDate
-      expectedDuration
-      spentTime
-    }
-  }
-  `;
-  
-  const { loading, error, data }= useQuery<TaskProps>(GET_TASK, {
+  const { loading, error, data }= useQuery<Tasks_tasks>(GET_TASK, {
     variables: {taskId: parseInt(taskId)},
   });
 

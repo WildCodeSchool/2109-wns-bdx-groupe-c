@@ -1,58 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, Button, TouchableOpacity } from 'react-native';
-import { useQuery } from "@apollo/client";
-import { Tasks as TasksProps } from "../../../../schemaTypes";
-import gql from "graphql-tag";
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+import useMyTasks from '../../../customHook/userMyTasks';
 
 import VARIABLES from '../../../../../assets/styles/_variables';
 
-const UserTasksDoing = (route: any) => {
+const UserTasksDoing = () => {
     
-  const { statusName } = route.route.params;
-
-  const GET_TASKS = gql`
-  query Tasks($statusName: String!) {
-    tasksByStatus(statusName: $statusName) {
-        id
-        shortText
-        subject
-        status {
-          name
-        }
-        description
-        project {
-          name
-          shortText
-        }
-        assignee {
-          id
-          firstName
-          lastName
-        }
-        createdAt
-        updatedAt
-        dueDate
-        expectedDuration
-        spentTime
-        comments {
-          content
-          createdAt
-          updatedAt
-          user {
-            firstName
-            lastName
-          }
-        }
-      }
-  }
-  `;
+  const statusName = 'In Progress';
 
   const navigation = useNavigation();
 
-  const { loading, error, data }= useQuery<TasksProps>(GET_TASKS, {
-    variables: {statusName: statusName},
-  });
+  const [tasks, loading] = useMyTasks(statusName);
 
   const styles = StyleSheet.create({
     container: {
@@ -83,9 +43,9 @@ const UserTasksDoing = (route: any) => {
   return (
     <View style={styles.container}>
       {loading ? <ActivityIndicator /> : null}
-      {data &&
+      {tasks &&
         <FlatList
-        data = {data.tasksByStatus}
+        data = {tasks}
         keyExtractor={(task) => task.id}
         renderItem={(task) => {
           return (

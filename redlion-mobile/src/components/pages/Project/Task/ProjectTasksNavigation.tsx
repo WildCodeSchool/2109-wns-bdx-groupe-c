@@ -2,11 +2,13 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import VARIABLES from '../../../../assets/styles/_variables';
+import VARIABLES from '../../../../../assets/styles/_variables';
 
-import ProjectsAll from './ProjectsAll';
-import ProjectsUser from './ProjectsUser';
-import ProjectsAppbar from '../../organisms/Project/ProjectsAppbar';
+import ProjectTasksAppbar from '../../../organisms/Project/ProjectTasksAppbar';
+import ProjectTasksToDo from './ProjectTasksToDo';
+import ProjectTasksInProgress from './ProjectTasksInProgress';
+import ProjectTasksDone from './ProjectTasksDone';
+import ProjectTasksCodeReview from './ProjectTasksCodeReview';
 
 const styles = StyleSheet.create({
   container: {
@@ -41,11 +43,11 @@ const styles = StyleSheet.create({
   }
 });
 
-const Projects = (route: any) => {
+const ProjectTasksNavigation = (route: any) => {
 
     const Stack = createStackNavigator();
 
-    const forFade = (current: any) => ({
+    const forFade = ({ current }) => ({
         cardStyle: {
             opacity: current.progress,
         },
@@ -63,13 +65,15 @@ const Projects = (route: any) => {
                 cardStyle: {
                     backgroundColor: VARIABLES.clrBgDark,
                 },
-                header: (props) => <ProjectsAppbar params={{route: route}} {...props} />,
+                header: (props) => <ProjectTasksAppbar params={{route: route}} {...props} />,
             })}    
         >
-            <Stack.Screen name="ProjectsAll" component={ProjectsAll} initialParams={{route: route.route.params}} options={{cardStyleInterpolator: forFade}} />
-            <Stack.Screen name="ProjectsUser" component={ProjectsUser} initialParams={{route: route.route.params}} options={{cardStyleInterpolator: forFade}} />
+            <Stack.Screen name="ProjectTasksToDo" component={ProjectTasksToDo} initialParams={{route: route.route.params}} options={{cardStyleInterpolator: forFade}} />
+            <Stack.Screen name="ProjectTasksInProgress" component={ProjectTasksInProgress} initialParams={{route: route.route.params}} options={{cardStyleInterpolator: forFade}} />
+            <Stack.Screen name="ProjectTasksDone" component={ProjectTasksDone} initialParams={{route: route.route.params}} options={{cardStyleInterpolator: forFade}} />
+            <Stack.Screen name="ProjectTasksCodeReview" component={ProjectTasksCodeReview} initialParams={{route: route.route.params}} options={{cardStyleInterpolator: forFade}} />
         </Stack.Navigator>
     );
 }
 
-export default Projects;
+export default ProjectTasksNavigation;

@@ -5,7 +5,6 @@ import VARIABLES from '../../../../assets/styles/_variables';
 
 import UserDashboardCardTaskFrst from '../../organisms/User/UserDashboardCardTaskFrst';
 import UserDashboardCardTaskScnd from '../../organisms/User/UserDashboardCardTaskScnd';
-import UserDashboardCardProject from '../../organisms/User/UserDashboardCardProject';
 
 export default function User() {
 
@@ -22,7 +21,6 @@ export default function User() {
     <View style={styles.homeContainer}>
       <UserDashboardCardTaskFrst></UserDashboardCardTaskFrst>
       <UserDashboardCardTaskScnd></UserDashboardCardTaskScnd>
-      <UserDashboardCardProject></UserDashboardCardProject> 
     </View>
   );
 }

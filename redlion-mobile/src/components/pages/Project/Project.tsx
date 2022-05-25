@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, FlatList, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Appbar, Divider, Menu, ProgressBar } from 'react-native-paper';
-import gql from "graphql-tag";
+import { Appbar, Menu, ProgressBar } from 'react-native-paper';
 import { useQuery } from "@apollo/client";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { Projects_projects } from "../../../schemaTypes";
+import { Project_project } from "../../../schemaTypes";
+import { GET_PROJECT_ALL } from '../../../queries/project';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 import COMPONENTS from '../../../../assets/styles/_components';
@@ -81,40 +81,9 @@ export default function Project (route: any) {
 
   const { projectId, projectName, createdBy} = route.route.params;
 
-  const GET_PROJECT = gql`
-    query Project($projectId: Float!) {
-      project(id: $projectId) {
-        id
-        name
-        shortText
-        description
-        initialTimeSpent
-        createdAt
-        updatedAt
-        createdBy {
-          firstName
-          lastName
-        }
-        languages {
-          id
-          name
-        }
-        tasks {
-          id
-          subject
-          shortText
-          description
-        }
-        status {
-          name
-        }
-      }
-    }
-  `;
-
   const navigation = useNavigation();
 
-  const { loading, error, data } = useQuery<Projects_projects>(GET_PROJECT, {
+  const { loading, error, data } = useQuery<Project_project>(GET_PROJECT_ALL, {
     variables: {projectId: parseInt(projectId)},
   });
 
@@ -128,7 +97,7 @@ export default function Project (route: any) {
 
               {/* --- INFORMATIONS --- */}
               <TouchableOpacity
-                    onPress={() => navigation.navigate('ProjectInformationsUpdate', {projectId: projectId, projectName: projectName})}
+                    onPress={() => navigation.navigate('ProjectInformations', {projectId: projectId, projectName: projectName})}
                     activeOpacity={.8}
               >
               <View style={[styles.columnBlock, styles.width, styles.informations]}>
@@ -158,7 +127,7 @@ export default function Project (route: any) {
 
             {/* --- USERS --- */}
             <TouchableOpacity
-              onPress={() => {navigation.navigate('ProjectUsersUpdate', {projectId: projectId, projectName: projectName, })}}
+              onPress={() => {navigation.navigate('ProjectUsers', {projectId: projectId, projectName: projectName, })}}
               activeOpacity={.8}
             >
               <View style={[styles.columnBlock, styles.width, styles.users]}>
@@ -174,7 +143,7 @@ export default function Project (route: any) {
 
             {/* --- LANGUAGES --- */}
             <TouchableOpacity
-              onPress={() => {navigation.navigate('ProjectLanguagesUpdate', {projectId: projectId, projectName: projectName, createdBy: createdBy})}}
+              onPress={() => {navigation.navigate('ProjectLanguages', {projectId: projectId, projectName: projectName, createdBy: createdBy})}}
               activeOpacity={.8}
             >
               <View style={[styles.columnBlock, styles.width, styles.languages]}>
@@ -220,15 +189,8 @@ export default function Project (route: any) {
                       setMenuTask(!menuTask);
                     }}
                     title="Tout voir"
-                    titleStyle={[COMPONENTS.menuTitle]} />
-                  <Divider />
-                  <Menu.Item
-                    onPress={() => {
-                      navigation.navigate('ProjectTaskCreate', {projectName: data.project.name});
-                      setMenuTask(!menuTask);
-                    }}
-                    title="Créer une tâche"
-                    titleStyle={[COMPONENTS.menuTitle]} />
+                    titleStyle={[COMPONENTS.menuTitle]}
+                  />
                 </Menu>
               </View>
               <View style={[styles.rowBlock, {padding: 0}]}>
