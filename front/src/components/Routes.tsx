@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client"
 
 import Home from '../pages/Home'
 import Dashboard from '../pages/Dashboard'
-import Project from '../pages/Project'
+import ProjectDashboardTask from '../pages/ProjectDashboardTask'
 
 import { MY_PROFILE } from '../queries/user'
 import ProjectDashboardInfo from '../pages/ProjectDashboardInfo'
@@ -28,8 +28,8 @@ const Routes = () => {
       <Switch>
         {isAuthenticated && (
           <>
-            <Route path="/project/:id">
-              <Project />
+            <Route path="/project/:id/tasks">
+              <ProjectDashboardTask />
             </Route>
             <Route exact path="/project/:id/infos">
               <ProjectDashboardInfo />

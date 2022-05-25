@@ -11,8 +11,9 @@ import Typography from '@mui/material/Typography'
 import MoreMenu from '../atoms/MoreMenu'
 import { GET_TASKS_BY_PROJECT } from '../../queries/task'
 import { Task } from '../../entities/task'
+import { Theme, useTheme } from '@mui/material/styles'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   card: {
     maxWidth: '500px',
     backgroundColor: '#7273FF',
@@ -23,6 +24,14 @@ const useStyles = makeStyles({
     padding: '0',
     margin: '10px 0',
   },
+  tagCard: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    borderRadius: '20px 0 0 0',
+    minWidth: '100px',
+    minHeight: '18px'
+  },
   taskCardName: {
     fontSize: '17px !important',
   },
@@ -32,7 +41,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-})
+}))
 
 interface Props {
   projectId: number
@@ -41,12 +50,22 @@ interface Props {
 
 const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
   const { loading, data, error } = useQuery(GET_TASKS_BY_PROJECT, { variables: { projectId } })
-
+  
+  const theme = useTheme();
   const classes = useStyles()
+
+
+  const color = {
+    "To Do" : theme.palette.secondary.purple,
+    "In Progress" : theme.palette.secondary.yellow,
+    "Code Review" : theme.palette.secondary.cyan,
+    "Done" : theme.palette.secondary.green,
+  }
 
   return (
     <Card className={classes.card} sx={{borderRadius: '20px'}}>
       <CardContent sx={{ backgroundColor: '#0F4473', position: 'relative'}}>
+      <Box className={classes.tagCard} sx={{backgroundColor: color['To Do']}} />
         <Box className={classes.boxTitle}>
           <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold' }}>
             Tasks &lt; To do

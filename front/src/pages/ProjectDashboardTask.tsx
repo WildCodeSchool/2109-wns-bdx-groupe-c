@@ -8,7 +8,6 @@ import ObjectHelpers from '../helpers/ObjectHelper';
 import { Task } from '../entities/task';
 import { Status } from '../entities/status';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
 
 import StatusColumn from '../components/molecules/StatusColumn';
 
@@ -19,14 +18,24 @@ import {
 import { MUTATION_UPDATE_STATUS_TASK } from "../queries/task"
 import ModalAddTask from '../components/molecules/Task/ModalAddTask';
 import Toast from '../components/molecules/Toast';
+import { Theme } from '@mui/material/styles'
+import Sidenav from '../components/molecules/Sidenav';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
+    masterContainer: {
+        backgroundColor: '#061B2E',
+        margin: '0',
+        minHeight: '100vh',
+        padding: '25px',
+        marginLeft: '65px',
+        color: '#fff'
+      },
     containerWrapper: {
         backgroundColor: '#061B2E',
         minHeight: '100vh',
     },
     mainContainer: {
-        backgroundColor: '#061B2E',
+        backgroundColor: theme.palette.secondary.main, 
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
         margin: '24px auto',
@@ -34,13 +43,15 @@ const useStyles = makeStyles({
         gap: '15px'
     },
     addTaskButton: {
+        position: 'relative',
+        left: '80px',
         backgroundColor: '#1F84E1',
         color: 'white',
         '&:hover': {
             backgroundColor: '#145591',
         },
     }
-})
+}))
 
 interface UseParamProps {
     id: string | undefined,
@@ -69,11 +80,11 @@ interface dragListType {
     },
 }
 
-const Project = () => {
+const ProjectDashboardTask = () => {
     const classes = useStyles()
     const { id } = useParams<UseParamProps>();
 
-    const { data: statusData } = useQuery(GET_ALL_STATUS)
+    const { data: dataAllStatus, loading: loadingAllStatus } = useQuery(GET_ALL_STATUS)
 
     const { loading, data } = useQuery(GET_TASKS_BY_STATUS_BY_PROJECTID, {
         variables: {projectId: id ? parseInt(id, 10) : 0}
@@ -111,7 +122,7 @@ const Project = () => {
     }, [data])
 
     const onDragEnd = ({ source, destination }: DropResult) => {
-        if (statusColumns && statusData) {
+        if (statusColumns && dataAllStatus) {
             // Make sure we have a valid destination
             if (destination === undefined || destination === null) return null
 
@@ -148,10 +159,9 @@ const Project = () => {
             } else {
               let newColEnd;
               const elementToMove: Task = statusColumns[sourceDroppableId].tasks[source.index]
-              const statusTable: Status[] = statusData.status
+              const statusTable: Status[] = dataAllStatus.status
               const statusId = statusTable.find(status => status.name === destinationDroppableId)?.id
               const taskId = elementToMove.id
-
 
               if ( statusId && taskId ) {
                 const statusIdFormatted = parseInt(statusId, 10);
@@ -188,38 +198,42 @@ const Project = () => {
       }
 
     return (
-        <Box className={classes.containerWrapper}>
-            <DragDropContext onDragEnd={onDragEnd}>
-                {loading && <h1>Loading...</h1>}
-                {!loading && statusColumns && (
-                    <Box className={classes.mainContainer}>
-                        {Object.values(statusColumns).map(status => {
-                            const { id } = status
-                            return (
-                                <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted}/>
-                            )
-                        })}
-                    </Box>
-                )}
-            </DragDropContext>
-            <Button
-                className={classes.addTaskButton}
-                onClick={toggleAddTaskModal}
-            >
-              Ajouter une tâche
-            </Button>
-            <ModalAddTask
-                openAddTask={openAddTask}
-                toggleAddTaskModal={toggleAddTaskModal}
-            />
-            <Toast
-            handleClose={handleCloseToast}
-            open={showSuccessTaskDeleted}
-            severity="success"
-            message="Task deleted successfully"
-            />
+        <Box className={classes.masterContainer}>
+            <Sidenav />
+            <Box className={classes.containerWrapper}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    {loading && <h1>Loading...</h1>}
+                    {!loading && statusColumns && (
+                        <Box className={classes.mainContainer}>
+                            {Object.values(statusColumns).map(status => {
+                                const { id } = status
+                                return (
+                                    <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted}/>
+                                )
+                            })}
+                        </Box>
+                    )}
+                </DragDropContext>
+
+                <Button
+                    className={classes.addTaskButton}
+                    onClick={toggleAddTaskModal}
+                >
+                Ajouter une tâche
+                </Button>
+                <ModalAddTask
+                    openAddTask={openAddTask}
+                    toggleAddTaskModal={toggleAddTaskModal}
+                />
+                <Toast
+                handleClose={handleCloseToast}
+                open={showSuccessTaskDeleted}
+                severity="success"
+                message="Task deleted successfully"
+                />
+            </Box>
         </Box>
     )
 }
 
-export default Project
+export default ProjectDashboardTask

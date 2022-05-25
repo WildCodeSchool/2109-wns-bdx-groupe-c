@@ -1,6 +1,6 @@
-import { Task } from './task';
+import { Task } from './task'
 export interface Status {
+  name: 'To Do' | 'In Progress' | 'Code Review' | 'Done'
   id: string
-  name: string
-  tasks: Task[] | null
+  tasks: Task[] | null
 }
