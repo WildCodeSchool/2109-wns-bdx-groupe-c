@@ -10,7 +10,12 @@ class ProjectRepository extends Project {
     }
 
     static async findOneById(id: number) {
-      return await Project.findOneOrFail({ id }, { relations: ['languages', 'createdBy', 'tasks', 'tasks.assignee', 'tasks.status', 'status'], order: {id: 'ASC'} } )
+      return await Project.findOneOrFail({ id }, {
+        relations: ['languages', 'createdBy', 'tasks', 'tasks.assignee', 'tasks.status', 'status'],
+        order: {
+          id: 'ASC'
+        }
+      } )
     }
 
     static async createProject(name: string, shortText: string, description: string, initialTimeSpent: number, user: User | null) {

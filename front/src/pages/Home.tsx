@@ -22,11 +22,15 @@ const useStyles = makeStyles({
     top: '40%',
   },
   connectionButton: {
-    backgroundColor: 'red',
-    color: '#061B2E',
+    backgroundColor: '#1F84E1',
+    color: 'white',
+    borderRadius:'20px',
+    fontWeight: '700',
+    minWidth: '150px',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     '&:hover': {
-      backgroundColor: 'yellow',
-      color: 'red',
+      backgroundColor: '#114e85',
+      color: 'white',
     },
   },
 })
@@ -49,7 +53,7 @@ const Home = () => {
                 history.push('/login')
               }}
             >
-              Se connecter
+              Connect
             </Button>
           )}
           {connectionOn && <Login setConnectionOn={setConnectionOn} />}

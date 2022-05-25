@@ -1,8 +1,9 @@
-import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx } from 'type-graphql'
+import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx, Authorized } from 'type-graphql'
 import { CustomContext } from "../type";
 import User from '../models/AppUser'
 import Role from '../models/Role'
 import UserRepository from '../repository/UserRepository';
+import { ROLE_ADMIN } from '../constants';
 
 @ArgsType()
 class signUpInput {
@@ -114,11 +115,13 @@ class UserResolver {
   }
 
   @Mutation(() => User)
+  @Authorized([ROLE_ADMIN])
   async deleteUser(@Args() { id }: DeleteUserInput) {
     return UserRepository.deleteUser(id);
   }
 
   @Mutation(() => User)
+  @Authorized([ROLE_ADMIN])
   async updateUserRole(@Args() { userId, roleIdentifier }: UpdateRoleInput) {
     const user = await User.findOneOrFail( userId )
     const role = await Role.findOneOrFail({ identifier: roleIdentifier })

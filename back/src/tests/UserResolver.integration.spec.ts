@@ -145,13 +145,25 @@ describe('UserResolver', () => {
   })
   describe('mutation change Role', () => {
     it('change the role and return the user', async () => {
+      const ROLE_ADMIN = await roleGenerator('admin', 'ADMIN')
+      const userTest = await userGenerator(
+        'admin',
+        'admin',
+        'admin@mail.com',
+        'password',
+        ROLE_ADMIN
+      )
+      const sessionAdmin = await AppUserSessionRepository.createSession(userTest)
       const role1 = await roleGenerator('test1', 'test1')
       const role2 = await roleGenerator('test2', 'test2')
 
       const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
 
-      const result = await testClient.post('/graphql').send({
-        query: `mutation {
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${sessionAdmin.id}`)
+        .send({
+          query: `mutation {
           updateUserRole(
             userId: ${user1.id},
             roleIdentifier: "${role2.identifier}",
@@ -177,19 +189,19 @@ describe('UserResolver', () => {
           }
         }
       }`,
-      })
+        })
       expect(JSON.parse(result.text).errors).toBeUndefined()
       expect(JSON.parse(result.text).data.updateUserRole).toMatchInlineSnapshot(`
         Object {
           "comments": null,
           "email": "nouveau@mail.com",
           "firstName": "Nouveau",
-          "id": "1",
+          "id": "2",
           "isActive": true,
           "lastName": "Nouveau",
           "projectsCreated": null,
           "role": Object {
-            "id": "2",
+            "id": "3",
             "identifier": "test2",
             "name": "test2",
           },
@@ -233,11 +245,23 @@ describe('UserResolver', () => {
   })
   describe('mutation delete a user', () => {
     it('update the boolean is active to false', async () => {
+      const ROLE_ADMIN = await roleGenerator('admin', 'ADMIN')
+      const userTest = await userGenerator(
+        'admin',
+        'admin',
+        'admin@mail.com',
+        'password',
+        ROLE_ADMIN
+      )
+      const sessionAdmin = await AppUserSessionRepository.createSession(userTest)
       const role1 = await roleGenerator('test1', 'test1')
       const user1 = await userGenerator('Nouveau', 'Nouveau', 'nouveau@mail.com', 'password', role1)
 
-      const result = await testClient.post('/graphql').send({
-        query: `mutation {
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${sessionAdmin.id}`)
+        .send({
+          query: `mutation {
           deleteUser(
             id: ${user1.id},
         ) {
@@ -247,7 +271,7 @@ describe('UserResolver', () => {
           isActive
         }
       }`,
-      })
+        })
       expect(JSON.parse(result.text).errors).toBeUndefined()
       expect(JSON.parse(result.text).data.deleteUser).toMatchInlineSnapshot(`
         Object {

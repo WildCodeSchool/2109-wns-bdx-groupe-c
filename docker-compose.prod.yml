@@ -14,12 +14,12 @@ services:
       # pas avec des dossiers du repertoire courant
       # ou pas d'interet à partager des fichiers avec d'autres conteneurs
     environment:
-      - DATABASE_URL=postgres://postgres:root@database:5432/postgres
+      - DATABASE_URL=${DATABASE_URL}
 
   database:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: root
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - database-volume:/var/lib/postgresql/data
 
