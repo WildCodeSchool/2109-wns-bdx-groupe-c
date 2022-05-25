@@ -341,9 +341,6 @@ describe('ProjectResolver', () => {
           languages {
             name
           }
-          tasks {
-            subject
-          }
           status {
             name
           }
@@ -374,23 +371,6 @@ describe('ProjectResolver', () => {
           "status": Object {
             "name": "To Do",
           },
-          "tasks": Array [
-            Object {
-              "subject": "Task Text1",
-            },
-            Object {
-              "subject": "Task Text2",
-            },
-            Object {
-              "subject": "Task Text3",
-            },
-            Object {
-              "subject": "Task Text4",
-            },
-            Object {
-              "subject": "Task Text5",
-            },
-          ],
         }
       `)
     })

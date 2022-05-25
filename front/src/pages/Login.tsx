@@ -10,11 +10,36 @@ import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles({
   connectionButton: {
-    backgroundColor: '#7273FF',
-    color: '#061B2E',
+    marginTop: '2rem',
+    backgroundColor: '#1F84E1',
+    color: 'white',
+    borderRadius:'20px',
+    fontWeight: '700',
+    minWidth: '150px',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    '&:hover': {
+      backgroundColor: '#114e85',
+      color: 'white',
+    },
   },
   textFieldArea: {
     backgroundColor: '#FFFFF',
+    "& .MuiInput-root": {
+      color: 'white',
+    },
+    "& .MuiInput-root::before": {
+      borderColor: 'white',
+    },
+    "& .MuiInput-root:hover::before": {
+      borderColor: '#1F84E1',
+    },
+    "& .MuiFormLabel-root": {
+      color: "white",
+      fontWeight: '700',
+    },
+    "& .MuiTextField-root": {
+      marginBottom: '2rem',
+    }
   },
   loginError: {
     color: '#FF0000',
