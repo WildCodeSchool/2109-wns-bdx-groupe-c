@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useMutation, ApolloError } from "@apollo/client";
+import { useMutation, ApolloError, useQuery } from "@apollo/client";
 import { useParams } from 'react-router-dom';
 
 import {useCallback, useState, useEffect} from 'react'
@@ -15,9 +15,9 @@ import {makeStyles} from "@mui/styles"
 
 import { Task } from "../../entities/task"
 import {MUTATION_DELETE_TASK} from "../../queries/task"
-import {GET_TASKS_BY_STATUS_BY_PROJECTID} from "../../queries/status"
+import {GET_TASKS_BY_STATUS_BY_PROJECTID } from "../../queries/status"
 
-interface ItemProps {
+interface TaskCardProps {
   task: Task
   index: number
   openToastSuccessTaskDeleted: () => void
@@ -50,7 +50,7 @@ interface UseParamProps {
   id: string | undefined,
 };
 
-const TaskCard: React.FC<ItemProps> = ({ task, index, openToastSuccessTaskDeleted }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, index, openToastSuccessTaskDeleted } ) => {
   const classes = useStyles()
   const { id: projectId } = useParams<UseParamProps>();
   const {shortText, subject, id: taskId} = task

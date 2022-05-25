@@ -8,7 +8,6 @@ import ObjectHelpers from '../helpers/ObjectHelper';
 import { Task } from '../entities/task';
 import { Status } from '../entities/status';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
 
 import StatusColumn from '../components/molecules/StatusColumn';
 
@@ -19,11 +18,18 @@ import {
 import { MUTATION_UPDATE_STATUS_TASK } from "../queries/task"
 import ModalAddTask from '../components/molecules/Task/ModalAddTask';
 import Toast from '../components/molecules/Toast';
-import { Typography } from '@mui/material';
-import ProjectAllTasksCard from '../components/molecules/ProjectAllTasksCard';
-import { Theme, useTheme } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles'
+import Sidenav from '../components/molecules/Sidenav';
 
 const useStyles = makeStyles((theme: Theme) => ({
+    masterContainer: {
+        backgroundColor: '#061B2E',
+        margin: '0',
+        minHeight: '100vh',
+        padding: '25px',
+        marginLeft: '65px',
+        color: '#fff'
+      },
     containerWrapper: {
         backgroundColor: '#061B2E',
         minHeight: '100vh',
@@ -37,6 +43,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         gap: '15px'
     },
     addTaskButton: {
+        position: 'relative',
+        left: '80px',
         backgroundColor: '#1F84E1',
         color: 'white',
         '&:hover': {
@@ -72,17 +80,9 @@ interface dragListType {
     },
 }
 
-const Project = () => {
+const ProjectDashboardTask = () => {
     const classes = useStyles()
     const { id } = useParams<UseParamProps>();
-    const theme = useTheme();
-
-    const color = {
-      "To Do" : theme.palette.secondary.purple,
-      "In Progress" : theme.palette.secondary.yellow,
-      "Code Review" : theme.palette.secondary.cyan,
-      "Done" : theme.palette.secondary.green,
-    }
 
     const { data: dataAllStatus, loading: loadingAllStatus } = useQuery(GET_ALL_STATUS)
 
@@ -198,45 +198,42 @@ const Project = () => {
       }
 
     return (
-        <Box className={classes.containerWrapper}>
-            <DragDropContext onDragEnd={onDragEnd}>
-                {loading && <h1>Loading...</h1>}
-                {!loading && statusColumns && (
-                    <Box className={classes.mainContainer}>
-                        {Object.values(statusColumns).map(status => {
-                            const { id } = status
-                            return (
-                                <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted}/>
-                            )
-                        })}
-                    </Box>
-                )}
-            </DragDropContext>
+        <Box className={classes.masterContainer}>
+            <Sidenav />
+            <Box className={classes.containerWrapper}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    {loading && <h1>Loading...</h1>}
+                    {!loading && statusColumns && (
+                        <Box className={classes.mainContainer}>
+                            {Object.values(statusColumns).map(status => {
+                                const { id } = status
+                                return (
+                                    <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted}/>
+                                )
+                            })}
+                        </Box>
+                    )}
+                </DragDropContext>
 
-            <Button
-                className={classes.addTaskButton}
-                onClick={toggleAddTaskModal}
-            >
-              Ajouter une tâche
-            </Button>
-            <ModalAddTask
-                openAddTask={openAddTask}
-                toggleAddTaskModal={toggleAddTaskModal}
-            />
-            <Toast
-            handleClose={handleCloseToast}
-            open={showSuccessTaskDeleted}
-            severity="success"
-            message="Task deleted successfully"
-            />
-        {/* </Box>
-            <Box className={classes.mainContainer}>
-            {loadingAllStatus ? <Typography variant="h2" color="secondary.whiteText" sx={{ fontSize: '28px', fontWeight: 'bold' }}>Loading...</Typography> : dataAllStatus?.status.map((status : Status) => { return (
-            <ProjectAllTasksCard key={status.id} propStatus={status.name} tagColor={color[status.name]} />
-            )})}
-        </Box> */}
+                <Button
+                    className={classes.addTaskButton}
+                    onClick={toggleAddTaskModal}
+                >
+                Ajouter une tâche
+                </Button>
+                <ModalAddTask
+                    openAddTask={openAddTask}
+                    toggleAddTaskModal={toggleAddTaskModal}
+                />
+                <Toast
+                handleClose={handleCloseToast}
+                open={showSuccessTaskDeleted}
+                severity="success"
+                message="Task deleted successfully"
+                />
+            </Box>
         </Box>
     )
 }
 
-export default Project
+export default ProjectDashboardTask

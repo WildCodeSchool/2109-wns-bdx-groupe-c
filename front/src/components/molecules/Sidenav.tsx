@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
+import { styled, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -87,7 +84,6 @@ interface UseParamProps {
 }
 
 const Sidenav = () => {
-  // const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const history = useHistory();
   const { id } = useParams<UseParamProps>();
@@ -117,19 +113,20 @@ const Sidenav = () => {
               { !loading && project && (
         <Box sx={{ display: 'flex' }}>
           <CssBaseline />
-          <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: 'none' }),
-              }}
-            >
-            <MenuIcon sx={{color: '#fff'}} />
-          </IconButton>
           <Drawer variant="permanent" open={open}>
+            <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{
+                  margin: 0,
+                  zIndex: 1201,
+                  ...(open && { display: 'none' }),
+                }}
+              >
+              <MenuIcon sx={{color: '#fff'}} />
+            </IconButton>
             <DrawerHeader>
               <IconButton onClick={handleDrawerClose}>
               <Box color='#fff'>{open === false ? '' : <ChevronLeftIcon />}</Box>

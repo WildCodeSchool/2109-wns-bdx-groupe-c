@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import { Droppable } from 'react-beautiful-dnd'
 import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
@@ -7,6 +7,8 @@ import TaskCard from './TaskCard'
 import Box from '@mui/material/Box'
 
 import { Task } from "../../entities/task"
+import { statusColors } from '../../constants';
+
 
 const useStyles = makeStyles({
   cardTitle: {
@@ -15,6 +17,14 @@ const useStyles = makeStyles({
       marginTop: '25px',
       height: 'auto',
       border: '1px solid white'
+  },
+  tagCard: {
+    position: 'relative',
+    top: 0,
+    left: 0,
+    borderRadius: '20px 0 0 0',
+    minWidth: '100px',
+    minHeight: '18px',
   },
   title: {
     fontSize: '1.5rem',
@@ -29,11 +39,10 @@ const useStyles = makeStyles({
   }
 })
 
-
 interface StatusColumnProps {
   column: {
     id: string,
-    name: string,
+    name: 'To Do' | 'In Progress' | 'Code Review' | 'Done',
     tasks: Task[],
   },
   openToastSuccessTaskDeleted: () => void,
@@ -49,7 +58,10 @@ On doit fournir au Dropable :
 */
 
 const StatusColumn: React.FC<StatusColumnProps> =  ({ column: {id, name, tasks}, openToastSuccessTaskDeleted }) => {
+
+  const colorStatus = useMemo(() => statusColors[name], [name]);
   const classes = useStyles()
+
   return (
     <Droppable droppableId={name}>
       {(provided) => (
@@ -61,6 +73,7 @@ const StatusColumn: React.FC<StatusColumnProps> =  ({ column: {id, name, tasks},
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
+          <Box className={classes.tagCard} sx={{backgroundColor: colorStatus}} />
           <h2 className={classes.title}>{name}</h2>
           <Box
             className={classes.cardContent}
