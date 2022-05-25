@@ -23,3 +23,6 @@ export const LIST_ENTITIES = [
   UserProject,
   AppUserSession,
 ];
+
+export const ROLE_ADMIN = 'ADMIN';
+export const ROLE_USER = 'USER';

@@ -576,7 +576,15 @@ describe('ProjectResolver', () => {
   })
   describe('Mutation delete a project', () => {
     it('can delete a project and delete the tasks associated', async () => {
-      const userTest = await userGenerator('Test', 'Test', 'nouveau@mail.com', 'password')
+      const ROLE_ADMIN = await roleGenerator('admin', 'ADMIN')
+      const userTest = await userGenerator(
+        'Test',
+        'Test',
+        'nouveau@mail.com',
+        'password',
+        ROLE_ADMIN
+      )
+      const sessionAdmin = await AppUserSessionRepository.createSession(userTest)
       const languagePHP = await languageGenerator('PHP')
       const languageJS = await languageGenerator('JS')
       const toDO = await statusGenerator('To Do')
@@ -592,8 +600,11 @@ describe('ProjectResolver', () => {
       await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0, toDO, userTest)
       await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0, toDO, userTest)
 
-      const result = await testClient.post('/graphql').send({
-        query: `mutation {
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${sessionAdmin.id}`)
+        .send({
+          query: `mutation {
           deleteProject(
             id: ${projectTest.id},
         ) {
@@ -602,7 +613,7 @@ describe('ProjectResolver', () => {
           description
         }
       }`,
-      })
+        })
       expect(JSON.parse(result.text).errors).toBeUndefined()
       expect(JSON.parse(result.text).data.deleteProject).toMatchInlineSnapshot(`
         Object {
@@ -624,6 +635,51 @@ describe('ProjectResolver', () => {
       })
       expect(JSON.parse(resultGetTasks.text).errors).toBeUndefined()
       expect(JSON.parse(resultGetTasks.text).data.allTasks).toMatchInlineSnapshot(`Array []`)
+    })
+  })
+  describe('Mutation delete a project if not an admin', () => {
+    it('cant delete a project if not an ADMIN', async () => {
+      const ROLE_USER = await roleGenerator('user', 'USER')
+      const userTest = await userGenerator(
+        'Test',
+        'Test',
+        'nouveau@mail.com',
+        'password',
+        ROLE_USER
+      )
+      const sessionUSER = await AppUserSessionRepository.createSession(userTest)
+      const languagePHP = await languageGenerator('PHP')
+      const languageJS = await languageGenerator('JS')
+      const toDO = await statusGenerator('To Do')
+      const projectTest = await projectGenerator(
+        'name',
+        'description',
+        'shortText',
+        1,
+        [languagePHP, languageJS],
+        userTest,
+        toDO
+      )
+      await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0, toDO, userTest)
+      await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0, toDO, userTest)
+
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${sessionUSER.id}`)
+        .send({
+          query: `mutation {
+          deleteProject(
+            id: ${projectTest.id},
+        ) {
+          name
+          shortText
+          description
+        }
+      }`,
+        })
+      expect(JSON.parse(result.text).errors[0].message).toMatchInlineSnapshot(
+        `"Access denied! You don't have permission for this action!"`
+      )
     })
   })
   describe('Mutation create a project', () => {

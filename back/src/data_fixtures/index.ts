@@ -30,8 +30,8 @@ const dataFixtures = async () => {
   console.log(' --------------   TABLE TRUNCATED  ------------------')
 
   console.log(' --------------    STEP 2/11 : Generate Role  ------------------')
-  const roleUser = await roleGenerator('user', 'user')
-  const roleAdmin = await roleGenerator('admin', 'admin')
+  const roleUser = await roleGenerator('user', 'USER')
+  const roleAdmin = await roleGenerator('admin', 'ADMIN')
 
   console.log(' --------------    STEP 3/11 : Generate User  ------------------')
   const user1 = await userGenerator('user1', 'UserName1', 'user1@mail.com', 'test', roleUser)

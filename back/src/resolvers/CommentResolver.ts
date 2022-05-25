@@ -38,6 +38,7 @@ class CommentResolver {
   async deleteComment(@Arg('id') id: number) {
     return await CommentRepository.deleteComment(id)
   }
+  
   @Mutation(() => Comment)
   async updateComment(@Args() { id, content }: UpdateCommentInput) {
     const comment = await Comment.findOneOrFail({ id })
