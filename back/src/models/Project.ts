@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType, Int } from 'type-graphql'
+import { MaxLength, IsNotEmpty, Min, IsInt } from "class-validator";
 import {
   BaseEntity,
   Column,
@@ -25,18 +26,33 @@ class Project extends BaseEntity {
 
   @Column('varchar', { length: 255 })
   @Field()
+  @MaxLength(255, {
+    message: 'name is too long',
+  })
+  @IsNotEmpty({ message : 'name can\'t be empty'})
   name!: string
 
   @Column('varchar', { length: 255 })
   @Field()
+  @MaxLength(255, {
+    message: 'shortText is too long',
+  })
+  @IsNotEmpty({ message : 'shortText can\'t be empty'})
   shortText!: string
 
   @Column('text')
   @Field()
+  @MaxLength(255, {
+    message: 'description is too long',
+  })
+  @IsNotEmpty({ message : 'description can\'t be empty'})
   description!: string
 
   @Column()
   @Field()
+  @IsInt()
+  @Min(0)
+  @IsNotEmpty({ message : 'initialTimeSpent can\'t be empty'})
   initialTimeSpent!: number
 
   @Column()
