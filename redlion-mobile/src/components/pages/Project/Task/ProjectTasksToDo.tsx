@@ -41,8 +41,6 @@ const ProjectTasksToDo = (route: any) => {
     variables: {projectId: parseInt(projectId)},
   });
 
-  console.log('data ==> ', data);
-
   return (
     <View style={styles.container}>
       {loading ? <ActivityIndicator /> : null}

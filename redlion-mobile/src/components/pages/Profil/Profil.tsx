@@ -39,13 +39,6 @@ export default function Profil(route: any) {
                 function: () => {navigation.navigate('ProfilStatistiques')},
             }}/>
 
-            <ButtonLarge props={{
-                myColor: VARIABLES.clrTag3,
-                text: 'Settings',
-                icon: () => (<Ionicons name={'settings'} style={[styles.buttonIcon, {color: VARIABLES.clrTag3}]} />),
-                function: () => {navigation.navigate('ProfilSettings')},
-            }}/>
-
         </View>
     )
 }

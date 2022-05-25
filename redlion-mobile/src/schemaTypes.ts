@@ -8,32 +8,30 @@
 // ====================================================
 
 export interface Projects_projects {
-  project : {
-    __typename: "Project";
+  __typename: "Project";
+  id: string;
+  name: string;
+  shortText: string;
+  description: string;
+  initialTimeSpent: number;
+  createdAt: any;
+  updatedAt: any;
+  createdBy: {
+    firstName: string;
+    lastName: string;
+  }
+  languages: {
     id: string;
     name: string;
+  }
+  tasks: {
+    id: string;
+    subject: string;
     shortText: string;
     description: string;
-    initialTimeSpent: number;
-    createdAt: any;
-    updatedAt: any;
-    createdBy: {
-      firstName: string;
-      lastName: string;
-    }
-    languages: {
-      id: string;
-      name: string;
-    }
-    tasks: {
-      id: string;
-      subject: string;
-      shortText: string;
-      description: string;
-    }
-    status: {
-      name: string;
-    }
+  }
+  status: {
+    name: string;
   }
 }
 

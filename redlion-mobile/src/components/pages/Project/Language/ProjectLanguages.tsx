@@ -1,22 +1,15 @@
 import * as React from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import { Projects_projects } from '../../../../schemaTypes';
-
 import { GET_PROJECT_PART } from '../../../../queries/project';
 
-import VARIABLES from '../../../../../assets/styles/_variables';
-import ProjectUpdateSectionStyles from '../../../organisms/Project/ProjectUpdateSection';
+import ProjectSectionStyles from '../../../organisms/Project/ProjectSection';
 
-const STYLES = ProjectUpdateSectionStyles;
+const STYLES = ProjectSectionStyles;
 
-const styles = StyleSheet.create({
-
-})
-
-export default function ProjectLanguagesUpdate(route: any) {
+export default function ProjectLanguages(route: any) {
 
     const { projectId, projectName } = route.route.params;
 
@@ -42,14 +35,6 @@ export default function ProjectLanguagesUpdate(route: any) {
                         )
                     }}
                 />
-                <Button
-                    color={VARIABLES.clrThrd}
-                    style={[STYLES.button, {borderColor: VARIABLES.clrThrd}]}
-                    contentStyle={STYLES.buttonContent}
-                    onPress={() => {}} 
-                >
-                    Add language
-                </Button>
             </>
             }
         </View>

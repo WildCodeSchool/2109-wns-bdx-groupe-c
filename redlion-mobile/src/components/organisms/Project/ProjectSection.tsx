@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 
-const ProjectUpdateSectionStyles = StyleSheet.create({
+const ProjectSectionStyles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         alignItems: 'center',
@@ -13,7 +12,6 @@ const ProjectUpdateSectionStyles = StyleSheet.create({
     list: {
         width: VARIABLES.windowWidth - 20,
         flexDirection: 'row',
-        flexWrap: 'wrap',
         paddingVertical: 10,
         borderWidth: 1,
         borderRadius: 18,
@@ -43,4 +41,4 @@ const ProjectUpdateSectionStyles = StyleSheet.create({
     },
 })
 
-export default ProjectUpdateSectionStyles;
+export default ProjectSectionStyles;

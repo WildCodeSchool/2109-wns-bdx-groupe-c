@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, FlatList, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Appbar, Divider, Menu, ProgressBar } from 'react-native-paper';
-import gql from "graphql-tag";
+import { Appbar, Menu, ProgressBar } from 'react-native-paper';
 import { useQuery } from "@apollo/client";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -98,7 +97,7 @@ export default function Project (route: any) {
 
               {/* --- INFORMATIONS --- */}
               <TouchableOpacity
-                    onPress={() => navigation.navigate('ProjectInformationsUpdate', {projectId: projectId, projectName: projectName})}
+                    onPress={() => navigation.navigate('ProjectInformations', {projectId: projectId, projectName: projectName})}
                     activeOpacity={.8}
               >
               <View style={[styles.columnBlock, styles.width, styles.informations]}>
@@ -128,7 +127,7 @@ export default function Project (route: any) {
 
             {/* --- USERS --- */}
             <TouchableOpacity
-              onPress={() => {navigation.navigate('ProjectUsersUpdate', {projectId: projectId, projectName: projectName, })}}
+              onPress={() => {navigation.navigate('ProjectUsers', {projectId: projectId, projectName: projectName, })}}
               activeOpacity={.8}
             >
               <View style={[styles.columnBlock, styles.width, styles.users]}>
@@ -144,7 +143,7 @@ export default function Project (route: any) {
 
             {/* --- LANGUAGES --- */}
             <TouchableOpacity
-              onPress={() => {navigation.navigate('ProjectLanguagesUpdate', {projectId: projectId, projectName: projectName, createdBy: createdBy})}}
+              onPress={() => {navigation.navigate('ProjectLanguages', {projectId: projectId, projectName: projectName, createdBy: createdBy})}}
               activeOpacity={.8}
             >
               <View style={[styles.columnBlock, styles.width, styles.languages]}>
@@ -190,15 +189,8 @@ export default function Project (route: any) {
                       setMenuTask(!menuTask);
                     }}
                     title="Tout voir"
-                    titleStyle={[COMPONENTS.menuTitle]} />
-                  <Divider />
-                  <Menu.Item
-                    onPress={() => {
-                      navigation.navigate('ProjectTaskCreate', {projectName: data.project.name});
-                      setMenuTask(!menuTask);
-                    }}
-                    title="Créer une tâche"
-                    titleStyle={[COMPONENTS.menuTitle]} />
+                    titleStyle={[COMPONENTS.menuTitle]}
+                  />
                 </Menu>
               </View>
               <View style={[styles.rowBlock, {padding: 0}]}>

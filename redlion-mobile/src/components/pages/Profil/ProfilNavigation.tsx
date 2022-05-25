@@ -5,7 +5,6 @@ import { StyleSheet } from 'react-native';
 import Profil from './Profil';
 import ProfilInformations from './ProfilInformations';
 import ProfilStatistiques from './ProfilStatistiques';
-import ProfilSettings from './ProfilSettings';
 
 import VARIABLES from '../../../../assets/styles/_variables';
 import COMPONENTS from '../../../../assets/styles/_components';
@@ -66,15 +65,6 @@ export default function ProfilNavigation() {
                     headerTitle: 'Statistiques',
                     cardStyleInterpolator: forFade,
                 }}
-            />
-            <Stack.Screen
-                name="ProfilSettings"
-                component={ProfilSettings}
-                options={{
-                    cardStyle: styles.profilContainer,
-                    headerTitle: 'Settings',
-                    cardStyleInterpolator: forFade,
-            }}
             />
         </Stack.Navigator>
     )

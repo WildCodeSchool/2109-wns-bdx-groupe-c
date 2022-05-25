@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     },
 })
 
-export default function ProjectTasksAppbar({navigation, back, route, params}) {
+export default function ProjectTasksAppbar({navigation, back, route, params}: any) {
 
     return (
         <Appbar.Header statusBarHeight={0} style={{
