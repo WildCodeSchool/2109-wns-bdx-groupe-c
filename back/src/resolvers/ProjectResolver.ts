@@ -1,10 +1,11 @@
-import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx } from 'type-graphql'
+import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx, Authorized } from 'type-graphql'
 import { CustomContext } from "../type";
 
 import ProjectRepository from '../repository/ProjectRepository'
 
 import Project from '../models/Project'
 import Status from '../models/Status'
+import { ROLE_ADMIN } from '../constants';
 
 @ArgsType()
 class CreateProjectInput {
@@ -79,6 +80,7 @@ class ProjectResolver {
   }
 
   @Mutation(() => Project)
+  @Authorized([ROLE_ADMIN])
   async deleteProject(@Arg('id') id: number) {
     return ProjectRepository.deleteProject(id);
   }

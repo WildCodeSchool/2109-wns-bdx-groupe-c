@@ -3,6 +3,9 @@ import { buildSchema } from 'type-graphql'
 import { Response } from "express";
 import { parse } from "cookie";
 
+
+import { authChecker } from "./authChecker";
+
 import CommentResolver from './resolvers/CommentResolver'
 import LanguageResolver from './resolvers/LanguageResolver'
 import ProjectResolver from './resolvers/ProjectResolver'
@@ -51,6 +54,7 @@ export default async () => {
       UserLanguageResolver,
       UserProjectResolver,
     ],
+    authChecker,
   })
   const server = new ApolloServer({ schema, context: setUpContext })
   return { server, schema };
