@@ -7,7 +7,6 @@ import { GET_PROJECT_ALL } from '../../../../queries/project';
 
 import ProjectSectionStyles from '../../../organisms/Project/ProjectSection';
 import VARIABLES from '../../../../../assets/styles/_variables';
-import ProjectInput from '../../../molecules/PojectInput';
 
 const STYLES = ProjectSectionStyles;
 
@@ -67,34 +66,6 @@ export default function ProjectInformations (route: any) {
         {loading ? <ActivityIndicator /> : null}
         {data &&
         <>
-          <ProjectInput props={{
-            label: 'Name',
-            project: data.project.name,
-            value: inputName,
-            setInputText: inputName => setInputName(inputName),
-          }}/>
-          {console.log('project name : ', data.project.name)}
-          <ProjectInput props={{
-            label: 'Short text',
-            project: data.project.shortText,
-            value: inputShortText,
-            setInputText: inputShortText => setInputShortText(inputShortText),
-          }}/>
-
-          <ProjectInput props={{
-            label: 'Description',
-            project: data.project.description,
-            value: inputDescription,
-            setInputText: inputDescription => setInputDescription(inputDescription),
-          }}/>
-
-          <ProjectInput props={{
-            label: 'Status',
-            project: data.project.status.name,
-            value: inputStatus,
-            setInputText: inputStatus => setInputStatus(inputStatus),
-          }}/>
-
           <View style={[STYLES.list, styles.list]}>
               <Text style={[STYLES.text, styles.title, {color: VARIABLES.clrThrd}]}>Name</Text>
               <Text style={[STYLES.text]}>{data.project.name}</Text>
