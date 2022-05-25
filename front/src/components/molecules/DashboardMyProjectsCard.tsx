@@ -75,7 +75,7 @@ const DashboardMyProjectsCard = () => {
                   const {name, shortText, countAssignee, languages} = project
                   return (
                       <Paper key={id} className={classes.projectPaper}>
-                        <CardActionArea sx={{ borderRadius: '5px' }} className={classes.projectActionArea} onClick={() => history.push(`/project/${id}`)}>
+                        <CardActionArea sx={{ borderRadius: '5px' }} className={classes.projectActionArea} onClick={() => history.push(`/project/${id}/tasks`)}>
                           <Box padding="15px">
                             <Typography fontWeight="bold" className={classes.projectCardName}>
                               {name}

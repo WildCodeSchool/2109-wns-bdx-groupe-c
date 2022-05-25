@@ -19,14 +19,17 @@ import {
 import { MUTATION_UPDATE_STATUS_TASK } from "../queries/task"
 import ModalAddTask from '../components/molecules/Task/ModalAddTask';
 import Toast from '../components/molecules/Toast';
+import { Typography } from '@mui/material';
+import ProjectAllTasksCard from '../components/molecules/ProjectAllTasksCard';
+import { Theme, useTheme } from '@mui/material/styles'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
     containerWrapper: {
         backgroundColor: '#061B2E',
         minHeight: '100vh',
     },
     mainContainer: {
-        backgroundColor: '#061B2E',
+        backgroundColor: theme.palette.secondary.main, 
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
         margin: '24px auto',
@@ -40,7 +43,7 @@ const useStyles = makeStyles({
             backgroundColor: '#145591',
         },
     }
-})
+}))
 
 interface UseParamProps {
     id: string | undefined,
@@ -72,8 +75,16 @@ interface dragListType {
 const Project = () => {
     const classes = useStyles()
     const { id } = useParams<UseParamProps>();
+    const theme = useTheme();
 
-    const { data: statusData } = useQuery(GET_ALL_STATUS)
+    const color = {
+      "To Do" : theme.palette.secondary.purple,
+      "In Progress" : theme.palette.secondary.yellow,
+      "Code Review" : theme.palette.secondary.cyan,
+      "Done" : theme.palette.secondary.green,
+    }
+
+    const { data: dataAllStatus, loading: loadingAllStatus } = useQuery(GET_ALL_STATUS)
 
     const { loading, data } = useQuery(GET_TASKS_BY_STATUS_BY_PROJECTID, {
         variables: {projectId: id ? parseInt(id, 10) : 0}
@@ -111,7 +122,7 @@ const Project = () => {
     }, [data])
 
     const onDragEnd = ({ source, destination }: DropResult) => {
-        if (statusColumns && statusData) {
+        if (statusColumns && dataAllStatus) {
             // Make sure we have a valid destination
             if (destination === undefined || destination === null) return null
 
@@ -148,10 +159,9 @@ const Project = () => {
             } else {
               let newColEnd;
               const elementToMove: Task = statusColumns[sourceDroppableId].tasks[source.index]
-              const statusTable: Status[] = statusData.status
+              const statusTable: Status[] = dataAllStatus.status
               const statusId = statusTable.find(status => status.name === destinationDroppableId)?.id
               const taskId = elementToMove.id
-
 
               if ( statusId && taskId ) {
                 const statusIdFormatted = parseInt(statusId, 10);
@@ -202,6 +212,7 @@ const Project = () => {
                     </Box>
                 )}
             </DragDropContext>
+
             <Button
                 className={classes.addTaskButton}
                 onClick={toggleAddTaskModal}
@@ -218,6 +229,12 @@ const Project = () => {
             severity="success"
             message="Task deleted successfully"
             />
+        {/* </Box>
+            <Box className={classes.mainContainer}>
+            {loadingAllStatus ? <Typography variant="h2" color="secondary.whiteText" sx={{ fontSize: '28px', fontWeight: 'bold' }}>Loading...</Typography> : dataAllStatus?.status.map((status : Status) => { return (
+            <ProjectAllTasksCard key={status.id} propStatus={status.name} tagColor={color[status.name]} />
+            )})}
+        </Box> */}
         </Box>
     )
 }
