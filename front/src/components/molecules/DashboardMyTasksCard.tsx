@@ -15,17 +15,19 @@ import { Theme, useTheme } from '@mui/material/styles'
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
-    maxWidth: '500px',
+    maxWidth: '430px',
     backgroundColor: '#7273FF',
   },
-  taskPaper: {
+  cardPaper: {
     maxWidth: '430px',
-    minHeight: '70px',
-    padding: '0',
+    minHeight: '100px',
     margin: '10px 0',
-    paddingLeft: '1rem',
     borderRadius: '30px',
+    padding: '1rem 1rem 1rem 2rem',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+  },
+  taskPaper: {
+    borderRadius: '30px',
   },
   tagCard: {
     position: 'absolute',
@@ -78,8 +80,8 @@ const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
         {data?.tasks.map((task: Task) => {
           return (
             <Paper key={task.id} className={classes.taskPaper}>
-              <CardActionArea sx={{ borderRadius: '30px' }}>
-                <Box padding="15px">
+              <CardActionArea className={classes.cardPaper}>
+                <Box>
                   <Typography variant="h4" fontWeight="bold" className={classes.taskCardName}>
                     {task.subject}
                   </Typography>
