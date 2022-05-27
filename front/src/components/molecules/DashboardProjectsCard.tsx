@@ -20,25 +20,26 @@ import { Language } from "../../entities/language"
 import { Project } from "../../entities/project"
 
 const useStyles = makeStyles({
+    cardContainer: {
+      backgroundColor: '#0F4473',
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
     card: {
-        minHeight: '275px',
-        backgroundColor: '#7273FF',
-        marginTop: '25px',
-        height: 'auto',
+      marginTop: '25px',
     },
     projectPaper: {
-      maxWidth: '400px',
-      minHeight: '175px',
-      padding: '0',
-      margin: '10px 0',
-      backgroundColor: '#061b2e',
-      paddingLeft: '1rem',
       borderRadius: '30px',
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      maxWidth: '430px',
+      marginRight: '2rem',
     },
     projectActionArea: {
-      maxWidth: '400px',
+      maxWidth: '430px',
+      minWidth: '430px',
       minHeight: '175px',
+      borderRadius: '30px',
+      padding: '1rem 1rem 1rem 2rem',
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     },
     projectCardName: {
       fontSize: '17px !important',
@@ -67,48 +68,42 @@ const DashboardProjectsCard = () => {
 
     return (
         <Card className={classes.card} sx={{borderRadius: '20px'}}>
-            <CardContent sx={{ backgroundColor: '#0F4473'}}>
+            <CardContent className={classes.cardContainer}>
               <Box className={classes.boxTitle} >
                 <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
                   All Projects
                 </Typography>
-                <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log("click")}/>
+                <MoreMenu options={['Add a Task']} onClick={()=>console.log("click")}/>
               </Box>
-                <Box sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)',
-                    gap: 1
-                    }}>
-                    {data?.projects.map((project: Project) => {
-                    const {id, name, shortText, languages, countAssignee} = project
-                    return (
-                        <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/infos`)}>
-                            <CardActionArea sx={{ borderRadius: '30px' }} className={classes.projectActionArea}>
-                            <Box padding="15px">
-                                <Typography fontWeight="bold" className={classes.projectCardName}>
-                                {name}
-                                </Typography>
-                                <Typography>{shortText}</Typography>
-                                <Box className={classes.projectUserElements}>
-                                <PersonIcon />
-                                <Typography>{countAssignee <= 1 ? countAssignee + ' utilisateur' : countAssignee + ' utilisateurs'}</Typography>
-                                </Box>
-                                <Box className={classes.projectLanguagesElement}>
-                                <LibraryBooksIcon />
-                                {languages.map((language: Language) => {
-                                    return (
-                                    <>
-                                        <Typography sx={{marginRight: '5px'}} key={language.id} component='p'>{language.name}</Typography>
-                                    </>
-                                    )
-                                })}
-                                </Box>
+                {data?.projects.map((project: Project) => {
+                const {id, name, shortText, languages, countAssignee} = project
+                return (
+                    <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/infos`)}>
+                        <CardActionArea sx={{ borderRadius: '30px' }} className={classes.projectActionArea}>
+                        <Box padding="15px">
+                            <Typography fontWeight="bold" className={classes.projectCardName}>
+                            {name}
+                            </Typography>
+                            <Typography>{shortText}</Typography>
+                            <Box className={classes.projectUserElements}>
+                            <PersonIcon />
+                            <Typography>{countAssignee <= 1 ? countAssignee + ' utilisateur' : countAssignee + ' utilisateurs'}</Typography>
                             </Box>
-                            </CardActionArea>
-                        </Paper>
-                    )
-                    })}
-                </Box>
+                            <Box className={classes.projectLanguagesElement}>
+                            <LibraryBooksIcon />
+                            {languages.map((language: Language) => {
+                                return (
+                                <>
+                                    <Typography sx={{marginRight: '5px'}} key={language.id} component='p'>{language.name}</Typography>
+                                </>
+                                )
+                            })}
+                            </Box>
+                        </Box>
+                        </CardActionArea>
+                    </Paper>
+                )
+                })}
             </CardContent>
         </Card>
     )

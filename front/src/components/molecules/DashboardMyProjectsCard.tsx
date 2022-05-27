@@ -26,18 +26,16 @@ const useStyles = makeStyles({
         marginTop: '25px',
     },
     projectPaper: {
-      maxWidth: '400px',
-      minHeight: '175px',
-      padding: '0',
-      margin: '10px 0',
-      backgroundColor: '#061b2e',
-      paddingLeft: '1rem',
       borderRadius: '30px',
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      maxWidth: '430px',
     },
     projectActionArea: {
-      maxWidth: '400px',
+      maxWidth: '430px',
       minHeight: '175px',
+      margin: '10px 0',
+      borderRadius: '30px',
+      padding: '1rem 1rem 1rem 2rem',
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     },
     projectCardName: {
       fontSize: '17px !important',
@@ -71,7 +69,7 @@ const DashboardMyProjectsCard = () => {
                 <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
                   My Projects
                 </Typography>
-                <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log("click")}/>
+                <MoreMenu options={['Add a Task']} onClick={()=>console.log("click")}/>
               </Box>
                 {data?.myProjects.map((myProject: MyProject) => {
                   const{ id, project } = myProject
