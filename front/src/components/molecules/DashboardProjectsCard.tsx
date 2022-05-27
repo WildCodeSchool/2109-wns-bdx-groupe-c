@@ -32,6 +32,7 @@ const useStyles = makeStyles({
       borderRadius: '30px',
       maxWidth: '430px',
       marginRight: '2rem',
+      marginBottom: '2rem',
     },
     projectActionArea: {
       maxWidth: '430px',

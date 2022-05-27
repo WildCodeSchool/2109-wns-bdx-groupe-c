@@ -46,7 +46,7 @@ class CreateTaskInput {
   @Field(() => Int)
   @IsInt()
   @Min(0)
-  @IsNotEmpty({ message : 'expectedDuration can\'t be empty'})
+  @IsNotEmpty({ message : 'hours can\'t be empty'})
   expectedDuration!: number
 }
 

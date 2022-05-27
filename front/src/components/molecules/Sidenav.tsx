@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled, Theme, CSSObject } from '@mui/material/styles';
+import {makeStyles} from "@mui/styles"
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -81,11 +82,23 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+
+const useStyles = makeStyles((theme: Theme) => ({
+  mainContainer: {
+    display: 'flex',
+    '& .MuiPaper-elevation': {
+      zIndex: '0',
+    }
+  },
+}))
+
+
 interface UseParamProps {
   id: string,
 }
 
 const Sidenav = () => {
+  const classes = useStyles()
   const [open, setOpen] = React.useState(false);
   const history = useHistory();
   const { id } = useParams<UseParamProps>();
@@ -122,7 +135,7 @@ const Sidenav = () => {
                   <p>Loading...</p>
               )}
               { !loading && project && (
-        <Box sx={{ display: 'flex' }}>
+        <Box className={classes.mainContainer}>
           <CssBaseline />
           <Drawer variant="permanent" open={open}>
             <IconButton

@@ -23,12 +23,13 @@ import Divider from '@mui/material/Divider';
 import { useHistory } from 'react-router-dom';
 
 
-const useStyles = makeStyles({ 
+const useStyles = makeStyles({
     navBar: {
         display: 'inline-flex',
         justifyContent: 'space-between',
         backgroundColor: '#061B2E',
         transition: 'color .3s ease',
+        zIndex: '1000',
     },
     img: {
         maxWidth: '150px',
@@ -90,7 +91,7 @@ export default function MenuAppBar() {
 
   const closeMenu = () => {
     setIsOpen(false);
-  }; 
+  };
 
   const history = useHistory();
 
