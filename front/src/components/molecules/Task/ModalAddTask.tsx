@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useMutation, ApolloError } from "@apollo/client";
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,6 +13,8 @@ import { TextField, Button } from '@mui/material'
 
 import {MUTATION_CREATE_TASK} from "../../../queries/task"
 import {GET_TASKS_BY_STATUS_BY_PROJECTID} from "../../../queries/status"
+
+import { ExceptionGraphQL } from '../../../entities/error';
 
 interface Props {
   openAddTask: boolean,
@@ -61,6 +63,15 @@ const useStyles = makeStyles({
   },
   textField: {
     paddingBottom: '1rem',
+  },
+  texFieldError: {
+    "& .MuiInput-root::before": {
+      borderColor: 'red',
+    },
+  },
+  fieldError: {
+    color: 'red',
+    fontSize: '0.8rem',
   }
 })
 
@@ -88,6 +99,7 @@ const ModalAddTask = ({openAddTask, toggleAddTaskModal}: Props) => {
     setDescription(emptyTask.description)
     setExpectedDuration(emptyTask.expectedDuration)
     setDueDate(emptyTask.dueDate)
+    setError(null)
   }, [openAddTask])
 
   const handleCreation = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
@@ -117,6 +129,30 @@ const ModalAddTask = ({openAddTask, toggleAddTaskModal}: Props) => {
     }
   }, [shortText, subject, description, expectedDuration, dueDate, createTask]);
 
+
+  const errorProps = useMemo(() => {
+    const errorFormatted: {[key:string]: string} = {};
+    if (error) {
+      if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+        const graphQLErrors = error.graphQLErrors;
+        const extentions = graphQLErrors[0].extensions;
+        const exceptions = extentions.exception as ExceptionGraphQL;
+        const validationErrors = exceptions.validationErrors;
+        validationErrors.forEach((validationError) => {
+          const property: string = validationError.property;
+          const message: string = validationError.constraints[Object.keys(validationError.constraints)[0]];
+          errorFormatted[property] = message;
+        });
+        return errorFormatted;
+      }
+      return errorFormatted
+    } else {
+      return errorFormatted
+    }
+  }, [error])
+
+  console.log('errorProps', errorProps)
+
   return (
     <Modal
     open={openAddTask}
@@ -142,45 +178,50 @@ const ModalAddTask = ({openAddTask, toggleAddTaskModal}: Props) => {
               label="Subject"
               variant="standard"
               value={subject}
-              className={classes.textField}
+              className={errorProps?.subject ? classes.texFieldError : classes.textField}
               onChange={(event) => setSubject(event.target.value)}
           />
+          {errorProps?.subject && <Box className={classes.fieldError}>{errorProps.subject}</Box>}
           <TextField
               id="shortText"
               type="text"
               label="Short Text"
               variant="standard"
               value={shortText}
-              className={classes.textField}
+              className={errorProps?.shortText ? classes.texFieldError : classes.textField}
               onChange={(event) => setShortText(event.target.value)}
           />
+          {errorProps?.shortText && <Box className={classes.fieldError}>{errorProps.shortText}</Box>}
           <TextField
               id="description"
               type="text"
               label="Description"
               variant="standard"
               value={description}
-              className={classes.textField}
+              className={errorProps?.description ? classes.texFieldError : classes.textField}
               onChange={(event) => setDescription(event.target.value)}
           />
+          {errorProps?.description && <Box className={classes.fieldError}>{errorProps.description}</Box>}
           <TextField
               id="expectedDuration"
               type="number"
               label="Expected Duration in hours"
               variant="standard"
               value={expectedDuration}
-              className={classes.textField}
+              className={errorProps?.expectedDuration ? classes.texFieldError : classes.textField}
               onChange={(event) => setExpectedDuration(event.target.value)}
           />
+          {errorProps?.expectedDuration && <Box className={classes.fieldError}>{errorProps.expectedDuration}</Box>}
           <TextField
               id="dueDate"
               type="date"
               label="Due date"
               variant="standard"
               value={dueDate}
-              className={classes.textField}
+              className={errorProps?.dueDate ? classes.texFieldError : classes.textField}
               onChange={(event) => setDueDate(event.target.value)}
           />
+          {errorProps?.dueDate && <Box className={classes.fieldError}>{errorProps.dueDate}</Box>}
         </Box>
         <Box className={classes.buttonContainer}>
           <Button
