@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         minHeight: '100vh',
         padding: '25px',
         marginLeft: '65px',
-        color: '#fff'
+        color: '#fff',
+        marginTop: '64px',
+        '@media screen and (max-width: 600px)': {
+          marginTop: '54px',
+        },
       },
     containerWrapper: {
         backgroundColor: '#061B2E',
@@ -40,7 +44,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
         margin: '24px auto',
         width: '80%',
-        gap: '15px'
+        gap: '15px',
+        marginTop: '64px',
+        '@media screen and (max-width: 600px)': {
+          marginTop: '54px',
+        },
     },
     buttonContainer: {
         display: 'flex',

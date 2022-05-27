@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     maxWidth: '100%',
     minHeight: '70px',
     padding: '0',
-    margin: '10px 0',
+    margin: '10px',
   },
   cardContainer: {
     display: 'flex',
