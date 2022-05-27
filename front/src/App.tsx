@@ -1,8 +1,8 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import Toast from './components/molecules/Toast'
-import Routes from './components/Routes'
 import { ToastContextProvider } from './contexts/ToastContext'
+import Routes from './components/Routes'
 
 function App(props: any) {
 
