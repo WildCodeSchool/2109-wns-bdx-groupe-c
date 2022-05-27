@@ -35,18 +35,22 @@ const useStyles = makeStyles((theme: Theme) => ({
         minHeight: '100vh',
     },
     mainContainer: {
-        backgroundColor: theme.palette.secondary.main, 
+        backgroundColor: theme.palette.secondary.main,
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
         margin: '24px auto',
         width: '80%',
         gap: '15px'
     },
+    buttonContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '2rem',
+    },
     addTaskButton: {
-        position: 'relative',
-        left: '80px',
         backgroundColor: '#1F84E1',
         color: 'white',
+        minWidth: '200px',
         '&:hover': {
             backgroundColor: '#145591',
         },
@@ -214,13 +218,14 @@ const ProjectDashboardTask = () => {
                         </Box>
                     )}
                 </DragDropContext>
-
-                <Button
-                    className={classes.addTaskButton}
-                    onClick={toggleAddTaskModal}
-                >
-                Ajouter une tâche
-                </Button>
+                <Box className={classes.buttonContainer}>
+                    <Button
+                        className={classes.addTaskButton}
+                        onClick={toggleAddTaskModal}
+                    >
+                    Add a Task
+                    </Button>
+                </Box>
                 <ModalAddTask
                     openAddTask={openAddTask}
                     toggleAddTaskModal={toggleAddTaskModal}

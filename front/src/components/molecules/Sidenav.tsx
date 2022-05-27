@@ -17,6 +17,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
+import HomeIcon from '@mui/icons-material/Home';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_ONE_PROJECT } from '../../queries/project';
@@ -25,6 +26,7 @@ import { Project } from '../../entities/project';
 const drawerWidth = 240;
 
 const iconLabel = [
+    {icon: <HomeIcon />, label: 'Home'},
     {icon: <InfoIcon />, label: 'Infos'},
     {icon: <FormatListBulletedIcon />, label: 'Tasks'},
     {icon: <ChatIcon />, label: 'Comments'},
@@ -105,11 +107,20 @@ const Sidenav = () => {
     setOpen(false);
   };
 
+  const handleIconClick = (label: string) => {
+    if (label === 'Home') {
+      history.push('/');
+    } else {
+      history.push(`/project/${id}/${label}`);
+    }
+
+  }
+
   return (
     <>
       { loading && (
-                  <p>Loading...</p> 
-              )} 
+                  <p>Loading...</p>
+              )}
               { !loading && project && (
         <Box sx={{ display: 'flex' }}>
           <CssBaseline />
@@ -142,8 +153,7 @@ const Sidenav = () => {
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
                     }}
-                    // onClick={() => console.log(item.label)}
-                    onClick={() => history.push(`/project/${project.id}/${item.label}`)}
+                    onClick={() => handleIconClick(item.label)}
                     >
                         <ListItemIcon
                         sx={{

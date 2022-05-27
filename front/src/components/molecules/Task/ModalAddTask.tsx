@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useMutation, ApolloError } from "@apollo/client";
 import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
@@ -31,6 +33,10 @@ const useStyles = makeStyles({
     padding: '1rem',
     p: 4,
   },
+  containerHeader: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
   containerField: {
     display: 'flex',
     flexDirection: 'column',
@@ -39,10 +45,22 @@ const useStyles = makeStyles({
   buttonValidation: {
     backgroundColor: '#1F84E1',
     color: 'white',
+    '&:hover': {
+      backgroundColor: '#145591',
+    },
   },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  iconXmark: {
+    position: 'relative',
+    top: '0',
+    right: '-80px',
+    cursor: 'pointer',
+  },
+  textField: {
+    paddingBottom: '1rem',
   }
 })
 
@@ -107,48 +125,60 @@ const ModalAddTask = ({openAddTask, toggleAddTaskModal}: Props) => {
     aria-describedby="modal-modal-description"
     >
       <Box className={classes.mainContainer}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Formulaire d'ajout de tâche
-        </Typography>
+        <Box className={classes.containerHeader}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Add a task here !
+          </Typography>
+          <FontAwesomeIcon
+                        icon={faXmark}
+                        className={classes.iconXmark}
+                        onClick={toggleAddTaskModal}
+                    />
+        </Box>
         <Box className={classes.containerField}>
-          <TextField
-              id="shortText"
-              type="text"
-              label="shortText"
-              variant="standard"
-              value={shortText}
-              onChange={(event) => setShortText(event.target.value)}
-          />
           <TextField
               id="subject"
               type="text"
-              label="subject"
+              label="Subject"
               variant="standard"
               value={subject}
+              className={classes.textField}
               onChange={(event) => setSubject(event.target.value)}
+          />
+          <TextField
+              id="shortText"
+              type="text"
+              label="Short Text"
+              variant="standard"
+              value={shortText}
+              className={classes.textField}
+              onChange={(event) => setShortText(event.target.value)}
           />
           <TextField
               id="description"
               type="text"
-              label="description"
+              label="Description"
               variant="standard"
               value={description}
+              className={classes.textField}
               onChange={(event) => setDescription(event.target.value)}
           />
           <TextField
               id="expectedDuration"
               type="number"
-              label="expectedDuration"
+              label="Expected Duration in hours"
               variant="standard"
               value={expectedDuration}
+              className={classes.textField}
               onChange={(event) => setExpectedDuration(event.target.value)}
           />
           <TextField
               id="dueDate"
               type="date"
-              label="dueDate"
+              label="Due date"
               variant="standard"
               value={dueDate}
+              className={classes.textField}
               onChange={(event) => setDueDate(event.target.value)}
           />
         </Box>
