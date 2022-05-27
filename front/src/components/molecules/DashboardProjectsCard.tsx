@@ -31,7 +31,10 @@ const useStyles = makeStyles({
       minHeight: '175px',
       padding: '0',
       margin: '10px 0',
-      backgroundColor: '#7273FF',
+      backgroundColor: '#061b2e',
+      paddingLeft: '1rem',
+      borderRadius: '30px',
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     },
     projectActionArea: {
       maxWidth: '400px',
@@ -67,7 +70,7 @@ const DashboardProjectsCard = () => {
             <CardContent sx={{ backgroundColor: '#0F4473'}}>
               <Box className={classes.boxTitle} >
                 <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
-                All Projects
+                  All Projects
                 </Typography>
                 <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log("click")}/>
               </Box>
@@ -80,7 +83,7 @@ const DashboardProjectsCard = () => {
                     const {id, name, shortText, languages, countAssignee} = project
                     return (
                         <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/infos`)}>
-                            <CardActionArea sx={{ borderRadius: '5px' }} className={classes.projectActionArea}>
+                            <CardActionArea sx={{ borderRadius: '30px' }} className={classes.projectActionArea}>
                             <Box padding="15px">
                                 <Typography fontWeight="bold" className={classes.projectCardName}>
                                 {name}

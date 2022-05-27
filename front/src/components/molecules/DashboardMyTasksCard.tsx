@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: '70px',
     padding: '0',
     margin: '10px 0',
+    paddingLeft: '1rem',
+    borderRadius: '30px',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
   },
   tagCard: {
     position: 'absolute',
@@ -50,7 +53,7 @@ interface Props {
 
 const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
   const { loading, data, error } = useQuery(GET_TASKS_BY_PROJECT, { variables: { projectId } })
-  
+
   const theme = useTheme();
   const classes = useStyles()
 
@@ -75,7 +78,7 @@ const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
         {data?.tasks.map((task: Task) => {
           return (
             <Paper key={task.id} className={classes.taskPaper}>
-              <CardActionArea sx={{ borderRadius: '5px' }}>
+              <CardActionArea sx={{ borderRadius: '30px' }}>
                 <Box padding="15px">
                   <Typography variant="h4" fontWeight="bold" className={classes.taskCardName}>
                     {task.subject}
