@@ -1,14 +1,11 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import MenuAppBar from './components/molecules/Header'
 import Routes from './components/Routes'
-
-console.log('globalThis :', globalThis.location)
 
 function App(props: any) {
 
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor: '#061B2E' }}>
       <BrowserRouter>
         <Routes />
       </BrowserRouter>
