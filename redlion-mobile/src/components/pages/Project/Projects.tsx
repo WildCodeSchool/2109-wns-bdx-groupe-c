@@ -1,8 +1,15 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-
+import * as React from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { useQuery } from "@apollo/client";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { ProgressBar, Switch } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { Projects as ProjectsType } from "../../../schemaTypes";
+import { GET_PROJECTS } from '../../../queries/project';
 import VARIABLES from '../../../../assets/styles/_variables';
+import COMPONENTS from '../../../../assets/styles/_components';
+import useMyProjects from '../../customHook/userMyProjects';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import ProjectsAll from './ProjectsAll';
 import ProjectsUser from './ProjectsUser';

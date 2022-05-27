@@ -56,6 +56,11 @@ export default function ProjectInformations (route: any) {
       variables: {projectId: parseInt(projectId)},
     });
 
+    const [inputName, setInputName] = React.useState("");
+    const [inputShortText, setInputShortText] = React.useState("");
+    const [inputDescription, setInputDescription] = React.useState("");
+    const [inputStatus, setInputStatus] = React.useState("");
+
     return (
       <View style={STYLES.container}>
         {loading ? <ActivityIndicator /> : null}

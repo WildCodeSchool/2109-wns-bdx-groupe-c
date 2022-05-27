@@ -3,10 +3,13 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import { Tasks_tasks } from '../../../schemaTypes';
+import { GET_TASKS_BY_STATUS_AND_USER } from '../../../queries/task';
+
 import COMPONENTS from '../../../../assets/styles/_components';
 import useMyTasks from '../../customHook/userMyTasks';
 
-export default function UserDashboardCardTaskFrst () {
+export default function UserDashboardCardTaskFrst ({ userId = 3 , statusName = 'In Progress' }) {
 
     const statusName = 'In Progress';
     

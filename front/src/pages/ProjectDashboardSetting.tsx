@@ -9,7 +9,11 @@ const useStyles = makeStyles({
       minHeight: '100vh',
       padding: '25px',
       marginLeft: '65px',
-      color: '#fff'
+      color: '#fff',
+      marginTop: '64px',
+      '@media screen and (max-width: 600px)': {
+        marginTop: '54px',
+      },
     },
   })
 

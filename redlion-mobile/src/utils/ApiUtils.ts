@@ -34,6 +34,19 @@ export const LOG_OUT = gql`
   }
 `;
 
+export const MY_PROJECTS = gql`
+  query MyProjects {
+    myProjects {
+      project {
+        name
+        shortText
+      }
+      projectRole {
+        name
+      }
+    }
+  }
+`;
 
 export const MY_PROJECTS = gql`
   query MyProjects {

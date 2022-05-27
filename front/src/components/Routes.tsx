@@ -11,6 +11,7 @@ import ProjectDashboardInfo from '../pages/ProjectDashboardInfo'
 import ProjectDashboardUser from '../pages/ProjectDashboardUser'
 import ProjectDashboardComment from '../pages/ProjectDashboardComment'
 import ProjectDashboardSetting from '../pages/ProjectDashboardSetting'
+import MenuAppBar from './molecules/Header'
 
 const Routes = () => {
   const history = useHistory()
@@ -28,6 +29,7 @@ const Routes = () => {
       <Switch>
         {isAuthenticated && (
           <>
+            <MenuAppBar />
             <Route path="/project/:id/tasks">
               <ProjectDashboardTask />
             </Route>
