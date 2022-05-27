@@ -48,20 +48,6 @@ export const MY_PROJECTS = gql`
   }
 `;
 
-export const MY_PROJECTS = gql`
-  query MyProjects {
-    myProjects {
-      project {
-        name
-        shortText
-      }
-      projectRole {
-        name
-      }
-    }
-  }
-`;
-
 // insider my login handler
 class ApiUtils {
 

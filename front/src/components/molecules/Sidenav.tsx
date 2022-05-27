@@ -10,12 +10,11 @@ import IconButton from '@mui/material/IconButton';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-
 import ChatIcon from '@mui/icons-material/Chat';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import InfoIcon from '@mui/icons-material/Info';
-import MenuIcon from '@mui/icons-material/Menu';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HomeIcon from '@mui/icons-material/Home';
@@ -37,23 +36,31 @@ const iconLabel = [
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
+  height: 'fit-content',
+  marginTop: '115px',
+  overflowX: 'hidden',
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: 'hidden',
+  backgroundColor: '#0F4473',
+  borderRadius: ' 0 20px 20px 0',
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  height: 'fit-content',
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+  marginTop: '115px',
+  overflowX: 'hidden',
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
+  backgroundColor: '#0F4473',
+  borderRadius: ' 0 20px 20px 0',
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -86,9 +93,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const useStyles = makeStyles((theme: Theme) => ({
   mainContainer: {
     display: 'flex',
+    height: 0,
     '& .MuiPaper-elevation': {
       zIndex: '0',
-    }
+    },
   },
 }))
 
@@ -130,6 +138,7 @@ const Sidenav = () => {
   }
 
   return (
+    
     <>
       { loading && (
                   <p>Loading...</p>
@@ -146,16 +155,21 @@ const Sidenav = () => {
                 sx={{
                   margin: 0,
                   zIndex: 1201,
+                  minHeight: 64,
                   ...(open && { display: 'none' }),
                 }}
               >
-              <MenuIcon sx={{color: '#fff'}} />
+              <ChevronRightIcon/>
             </IconButton>
-            <DrawerHeader>
-              <IconButton onClick={handleDrawerClose}>
-              <Box color='#fff'>{open === false ? '' : <ChevronLeftIcon />}</Box>
-              </IconButton>
-            </DrawerHeader>
+
+            { open === true &&
+              <DrawerHeader>
+                <IconButton onClick={handleDrawerClose}>
+                <Box color='#fff'><ChevronLeftIcon /></Box>
+                </IconButton>
+              </DrawerHeader>
+            }
+
             <Divider />
             <List>
                 {iconLabel.map((item) => (

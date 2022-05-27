@@ -22,7 +22,6 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Divider from '@mui/material/Divider';
 import { useHistory } from 'react-router-dom';
 
-
 const useStyles = makeStyles({
     navBar: {
         display: 'inline-flex',
@@ -35,6 +34,7 @@ const useStyles = makeStyles({
         maxWidth: '150px',
         position: 'fixed',
         left: '2rem',
+        cursor: 'pointer',
         '@media screen and (max-width: 840px)': {
             position: 'relative',
             left: 'unset',
@@ -141,7 +141,7 @@ export default function MenuAppBar() {
                 {list()}
             </Drawer>
             </IconButton>
-            <img src={'./logo.svg'} className={classes.img} />
+            <img src={'../../../logo.svg'} className={classes.img} onClick={() => history.push('/')} />
             {auth && (
                 <div>
                 <IconButton

@@ -11,8 +11,6 @@ import useMyTasks from '../../customHook/userMyTasks';
 
 export default function UserDashboardCardTaskFrst ({ userId = 3 , statusName = 'In Progress' }) {
 
-    const statusName = 'In Progress';
-    
     const navigation = useNavigation();
 
     const [tasks, loading] = useMyTasks(statusName);
