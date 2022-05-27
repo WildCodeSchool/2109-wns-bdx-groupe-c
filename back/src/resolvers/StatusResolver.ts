@@ -1,4 +1,5 @@
 import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver } from "type-graphql";
+import { MaxLength, IsNotEmpty, MinLength } from "class-validator";
 
 import Status from "../models/Status";
 import StatusRepository from "../repository/StatusRepository";
@@ -9,6 +10,13 @@ class UpdateStatusInput {
   id!: number
 
   @Field()
+  @MaxLength(150, {
+    message: 'identifier is too long',
+  })
+  @MinLength(2, {
+    message: 'name is too short',
+  })
+  @IsNotEmpty({ message : 'identifier can\'t be empty'})
   name!: string
 }
 

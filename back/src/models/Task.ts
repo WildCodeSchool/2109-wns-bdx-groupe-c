@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn } from 'typeorm'
-import { MaxLength, IsNotEmpty, IsDate, Min, IsInt } from "class-validator";
+
 
 import Project from './Project'
 import Status from './Status'
@@ -16,26 +16,14 @@ class Task extends BaseEntity {
 
   @Column('varchar', { length: 255 })
   @Field()
-  @MaxLength(255, {
-    message: 'subject is too long',
-  })
-  @IsNotEmpty({ message : 'subject can\'t be empty'})
   subject!: string
 
   @Column('varchar', { length: 255 })
   @Field()
-  @MaxLength(255, {
-    message: 'shortText is too long',
-  })
-  @IsNotEmpty({ message : 'shortText can\'t be empty'})
   shortText!: string
 
   @Column('text')
   @Field()
-  @MaxLength(255, {
-    message: 'description is too long',
-  })
-  @IsNotEmpty({ message : 'description can\'t be empty'})
   description!: string
 
   @ManyToOne(() => Status, status => status.tasks)
@@ -60,22 +48,14 @@ class Task extends BaseEntity {
 
   @CreateDateColumn()
   @Field()
-  @IsDate()
-  @IsNotEmpty({ message : 'dueDate can\'t be empty'})
   dueDate!: Date
 
   @Column('int')
   @Field()
-  @IsInt()
-  @Min(0)
-  @IsNotEmpty({ message : 'expectedDuration can\'t be empty'})
   expectedDuration!: number
 
   @Column('int')
   @Field()
-  @IsInt()
-  @Min(0)
-  @IsNotEmpty({ message : 'spentTime can\'t be empty'})
   spentTime!: number
 
   @OneToMany(() => Comment, comment => comment.task, { cascade: true })

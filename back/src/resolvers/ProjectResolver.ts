@@ -1,5 +1,6 @@
 import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx, Authorized } from 'type-graphql'
 import { CustomContext } from "../type";
+import { MaxLength, MinLength, IsNotEmpty, Min, IsInt } from "class-validator";
 
 import ProjectRepository from '../repository/ProjectRepository'
 
@@ -10,15 +11,39 @@ import { ROLE_ADMIN } from '../constants';
 @ArgsType()
 class CreateProjectInput {
   @Field()
+  @MaxLength(255, {
+    message: 'name is too long',
+  })
+  @MinLength(2, {
+    message: 'name is too short',
+  })
+  @IsNotEmpty({ message : 'name can\'t be empty'})
   name!: string
 
   @Field()
+  @MaxLength(255, {
+    message: 'shortText is too long',
+  })
+  @MinLength(2, {
+    message: 'shortText is too short',
+  })
+  @IsNotEmpty({ message : 'shortText can\'t be empty'})
   shortText!: string
 
   @Field()
+  @MaxLength(255, {
+    message: 'description is too long',
+  })
+  @MinLength(2, {
+    message: 'description is too short',
+  })
+  @IsNotEmpty({ message : 'description can\'t be empty'})
   description!: string
 
   @Field()
+  @IsInt()
+  @Min(0)
+  @IsNotEmpty({ message : 'initialTimeSpent can\'t be empty'})
   initialTimeSpent!: number
 }
 
@@ -28,15 +53,39 @@ class UpdateProjectInput {
   id!: number
 
   @Field({ nullable: true })
+  @MaxLength(255, {
+    message: 'name is too long',
+  })
+  @MinLength(2, {
+    message: 'name is too short',
+  })
+  @IsNotEmpty({ message : 'name can\'t be empty'})
   name?: string
 
   @Field({ nullable: true })
+  @MaxLength(255, {
+    message: 'shortText is too long',
+  })
+  @MinLength(2, {
+    message: 'shortText is too short',
+  })
+  @IsNotEmpty({ message : 'shortText can\'t be empty'})
   shortText?: string
 
   @Field({ nullable: true })
+  @MaxLength(255, {
+    message: 'description is too long',
+  })
+  @MinLength(2, {
+    message: 'description is too short',
+  })
+  @IsNotEmpty({ message : 'description can\'t be empty'})
   description?: string
 
   @Field({ nullable: true })
+  @IsInt()
+  @Min(0)
+  @IsNotEmpty({ message : 'initialTimeSpent can\'t be empty'})
   initialTimeSpent?: number
 }
 

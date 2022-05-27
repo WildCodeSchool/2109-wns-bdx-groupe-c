@@ -3,7 +3,6 @@ import {   BaseEntity,
   Column,
   Entity,
   PrimaryGeneratedColumn, ManyToOne  } from "typeorm";
-  import { IsNotEmpty } from "class-validator";
 
   import User from "./AppUser";
   import Task from "./Task";
@@ -16,7 +15,6 @@ class Comment extends BaseEntity{
 
   @Column("text")
   @Field()
-  @IsNotEmpty({ message : 'This field can\'t be empty'})
   content!: string;
 
   @Column()

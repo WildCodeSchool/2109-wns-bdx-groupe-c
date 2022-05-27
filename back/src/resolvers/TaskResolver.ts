@@ -1,25 +1,52 @@
 import { Args, Arg, ArgsType, Field, Int, Mutation, Query, Resolver, Ctx } from 'type-graphql'
+import { MaxLength, MinLength, IsNotEmpty, IsDate, Min, IsInt } from "class-validator";
 import { CustomContext } from "../type";
 import Task from '../models/Task'
 import TaskRepository from '../repository/TaskRepository';
 @ArgsType()
 class CreateTaskInput {
   @Field()
+  @MaxLength(255, {
+    message: 'subject is too long',
+  })
+  @MinLength(2, {
+    message: 'subject is too short',
+  })
+  @IsNotEmpty({ message : 'subject can\'t be empty'})
   subject!: string
 
   @Field()
+  @MaxLength(255, {
+    message: 'shortText is too long',
+  })
+  @MinLength(2, {
+    message: 'shortText is too short',
+  })
+  @IsNotEmpty({ message : 'shortText can\'t be empty'})
   shortText!: string
 
   @Field()
+  @MaxLength(255, {
+    message: 'description is too long',
+  })
+  @MinLength(2, {
+    message: 'description is too short',
+  })
+  @IsNotEmpty({ message : 'description can\'t be empty'})
   description!: string
 
   @Field(() => Int)
   projectId!: number
 
   @Field()
+  @IsDate()
+  @IsNotEmpty({ message : 'dueDate can\'t be empty'})
   dueDate!: Date
 
   @Field(() => Int)
+  @IsInt()
+  @Min(0)
+  @IsNotEmpty({ message : 'expectedDuration can\'t be empty'})
   expectedDuration!: number
 }
 

@@ -2,10 +2,15 @@ import { Arg, Args, ArgsType, Mutation, Query, Resolver, Field, Int, Ctx } from 
 import { CustomContext } from "../type";
 import Comment from '../models/Comment'
 import CommentRepository from '../repository/CommentRepository'
+import { IsNotEmpty, MinLength } from "class-validator";
 
 @ArgsType()
 class CreateCommentInput {
   @Field()
+  @IsNotEmpty({ message : 'This field can\'t be empty'})
+  @MinLength(2, {
+    message: 'content is too short',
+  })
   content!: string
 
   @Field(() => Int)
@@ -17,6 +22,10 @@ class UpdateCommentInput {
   id!: number
 
   @Field()
+  @IsNotEmpty({ message : 'This field can\'t be empty'})
+  @MinLength(2, {
+    message: 'content is too short',
+  })
   content!: string
 }
 @Resolver(Comment)
@@ -38,7 +47,7 @@ class CommentResolver {
   async deleteComment(@Arg('id') id: number) {
     return await CommentRepository.deleteComment(id)
   }
-  
+
   @Mutation(() => Comment)
   async updateComment(@Args() { id, content }: UpdateCommentInput) {
     const comment = await Comment.findOneOrFail({ id })

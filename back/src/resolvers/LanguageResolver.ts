@@ -1,6 +1,7 @@
 import { Arg, Args, ArgsType, Field, Int, Mutation, Query, Resolver } from 'type-graphql'
 import Language from '../models/Language'
 import LanguageRepository from '../repository/LanguageRepository'
+import { MaxLength, IsNotEmpty, MinLength } from "class-validator";
 
 @ArgsType()
 class DeleteLanguageInput {
@@ -14,6 +15,13 @@ class UpdateLangugeInput {
   id!: number
 
   @Field()
+  @MaxLength(100, {
+    message: 'name is too long',
+  })
+  @MinLength(2, {
+    message: 'name is too short',
+  })
+  @IsNotEmpty({ message : 'This field can\'t be empty'})
   name!: string
 }
 
