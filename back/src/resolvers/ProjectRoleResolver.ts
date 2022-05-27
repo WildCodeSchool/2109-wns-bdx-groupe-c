@@ -1,5 +1,5 @@
 import { Arg, Args, ArgsType, Field, Int,Mutation, Query, Resolver } from "type-graphql";
-
+import { MaxLength, IsNotEmpty, MinLength } from "class-validator";
 
 import ProjectRole from "../models/ProjectRole";
 import ProjectRoleRepository from "../repository/ProjectRoleRepository";
@@ -10,6 +10,13 @@ class UpdateProjectRoleInput {
   id!: number;
 
   @Field()
+  @MaxLength(100, {
+    message: 'name is too long',
+  })
+  @MinLength(2, {
+    message: 'name is too short',
+  })
+  @IsNotEmpty({ message : 'name can\'t be empty'})
   name!: string;
 }
 

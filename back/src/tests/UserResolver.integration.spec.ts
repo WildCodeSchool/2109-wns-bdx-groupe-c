@@ -224,7 +224,7 @@ describe('UserResolver', () => {
           updateMyInformations(
             firstName: "test firstname updated",
             lastName: "test lastname updated",
-            email: "test email updated",
+            email: "test@mailupdated.com",
             password: "password",
         ) {
           firstName
@@ -236,7 +236,7 @@ describe('UserResolver', () => {
       expect(JSON.parse(result.text).errors).toBeUndefined()
       expect(JSON.parse(result.text).data.updateMyInformations).toMatchInlineSnapshot(`
         Object {
-          "email": "test email updated",
+          "email": "test@mailupdated.com",
           "firstName": "test firstname updated",
           "lastName": "test lastname updated",
         }

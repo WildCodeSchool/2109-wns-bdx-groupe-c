@@ -5,7 +5,6 @@ import {   BaseEntity,
   PrimaryGeneratedColumn,
   OneToMany
 } from "typeorm";
-import { MaxLength, IsNotEmpty } from "class-validator";
 
 import Task from './Task'
 
@@ -18,10 +17,6 @@ class Status extends BaseEntity{
 
   @Column("varchar", { length: 150, unique: true })
   @Field()
-  @MaxLength(150, {
-    message: 'identifier is too long',
-  })
-  @IsNotEmpty({ message : 'identifier can\'t be empty'})
   name!: string;
 
   @OneToMany(() => Task, task => task.status)

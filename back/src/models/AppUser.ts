@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm'
-import { MaxLength, IsEmail } from "class-validator";
 import Argon2Password from '../helpers/Argon2Password'
 
 import Comment from './Comment'
@@ -16,24 +15,14 @@ class AppUser extends BaseEntity {
 
   @Column('varchar', { length: 100 })
   @Field()
-  @MaxLength(100, {
-    message: 'firstName is too long',
-  })
   firstName!: string
 
   @Column('varchar', { length: 100 })
   @Field()
-  @MaxLength(100, {
-    message: 'lastName is too long',
-  })
   lastName!: string
 
   @Column('varchar', { length: 100, unique: true })
   @Field()
-  @MaxLength(100, {
-    message: 'email is too long',
-  })
-  @IsEmail()
   email!: string
 
   // On enlève le @Field() pour ne pas afficher le mot de passe côté Front
