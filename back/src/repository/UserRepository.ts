@@ -6,7 +6,7 @@ class UserRepository extends User {
   static async findAll() {
     return await User.find({
       relations: ['projectsCreated','comments','role','tasks'],
-      order: { id: 'DESC' }
+      order: { lastName: 'ASC' }
     })
   }
 

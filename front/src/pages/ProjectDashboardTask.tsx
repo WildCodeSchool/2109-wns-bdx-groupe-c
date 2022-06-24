@@ -109,16 +109,21 @@ const ProjectDashboardTask = () => {
       },[openAddTask]);
 
     const [showSuccessTaskDeleted, setShowSuccessTaskDeleted] = useState<boolean>(false)
+    const [showSuccessUserAttributed, setShowSuccessUserAttributed] = useState<boolean>(false)
 
     const handleCloseToast = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
         return;
     }
     setShowSuccessTaskDeleted(false);
+    setShowSuccessUserAttributed(false)
     }
 
     const openToastSuccessTaskDeleted = () => {
         setShowSuccessTaskDeleted(true);
+    };
+    const openToastSuccessUserAttributed = () => {
+        setShowSuccessUserAttributed(true);
     };
 
 
@@ -220,7 +225,7 @@ const ProjectDashboardTask = () => {
                             {Object.values(statusColumns).map(status => {
                                 const { id } = status
                                 return (
-                                    <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted}/>
+                                    <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted} openToastSuccessUserAttributed={openToastSuccessUserAttributed}/>
                                 )
                             })}
                         </Box>
@@ -243,6 +248,12 @@ const ProjectDashboardTask = () => {
                 open={showSuccessTaskDeleted}
                 severity="success"
                 message="Task deleted successfully"
+                />
+                <Toast
+                handleClose={handleCloseToast}
+                open={showSuccessUserAttributed}
+                severity="success"
+                message="User Attributed with Success !"
                 />
             </Box>
         </Box>

@@ -63,3 +63,12 @@ mutation UpdateStatus($deleteTaskId: Float!) {
   }
 }
 `
+
+export const ASSIGN_USER_TO_TASK = gql`
+mutation AssignUserToTask($assignUserToTaskId: Int!, $userId: Int!) {
+  assignUserToTask(id: $assignUserToTaskId, userId: $userId) {
+    shortText
+    description
+  }
+}
+`
