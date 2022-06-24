@@ -1,17 +1,39 @@
 import { gql } from '@apollo/client'
 
 export const MY_PROFILE = gql`
-query MyProfile {
-  myProfile {
-    firstName
-    lastName
-    email
-    role {
-      name
-      identifier
+  query MyProfile {
+    myProfile {
+      firstName
+      lastName
+      email
+      createdAt
+      role {
+        name
+        identifier
+      }
     }
   }
-}
+`;
+
+export const MY_LANGUAGES = gql`
+  query MyLanguages {
+    myLanguages {
+      id
+      rating
+      language {
+        name
+      }
+      user {
+        firstName
+        lastName
+        email
+        createdAt
+        projectsCreated {
+          id
+        }
+      }
+    }
+  }
 `;
 
 export const LOG_OUT = gql`
@@ -37,6 +59,32 @@ export const SIGN_UP = gql`
       lastName
       email
       isActive
+    }
+  }
+`;
+
+export const USER_MY_PROJECTS = gql`
+  query MyProjects($statusName: String) {
+    myProjects(statusName: $statusName) {
+      id
+      user {
+        lastName
+        firstName
+      }
+      project {
+        name
+      }
+    }
+  }
+`;
+
+export const ADD_LANGUAGE = gql`
+  mutation Mutation($languageId: Int!, $rating: Float!) {
+    addLanguageToMe(languageId: $languageId, rating: $rating) {
+      rating
+      language {
+        name
+      }
     }
   }
 `;
