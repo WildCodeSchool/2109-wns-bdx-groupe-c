@@ -9,7 +9,7 @@ import { GET_TASKS_BY_STATUS_AND_USER } from '../../../queries/task';
 import COMPONENTS from '../../../../assets/styles/_components';
 import useMyTasks from '../../customHook/userMyTasks';
 
-export default function UserDashboardCardTaskFrst ({ userId = 3 , statusName = 'In Progress' }) {
+export default function UserDashboardCardTaskFrst ({ statusName = 'In Progress' }) {
 
     const navigation = useNavigation();
 

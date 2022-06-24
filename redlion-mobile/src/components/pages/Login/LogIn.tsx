@@ -79,7 +79,12 @@ export default function LogIn () {
         } else {
             setError(true);
         }
-    }, [error, email, password]);
+    }, [
+        setError,
+        email,
+        password,
+        navigation
+    ]);
 
     return (
         <View style={styles.container}>
@@ -118,7 +123,7 @@ export default function LogIn () {
                     onChangeText={text => setPassword(text)}
                 />
                 <HelperText type="error" visible={error} onPressIn={()=>{}} onPressOut={()=>{}}>
-                    Could not sign up with provided email address.
+                    Could not sign in with provided email address or password
                 </HelperText>
                 <Button
                     style={styles.button}

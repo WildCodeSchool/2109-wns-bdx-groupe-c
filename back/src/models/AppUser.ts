@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql'
+import { hash } from "bcrypt";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm'
-import Argon2Password from '../helpers/Argon2Password'
 
 import Comment from './Comment'
 import Project from './Project'
@@ -61,7 +61,7 @@ class AppUser extends BaseEntity {
     if (firstName) this.firstName = firstName;
     if (lastName) this.lastName = lastName;
     if (email) this.email = email;
-    if (password) this.password = await Argon2Password.hashPassword(password);
+    if (password) this.password = await hash(password, 10);
     this.updatedAt = new Date();
     await this.save();
     return this;

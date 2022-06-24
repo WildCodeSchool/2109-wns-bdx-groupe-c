@@ -47,11 +47,7 @@ const useStyles = makeStyles({
   }
 })
 
-interface loginProps {
-  setConnectionOn: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-const Login = ({ setConnectionOn }: loginProps) => {
+const Login = () => {
   const classes = useStyles()
   const history = useHistory()
   const [showPassword, setShowPassword] = useState(false)
@@ -88,7 +84,7 @@ const Login = ({ setConnectionOn }: loginProps) => {
             <TextField
               id="email"
               type="email"
-              label="Email"
+              label="E-mail"
               variant="standard"
               value={email}
               onChange={event => setEmail(event.target.value)}
@@ -96,7 +92,7 @@ const Login = ({ setConnectionOn }: loginProps) => {
             <TextField
               variant="standard"
               type={showPassword ? 'text' : 'password'}
-              label="Mot de passe"
+              label="Password"
               onChange={event => setPassword(event.target.value)}
               value={password}
               InputProps={{
@@ -121,14 +117,14 @@ const Login = ({ setConnectionOn }: loginProps) => {
           </Box>
           {loginError && <Box className={classes.loginError}>{loginError}</Box>}
           <Button className={classes.connectionButton} type="submit">
-            Se connecter
+            Connect
           </Button>
         </Box>
       </form>
       <Button
         className={classes.connectionButton}
       >
-        Accueil
+        Home
       </Button>
     </>
   )

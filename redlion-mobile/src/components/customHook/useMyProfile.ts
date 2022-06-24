@@ -44,10 +44,9 @@ const useMyProfile = () => {
                 setLoading(false)
               }
             })
-          .catch((error) => {
+          .catch(() => {
             setUser(null)
-              console.log('ERREUR DE LA MUTATION SUR MON PROFIL', error.message)
-              setLoading(false)
+            setLoading(false)
             });
       }, [])
 
