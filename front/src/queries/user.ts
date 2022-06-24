@@ -23,7 +23,6 @@ mutation Mutation($firstName: String!, $lastName: String!, $password: String!, $
     email
     isActive
   }
-}
 `;
 
 export const LOG_OUT = gql`
@@ -38,6 +37,21 @@ query Users {
     id
     firstName
     lastName
+  }
+}
+`;
+
+export const USER_MY_TASKS = gql`
+query MyTasks($statusName: String) {
+  myTasks(statusName: $statusName) {
+    id
+    subject
+    shortText
+    description
+    project {
+      name
+      id
+    }
   }
 }
 `;
@@ -57,17 +71,13 @@ export const USER_MY_PROJECTS = gql`
   }
 `;
 
-export const USER_MY_TASKS = gql`
-query MyTasks($statusName: String) {
-  myTasks(statusName: $statusName) {
-    id
-    subject
-    shortText
-    description
-    project {
-      name
-      id
+export const ADD_LANGUAGE = gql`
+  mutation Mutation($languageId: Int!, $rating: Float!) {
+    addLanguageToMe(languageId: $languageId, rating: $rating) {
+      rating
+      language {
+        name
+      }
     }
   }
-}
 `;

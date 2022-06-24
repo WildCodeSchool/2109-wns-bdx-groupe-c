@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const ProfilLanguages = () => {
-
     const classes = useStyles();
 
     // update language modal
