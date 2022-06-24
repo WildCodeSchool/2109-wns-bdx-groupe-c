@@ -19,6 +19,10 @@ query TaskByStatusByProject($projectId: Int!) {
       id
       subject
       shortText
+      assignee {
+        firstName
+        lastName
+      }
     }
   }
 }

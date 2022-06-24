@@ -73,19 +73,19 @@ describe('UserResolver', () => {
           Array [
             Object {
               "createdAt": "2021-11-23T23:18:00.134Z",
-              "email": "nouvelle@mail.fr",
-              "firstName": "Nouvelle",
-              "id": "2",
-              "isActive": true,
-              "lastName": "Nouvelle",
-            },
-            Object {
-              "createdAt": "2021-11-23T23:18:00.134Z",
               "email": "nouveau@mail.com",
               "firstName": "Nouveau",
               "id": "1",
               "isActive": true,
               "lastName": "Nouveau",
+            },
+            Object {
+              "createdAt": "2021-11-23T23:18:00.134Z",
+              "email": "nouvelle@mail.fr",
+              "firstName": "Nouvelle",
+              "id": "2",
+              "isActive": true,
+              "lastName": "Nouvelle",
             },
           ]
         `)

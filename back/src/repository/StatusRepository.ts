@@ -21,7 +21,7 @@ class StatusRepository extends Status {
 
   static async findTaskByStatusByProject(projectId: number) {
     const statusFound =  await Status.find({
-      relations: ['tasks', 'tasks.project'],
+      relations: ['tasks', 'tasks.project', 'tasks.assignee'],
       order: {id: 'ASC'}
     })
     return statusFound

@@ -20,3 +20,13 @@ mutation LogOut {
   logOut
 }
 `;
+
+export const GET_ALL_USERS = gql`
+query Users {
+  users {
+    id
+    firstName
+    lastName
+  }
+}
+`;
