@@ -157,7 +157,7 @@ class UserResolver {
   async signIn(
     @Args() { email, password }: signInInput,
     @Ctx() { onSessionCreated }: CustomContext
-  ): Promise<User | undefined> {
+  ): Promise<User> {
     return UserRepository.signIn(email, password, onSessionCreated);
   }
 

@@ -48,7 +48,6 @@ class UserRepository extends User {
         return user;
       }
     }
-    throw new Error(ERROR);
   }
 
   static async logOut(sessionId: string): Promise<Boolean> {

@@ -56,7 +56,7 @@ const Home = () => {
               Connect
             </Button>
           )}
-          {connectionOn && <Login setConnectionOn={setConnectionOn} />}
+          {connectionOn && <Login />}
         </Box>
       </Box>
     </>
