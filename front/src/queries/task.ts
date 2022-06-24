@@ -36,6 +36,17 @@ export const GET_TASKS_BY_PROJECT = gql`
   }
 `
 
+export const GET_TASKS_BY_STATUS = gql`
+  query Tasks($statusName: String!) {
+    tasksByStatus(statusName: $statusName) {
+        id
+        status {
+            name
+        }
+    }
+  }
+`
+
 export const MUTATION_UPDATE_STATUS_TASK = gql`
   mutation UpdateStatus($updateStatusId: Int!, $statusId: Int!) {
     updateStatus(id: $updateStatusId, statusId: $statusId) {
