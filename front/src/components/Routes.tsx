@@ -46,6 +46,9 @@ const Routes = () => {
             <Route exact path="/project/:id/settings">
               <ProjectDashboardSetting />
             </Route>
+            <Route exact path="/login">
+              <Redirect to="/" />
+            </Route>
             <Route exact path="/">
               <Dashboard />
             </Route>
