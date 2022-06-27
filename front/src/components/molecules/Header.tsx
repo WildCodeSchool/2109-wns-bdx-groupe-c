@@ -2,13 +2,9 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useMutation } from '@apollo/client';
@@ -17,8 +13,6 @@ import {makeStyles} from "@mui/styles"
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import { ListItem } from '@mui/material';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Divider from '@mui/material/Divider';
 import { useHistory } from 'react-router-dom';
 
@@ -63,13 +57,9 @@ const useStyles = makeStyles({
 })
 
 export default function MenuAppBar() {
-  const [auth, setAuth] = React.useState(true);
+  const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [logOut] = useMutation(LOG_OUT, {refetchQueries: [{query: MY_PROFILE}]});
-
-  const handleChange = (event: any) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -141,7 +131,7 @@ export default function MenuAppBar() {
                 {list()}
             </Drawer>
             </IconButton>
-            <img src={'../../../logo.svg'} className={classes.img} onClick={() => history.push('/')} />
+            <img src={'../../../logo.svg'} className={classes.img} onClick={() => history.push('/')} alt={''} />
             {auth && (
                 <div>
                 <IconButton
