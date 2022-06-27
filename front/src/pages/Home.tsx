@@ -11,6 +11,9 @@ const useStyles = makeStyles({
     backgroundColor: '#061B2E',
     height: '100vh',
     width: '100vw',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   formContainer: {
     display: 'grid',
@@ -19,7 +22,6 @@ const useStyles = makeStyles({
     alignItems: 'center',
     flexDirection: 'column',
     position: 'relative',
-    top: '40%',
   },
   connectionButton: {
     backgroundColor: '#1F84E1',

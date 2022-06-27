@@ -44,7 +44,20 @@ const useStyles = makeStyles({
   loginError: {
     color: '#FF0000',
     backgroundColor: '#FFFFF',
-  }
+  },
+  topContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: '2rem',
+  },
+  topImg: {
+
+  },
+  topTitle: {
+    color: '#fff',
+  },
+
 })
 
 const Login = () => {
@@ -78,6 +91,10 @@ const Login = () => {
 
   return (
     <>
+      <Box className={classes.topContainer}>
+        <img src={'../../../logo.svg'} className={classes.topImg} onClick={() => history.push('/registration')} />
+        <h1 className={classes.topTitle}>"Think Lion, not kitty"</h1>
+      </Box>
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column">
           <Box display="flex" flexDirection="column" className={classes.textFieldArea}>
@@ -123,8 +140,9 @@ const Login = () => {
       </form>
       <Button
         className={classes.connectionButton}
+        onClick={() => history.push('/registration')}
       >
-        Home
+        Registration
       </Button>
     </>
   )

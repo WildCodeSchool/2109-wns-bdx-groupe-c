@@ -8,3 +8,13 @@ export const SIGN_IN = gql`
     }
   }
 `;
+
+export const SIGN_UP = gql`
+  mutation Mutation($firstName: String!, $lastName: String!, $password: String!, $email: String!) {
+    signUp(firstName: $firstName, lastName: $lastName, password: $password, email: $email) {
+      firstName
+      lastName
+      email
+    }
+  }
+`;

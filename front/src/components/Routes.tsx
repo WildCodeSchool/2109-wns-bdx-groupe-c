@@ -12,6 +12,7 @@ import ProjectDashboardUser from '../pages/ProjectDashboardUser'
 import ProjectDashboardComment from '../pages/ProjectDashboardComment'
 import ProjectDashboardSetting from '../pages/ProjectDashboardSetting'
 import MenuAppBar from './molecules/Header'
+import Registration from '../pages/Registration'
 
 const Routes = () => {
   const history = useHistory()
@@ -54,6 +55,7 @@ const Routes = () => {
           <>
             <Redirect to={{ pathname: '/login' }} />
             <Route path="/login" component={Home} />
+            <Route exact path="/registration" component={Registration} />
           </>
         )}
       </Switch>
