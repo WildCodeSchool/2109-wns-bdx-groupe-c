@@ -17,9 +17,9 @@ import {
 } from "../queries/status"
 import { MUTATION_UPDATE_STATUS_TASK } from "../queries/task"
 import ModalAddTask from '../components/molecules/Task/ModalAddTask';
-import Toast from '../components/molecules/Toast';
 import { Theme } from '@mui/material/styles'
 import Sidenav from '../components/molecules/Sidenav';
+import useToast from '../contexts/useToast';
 
 const useStyles = makeStyles((theme: Theme) => ({
     masterContainer: {
@@ -94,6 +94,7 @@ interface dragListType {
 
 const ProjectDashboardTask = () => {
     const classes = useStyles()
+    const { showToast } = useToast();
     const { id } = useParams<UseParamProps>();
 
     const { data: dataAllStatus, loading: loadingAllStatus } = useQuery(GET_ALL_STATUS)
@@ -107,25 +108,6 @@ const ProjectDashboardTask = () => {
     const toggleAddTaskModal = useCallback(() => {
         setOpenAddTask(!openAddTask);
       },[openAddTask]);
-
-    const [showSuccessTaskDeleted, setShowSuccessTaskDeleted] = useState<boolean>(false)
-    const [showSuccessUserAttributed, setShowSuccessUserAttributed] = useState<boolean>(false)
-
-    const handleCloseToast = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-        return;
-    }
-    setShowSuccessTaskDeleted(false);
-    setShowSuccessUserAttributed(false)
-    }
-
-    const openToastSuccessTaskDeleted = () => {
-        setShowSuccessTaskDeleted(true);
-    };
-    const openToastSuccessUserAttributed = () => {
-        setShowSuccessUserAttributed(true);
-    };
-
 
     const [updateStatusTask] = useMutation(MUTATION_UPDATE_STATUS_TASK)
     const [statusColumns, setStatusColumns] = useState<dragListType | null>(null)
@@ -208,9 +190,11 @@ const ProjectDashboardTask = () => {
 
               const newCols = {...statusColumns, ...{[sourceDroppableId]: {...statusColumns[sourceDroppableId], tasks: newColStart}, [destinationDroppableId]: {...statusColumns[destinationDroppableId], tasks: newColEnd}}}
               setStatusColumns(newCols)
+
+
             }
         }
-
+        showToast('success', 'status of the task updated !');
 
       }
 
@@ -225,7 +209,7 @@ const ProjectDashboardTask = () => {
                             {Object.values(statusColumns).map(status => {
                                 const { id } = status
                                 return (
-                                    <StatusColumn column={status} key={id} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted} openToastSuccessUserAttributed={openToastSuccessUserAttributed}/>
+                                    <StatusColumn column={status} key={id} />
                                 )
                             })}
                         </Box>
@@ -242,18 +226,6 @@ const ProjectDashboardTask = () => {
                 <ModalAddTask
                     openAddTask={openAddTask}
                     toggleAddTaskModal={toggleAddTaskModal}
-                />
-                <Toast
-                handleClose={handleCloseToast}
-                open={showSuccessTaskDeleted}
-                severity="success"
-                message="Task deleted successfully"
-                />
-                <Toast
-                handleClose={handleCloseToast}
-                open={showSuccessUserAttributed}
-                severity="success"
-                message="User Attributed with Success !"
                 />
             </Box>
         </Box>

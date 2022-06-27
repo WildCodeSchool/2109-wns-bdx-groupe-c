@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import { Snackbar, Alert, AlertProps } from '@mui/material';
+import useToast from '../../contexts/useToast';
 
 
 const SnackbarAlert =forwardRef<HTMLDivElement, AlertProps>(
@@ -8,36 +9,23 @@ const SnackbarAlert =forwardRef<HTMLDivElement, AlertProps>(
   }
 )
 
+const Toast: React.FC = () => {
+  const { toastConfig, hideToast } = useToast();
 
-interface ToastProps {
-  handleClose: (event?: React.SyntheticEvent | Event, reason?: string) => void,
-  open: boolean,
-  severity: 'success' | 'info' | 'warning' | 'error',
-  message: string,
-}
-
-
-const Toast: React.FC<ToastProps> = ({handleClose, open, severity, message}) => {
-  // const [open, setOpen] = useState(false);
-  // const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-  //   setOpen(false);
-  // }
+  if (!toastConfig) return null;
 
   return (
     <>
       <Snackbar
-        open={open}
+        open={true}
         autoHideDuration={6000}
-        onClose={handleClose}
+        onClose={hideToast}
       >
         <SnackbarAlert
-          onClose={handleClose}
-          severity={severity}
+          onClose={hideToast}
+          severity={toastConfig.severity}
         >
-          {message}
+          { toastConfig.message }
         </SnackbarAlert>
 
       </Snackbar>

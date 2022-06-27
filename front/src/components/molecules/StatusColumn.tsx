@@ -45,8 +45,6 @@ interface StatusColumnProps {
     name: 'To Do' | 'In Progress' | 'Code Review' | 'Done',
     tasks: Task[],
   },
-  openToastSuccessTaskDeleted: () => void,
-  openToastSuccessUserAttributed: () => void,
 }
 
 
@@ -58,7 +56,7 @@ On doit fournir au Dropable :
 à la <div> retourné  ainsi que le {provided.placeholder}
 */
 
-const StatusColumn: React.FC<StatusColumnProps> =  ({ column: {id, name, tasks}, openToastSuccessTaskDeleted, openToastSuccessUserAttributed }) => {
+const StatusColumn: React.FC<StatusColumnProps> =  ({ column: {id, name, tasks}}) => {
 
   const colorStatus = useMemo(() => statusColors[name], [name]);
   const classes = useStyles()
@@ -82,7 +80,7 @@ const StatusColumn: React.FC<StatusColumnProps> =  ({ column: {id, name, tasks},
             ref={provided.innerRef}
           >
             {tasks.map((task, index) => (
-              <TaskCard key={task.shortText} task={task} index={index} openToastSuccessTaskDeleted={openToastSuccessTaskDeleted} openToastSuccessUserAttributed={openToastSuccessUserAttributed} />
+              <TaskCard key={task.shortText} task={task} index={index} />
             ))}
             {provided.placeholder}
           </Box>
