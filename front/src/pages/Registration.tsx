@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles'
 import { Box, Button, IconButton, InputAdornment, TextField } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { useHistory } from 'react-router-dom'
-import { SIGN_UP } from "../queries/login"
+import { SIGN_UP, SIGN_IN } from "../queries/login"
 import { MY_PROFILE } from '../queries/user';
 
 const useStyles = makeStyles({
@@ -96,22 +96,37 @@ const Registration = () => {
   // ---------------------------------------
 
   const [signUp] = useMutation(SIGN_UP);
+  const [signIn] = useMutation(SIGN_IN);
 
   const [error, setError] = useState<ApolloError | null>(null)
 
   const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    try {
-        await signUp({
-            variables: { firstName, lastName, email, password },
-            refetchQueries: [ MY_PROFILE ]
-        });
-        history.push('/login')
-    } catch (error) {
+    signUp({
+        variables: { firstName, lastName, email, password },
+        refetchQueries: [ MY_PROFILE ]
+    })
+    .then((res) => {
+        const { data } = res;
+        const { signUp: newUser } = data;
+        if (newUser) return true
+    })
+    .then((res) => {
+        if (res) {
+            return signIn({
+                variables: { email, password },
+                refetchQueries: [ MY_PROFILE ]
+                });
+        }
+    })
+    .then(() => {
+        history.push('/')
+    })
+    .catch((error) => {
         setError(error as ApolloError)
-    }
+    })
   }, [signUp, firstName, lastName, email, password]);
-  
+
   const signUpError = useMemo(() => {
     if (error) return error.graphQLErrors[0].message
     return null
