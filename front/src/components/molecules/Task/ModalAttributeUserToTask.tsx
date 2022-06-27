@@ -17,13 +17,13 @@ import { ASSIGN_USER_TO_TASK } from '../../../queries/task';
 import {GET_TASKS_BY_STATUS_BY_PROJECTID } from "../../../queries/status"
 
 import { User } from '../../../entities/user';
+import useToast from '../../../contexts/useToast';
 
 interface Props {
   showModal: boolean,
   toggleModal: () => void,
   taskId: string,
   projectId: string | undefined,
-  openToastSuccessUserAttributed: () => void,
 }
 
 const useStyles = makeStyles({
@@ -73,9 +73,9 @@ export interface Option {
   value: string,
 }
 
-const ModalAttributeUserToTask = ({showModal, toggleModal, taskId, projectId, openToastSuccessUserAttributed}: Props) => {
+const ModalAttributeUserToTask = ({showModal, toggleModal, taskId, projectId}: Props) => {
   const classes = useStyles()
-
+  const { showToast } = useToast();
   const { data, loading } = useQuery(GET_ALL_USERS, {
     skip: !showModal
   });
@@ -124,7 +124,7 @@ const ModalAttributeUserToTask = ({showModal, toggleModal, taskId, projectId, op
           }]
         })
         toggleModal();
-        openToastSuccessUserAttributed();
+        showToast('success', 'User Attributed with Success !');
       }
       catch {
 

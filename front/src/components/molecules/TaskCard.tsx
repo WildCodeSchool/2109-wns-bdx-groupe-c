@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useMutation, ApolloError, useQuery } from "@apollo/client";
+import { useMutation, ApolloError } from "@apollo/client";
 import { useParams } from 'react-router-dom';
 
-import {useCallback, useState, useEffect} from 'react'
+import {useCallback, useState} from 'react'
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
@@ -17,13 +17,12 @@ import { Task } from "../../entities/task"
 import {MUTATION_DELETE_TASK} from "../../queries/task"
 import {GET_TASKS_BY_STATUS_BY_PROJECTID } from "../../queries/status"
 import ModalAttributeUserToTask from './Task/ModalAttributeUserToTask';
+import useToast from '../../contexts/useToast';
 
 
 interface TaskCardProps {
   task: Task
   index: number
-  openToastSuccessTaskDeleted: () => void,
-  openToastSuccessUserAttributed: () => void,
 }
 
 const useStyles = makeStyles({
@@ -63,14 +62,15 @@ interface UseParamProps {
   id: string | undefined,
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, index, openToastSuccessTaskDeleted, openToastSuccessUserAttributed } ) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, index } ) => {
   const classes = useStyles()
+  const { showToast } = useToast();
   const { id: projectId } = useParams<UseParamProps>();
   const {shortText, subject, id: taskId, assignee } = task
   const [ deleteTask ] = useMutation(MUTATION_DELETE_TASK);
   const [ error, setError ] = useState<ApolloError | null>(null)
   const [ showModal, setShowModal ] = useState<boolean>(false)
-  console.log('task', task)
+
   const toggleModal = useCallback(() => {
     setShowModal(!showModal)
   }, [showModal, setShowModal])
@@ -91,14 +91,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, openToastSuccessTaskDe
               }));
       })
         .then(() => {
-          //TODO ici afficher snackBar
-          openToastSuccessTaskDeleted()
+          showToast('success', 'Task deleted with success !');
         })
         .catch((error) => {
           setError(error as ApolloError)
         })
     }
-  }, [projectId, openToastSuccessTaskDeleted, setError]);
+  }, [projectId, setError, showToast]);
 
   return (
     <>
@@ -148,7 +147,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, openToastSuccessTaskDe
         toggleModal={toggleModal}
         taskId={taskId}
         projectId={projectId}
-        openToastSuccessUserAttributed={openToastSuccessUserAttributed}
       />
     </>
   )
