@@ -18,6 +18,14 @@ const useStyles = makeStyles({
       margin: '54px 0 0',
     },
   },
+  tasksContainer: {
+    display: 'inline-flex',
+    width: '100%',
+    '@media screen and (max-width: 1200px)': {
+      overflowX: 'scroll',
+      paddingBottom: '1rem',
+    },
+  },
 })
 
 const Dashboard = () => {
@@ -27,7 +35,11 @@ const Dashboard = () => {
   return (
     <>
       <Box className={classes.mainContainer}>
-          <DashboardMyTasksCard projectId={1} />
+          <Box className={classes.tasksContainer}>
+            <DashboardMyTasksCard statusName={'To Do'} color={'#A5A6F6'} />
+            <DashboardMyTasksCard statusName={'In Progress'} color={'#E9FF63'} />
+            <DashboardMyTasksCard statusName={'Code Review'} color={'#10CEC3'} />
+          </Box>
           <DashboardProjectsCard />
       </Box>
       {!data && (

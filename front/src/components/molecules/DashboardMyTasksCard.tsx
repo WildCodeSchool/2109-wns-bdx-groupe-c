@@ -1,34 +1,42 @@
 import { useQuery } from '@apollo/client'
 
-import { CircularProgress } from '@mui/material'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardActionArea from '@mui/material/CardActionArea'
-import CardContent from '@mui/material/CardContent'
 import { makeStyles } from '@mui/styles'
-import Paper from '@mui/material/Paper'
-import Typography from '@mui/material/Typography'
+import { Box, Paper, Typography, Theme, Card, CardContent,CardActionArea, CircularProgress } from '@mui/material'
 
 import MoreMenu from '../atoms/MoreMenu'
-import { GET_TASKS_BY_PROJECT } from '../../queries/task'
+import { GET_TASKS_BY_STATUS_MORE } from '../../queries/task'
 import { Task } from '../../entities/task'
-import { Theme, useTheme } from '@mui/material/styles'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  cardTasksContainer: {
+    display: 'inline-flex',
+    height: 'fit-content',
+  },
   card: {
-    maxWidth: '430px',
+    minWidth: '320px',
+    maxWidth: '400px',
+    marginRight: '2rem',
     backgroundColor: '#7273FF',
+    borderRadius: '14px',
+  },
+  cardContent: {
+    position: 'relative',
+    backgroundColor: '#0F4473',
   },
   cardPaper: {
-    maxWidth: '430px',
     minHeight: '100px',
     margin: '10px 0',
-    borderRadius: '30px',
-    padding: '1rem 1rem 1rem 2rem',
+    borderRadius: '14px',
+    padding: '1rem',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
   },
+  cardTasksList: {
+    maxHeight: '800px',
+    paddingRight: '1rem',
+    overflowY: 'scroll',
+  },
   taskPaper: {
-    borderRadius: '30px',
+    borderRadius: '14px',
   },
   tagCard: {
     position: 'absolute',
@@ -40,64 +48,69 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   taskCardName: {
     fontSize: '17px !important',
+    marginBottom: '1rem',
+    fontWeight: 'bold',
   },
   boxTitle: {
     width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: '1rem',
+  },
+  cardTitle: {
+    fontSize: '28px',
+    color: 'white',
+    fontWeight: 'bold'
+  },
+  description: {
+    marginBottom: '1rem',
   },
 }))
 
 interface Props {
-  projectId: number
+  statusName: string,
+  color: string,
 }
 
+const DashboardMyTasksCard = ({ statusName, color }: Props) => {
 
-const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
-  const { loading, data, error } = useQuery(GET_TASKS_BY_PROJECT, { variables: { projectId } })
+  const classes = useStyles();
 
-  const theme = useTheme();
-  const classes = useStyles()
-
-
-  const color = {
-    "To Do" : theme.palette.secondary.purple,
-    "In Progress" : theme.palette.secondary.yellow,
-    "Code Review" : theme.palette.secondary.cyan,
-    "Done" : theme.palette.secondary.green,
-  }
+  const { loading, data } = useQuery(GET_TASKS_BY_STATUS_MORE, { variables: { statusName, color } })
 
   return (
-    <Card className={classes.card} sx={{borderRadius: '20px'}}>
-      <CardContent sx={{ backgroundColor: '#0F4473', position: 'relative'}}>
-      <Box className={classes.tagCard} sx={{backgroundColor: color['To Do']}} />
-        <Box className={classes.boxTitle}>
-          <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold' }}>
-            Tasks &lt; To do
-          </Typography>
-          <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log('click')}/>
-        </Box>
-        {loading && (
-            <CircularProgress />
-        )}
-        {data?.tasks.map((task: Task) => {
-          return (
-            <Paper key={task.id} className={classes.taskPaper}>
-              <CardActionArea className={classes.cardPaper}>
-                <Box>
-                  <Typography variant="h4" fontWeight="bold" className={classes.taskCardName}>
-                    {task.subject}
-                  </Typography>
-                  <Typography>{task.description}</Typography>
-                  <Typography>{task.createdAt}</Typography>
-                </Box>
-              </CardActionArea>
-            </Paper>
-          )
-        })}
-      </CardContent>
-    </Card>
+    <Box className={classes.cardTasksContainer}>
+      <Card className={classes.card}>
+        <CardContent className={classes.cardContent}>
+        <Box className={classes.tagCard} sx={{ backgroundColor: color}} />
+          <Box className={classes.boxTitle}>
+            <Typography variant="h2"  className={classes.cardTitle}>Tasks : {statusName}</Typography>
+            <MoreMenu options={['See all tasks']} onClick={()=>console.log('click')}/>
+          </Box>
+          <Box className={classes.cardTasksList}>
+            {loading && (
+              <CircularProgress />
+            )}
+            {data?.tasksByStatus.map((task: Task) => {
+              let createdAt = new Date(task.createdAt);
+              let inscriptionDate = createdAt.toLocaleDateString();
+              return (
+                <Paper key={task.id} className={classes.taskPaper}>
+                  <CardActionArea className={classes.cardPaper}>
+                    <Box>
+                      <Typography variant="h4" className={classes.taskCardName}>{task.subject}</Typography>
+                      <Typography className={classes.description}>{task.description}</Typography>
+                      <Typography>{inscriptionDate}</Typography>
+                    </Box>
+                  </CardActionArea>
+                </Paper>
+              )
+            })}
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }
 

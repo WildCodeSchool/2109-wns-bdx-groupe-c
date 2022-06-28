@@ -11,8 +11,9 @@ import ProjectDashboardInfo from '../pages/ProjectDashboardInfo'
 import ProjectDashboardUser from '../pages/ProjectDashboardUser'
 import ProjectDashboardComment from '../pages/ProjectDashboardComment'
 import ProjectDashboardSetting from '../pages/ProjectDashboardSetting'
-import MenuAppBar from './molecules/Header'
 import Registration from '../pages/Registration'
+import Profil from '../pages/Profil'
+import MenuAppBar from './molecules/all/Header'
 
 const Routes = () => {
   const history = useHistory()
@@ -48,6 +49,9 @@ const Routes = () => {
             </Route>
             <Route exact path="/login">
               <Redirect to="/" />
+            </Route>
+            <Route exact path="/profil">
+              <Profil />
             </Route>
             <Route exact path="/">
               <Dashboard />

@@ -8,7 +8,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useMutation } from '@apollo/client';
-import { MY_PROFILE, LOG_OUT } from '../../queries/user'
+import { MY_PROFILE, LOG_OUT } from '../../../queries/user'
 import {makeStyles} from "@mui/styles"
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -98,7 +98,7 @@ export default function MenuAppBar() {
                     <span onClick={() => history.push('/')}>Dashboard</span>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <span onClick={() => history.push('/')}>Home</span>
+                    <span onClick={() => history.push('/profil')}>Profil</span>
                 </ListItem>
             </List>
 
@@ -106,7 +106,7 @@ export default function MenuAppBar() {
 
             <List>
                 <ListItem className={classes.listItem}>
-                    <span onClick={() => history.push('/')}>Contact</span>
+                    <span onClick={handleLogout}>Logout</span>
                 </ListItem>
             </List>
         </Box>
@@ -134,35 +134,35 @@ export default function MenuAppBar() {
             <img src={'../../../logo.svg'} className={classes.img} onClick={() => history.push('/')} alt={''} />
             {auth && (
                 <div>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={handleMenu}
-                    color="primary"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={handleClose} className={classes.profilItem}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose} className={classes.profilItem}>My account</MenuItem>
-                    <MenuItem onClick={handleLogout} className={classes.profilItem}>Logout</MenuItem>
-                </Menu>
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleMenu}
+                        color="primary"
+                    >
+                        <AccountCircle />
+                    </IconButton>
+                    <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                        }}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={() => history.push('/profil')} className={classes.profilItem}>Profil</MenuItem>
+                        <MenuItem onClick={() => history.push('/')} className={classes.profilItem}>Dashboard</MenuItem>
+                        <MenuItem onClick={handleLogout} className={classes.profilItem}>Logout</MenuItem>
+                    </Menu>
                 </div>
             )}
         </Toolbar>
