@@ -41,8 +41,34 @@ export const GET_TASKS_BY_STATUS = gql`
     tasksByStatus(statusName: $statusName) {
         id
         status {
-            name
+          name
         }
+    }
+  }
+`
+export const GET_TASKS_BY_STATUS_MORE = gql`
+  query Tasks($statusName: String!) {
+    tasksByStatus(statusName: $statusName) {
+      id
+      subject
+      shortText
+      description
+      status {
+        name
+      }
+      project {
+        id
+        name
+      }
+      assignee {
+        id
+        firstName
+        lastName
+      }
+      createdAt
+      updatedAt
+      dueDate
+      spentTime
     }
   }
 `

@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginRight: '3rem',
         color: '#fff',
         marginTop: '64px',
-        '@media screen and (max-width: 600px)': {
-          marginTop: '54px',
+        '@media screen and (max-width: 640px)': {
+            margin: '54px 0 0',
         },
     },
 }))

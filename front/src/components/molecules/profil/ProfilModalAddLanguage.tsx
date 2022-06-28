@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useCallback } from 'react';
 import {makeStyles} from "@mui/styles"
 import { Theme } from '@mui/material/styles'
-import { TextField, Button, Modal, Box, Typography } from '@mui/material'
-import { useMutation, ApolloError } from "@apollo/client";
+import { TextField, Button, Box, Typography } from '@mui/material'
+import { useMutation, ApolloError, useQuery } from "@apollo/client";
 
-import { emptyLanguage } from '../../../helpers/LanguageHelper';
-import { ADD_LANGUAGE, MY_LANGUAGES } from '../../../queries/user';
+import { createLanguageHelper, addLanguageToMeHelper } from '../../../helpers/LanguageHelper';
+import { CREATE_LANGUAGE, ADD_LANGUAGE_TO_ME, MY_LANGUAGES } from '../../../queries/user';
+import { ALL_LANGUAGES } from '../../../queries/language';
+import { AddLanguageToMe } from '../../../entities/language';
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
@@ -35,50 +36,54 @@ interface Props {
     toggleAddLanguageModal: () => void,
 }
 
-interface UseParamProps {
-    id: string | undefined,
-  };
-
 export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLanguageModal}: Props) {
   const classes = useStyles();
 
-  const [name, setName] = useState<string>(emptyLanguage.language.name);
-  const [rating, setRating] = useState<number|null>(emptyLanguage.rating);
-  const [languageId, setLanguageId] = useState<number>(emptyLanguage.languageId);
-
-
-  useEffect(() => {
-    setName(emptyLanguage.language.name)
-    setRating(emptyLanguage.rating)
-  }, [openAddLanguage])
+  const [name, setName] = useState<string>(createLanguageHelper.name);
+  const [rating, setRating] = useState<string>('0');
+  const [languageId, setLanguageId] = useState<number>(1);
 
   const [error, setError] = useState<ApolloError | null>(null)
-  const [addLanguage] = useMutation(ADD_LANGUAGE);
-
-  const { id } = useParams<UseParamProps>();
+  const [createLanguage] = useMutation(CREATE_LANGUAGE);
+  const [addLanguage] = useMutation(ADD_LANGUAGE_TO_ME);
+  const {loading, data} = useQuery(ALL_LANGUAGES);
 
   const handleCreation = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
     e.preventDefault()
-    console.log('e :', name)
-    try {
-        console.log('try to add !!!!!!')
-        await addLanguage({
-          variables: {
-            rating,
-            language: {
-                name
-            },
-            languageId: 0,
-          },
-          refetchQueries: [{
-            query: MY_LANGUAGES,
-          }]
-        });
-        toggleAddLanguageModal();
-    } catch (error) {
-        console.log('XXXXXX ERRORS XXXXXX')
-        setError(error as ApolloError)
-    }
+    
+    createLanguage({
+      variables: { name },
+      refetchQueries: [{
+        query: ALL_LANGUAGES,
+      }]
+    })
+    .then((res: any) => {
+      let allLanguages = Object.entries<any>(data);
+      
+      if (res) {
+        allLanguages[0][1].forEach((item: AddLanguageToMe) => {
+          console.log('item ==>', item)
+          if (item.id == languageId) {
+            console.log('==> try to add')
+            console.log('languageId ==>', typeof languageId)
+            console.log('rating ==>', typeof rating)
+            return addLanguage({
+              variables: {languageId, rating },
+              refetchQueries: [{
+                query: MY_LANGUAGES,
+              }]
+            });
+          } else {
+            return false
+          }
+        })
+      }
+    })
+    .catch((error: any) => {
+      console.log('==> ERROR !')
+      setError(error as ApolloError)
+    })
+
   }, [rating, name]);
 
   return (
@@ -88,7 +93,7 @@ export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLangua
         </Typography>
         <Box className={classes.form}>
             <TextField
-                id="languageName"
+                id="Language"
                 className={classes.input}
                 type="text"
                 label="Language"

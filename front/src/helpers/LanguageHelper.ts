@@ -1,9 +1,10 @@
-import { CreateLanguage } from '../entities/language'
+import { CreateLanguage, AddLanguageToMe } from '../entities/language'
 
-export const emptyLanguage: CreateLanguage = {
-  languageId: 0,
-  language: {
-    name: '',
-  },
-  rating: null,
+export const createLanguageHelper: CreateLanguage = {
+  name: '',
+}
+
+export const addLanguageToMeHelper: AddLanguageToMe = {
+  id: NaN,
+  rating: NaN,
 }

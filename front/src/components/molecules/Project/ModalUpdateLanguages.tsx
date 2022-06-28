@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import {makeStyles} from "@mui/styles"
 import { Button } from '@mui/material'
-import { GET_ALL_LANGUAGES } from '../../../queries/language';
+import { ALL_LANGUAGES } from '../../../queries/language';
 import { MUTATION_UPDATE_PROJECT_LANGUAGES, GET_ONE_PROJECT } from '../../../queries/project';
 
 import useToast from '../../../contexts/useToast';
@@ -94,7 +94,7 @@ export interface LanguageProject {
 const ModalUpdateProjectLanguages = ({showModal, toggleModal, project}: Props) => {
   const classes = useStyles()
   const { showToast } = useToast();
-  const { data, loading } = useQuery(GET_ALL_LANGUAGES, {
+  const { data, loading } = useQuery(ALL_LANGUAGES, {
     skip: !showModal
   });
   const [ projectLanguages, setProjectLanguages ] = useState<number[]>([])

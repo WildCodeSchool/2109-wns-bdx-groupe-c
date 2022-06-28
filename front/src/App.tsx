@@ -6,8 +6,10 @@ import Routes from './components/Routes'
 
 function App(props: any) {
 
+  document.body.style.backgroundColor = "#061B2E";
+
   return (
-    <div className="App" style={{ backgroundColor: '#061B2E' }}>
+    <div className="App" style={{ backgroundColor: '#061B2E', minWidth: '100%' }}>
       <ToastContextProvider>
         <BrowserRouter>
           <Routes />

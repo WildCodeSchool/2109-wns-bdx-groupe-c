@@ -27,6 +27,24 @@ export interface Project {
 // @generated
 // This file was automatically generated and should not be edited.
 
+// ====================================================
+// GraphQL query operation: Language
+// ====================================================
+
+export interface Languages_Languages {
+  language : {
+    __typename: "Language";
+    id: string;
+    name: string;
+    rating: number;
+  }
+}
+
+export interface Languages {
+  projects: Languages_Languages[];
+}
+
+
 //==============================================================
 // START Enums and Input Objects
 //==============================================================

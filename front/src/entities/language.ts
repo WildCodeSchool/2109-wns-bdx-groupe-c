@@ -12,10 +12,11 @@ export interface MyLanguages {
 }
 
 export interface CreateLanguage {
-  languageId: number
-  language: {
-    name: string
-  }
-  rating: number | null
+  name: string
+}
+
+export interface AddLanguageToMe {
+  id: number
+  rating: number
 }
 

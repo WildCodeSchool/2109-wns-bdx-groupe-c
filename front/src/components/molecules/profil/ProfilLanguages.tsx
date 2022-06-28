@@ -6,9 +6,6 @@ import { useQuery } from "@apollo/client"
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -44,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'inline-flex',
         alignItems: 'center',
         marginBottom: '1rem',
+        cursor: 'pointer',
     },
     languagesListName: {
         position: 'relative',
@@ -64,14 +62,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const ProfilLanguages = () => {
+
     const classes = useStyles();
 
     // update language modal
     const [openUpdate, setOpenUpdate] = useState(false);
     const handleOpenUpdate = () => setOpenUpdate(true);
-    const handleCloseUpdate = () => { 
-        setOpenUpdate(false);
-    }
+    const handleCloseUpdate = () => setOpenUpdate(false);
 
     // add language modal
     const [openAdd, setOpenAdd] = useState(false);
@@ -88,7 +85,7 @@ const ProfilLanguages = () => {
                 {data?.myLanguages.map((myLanguages: MyLanguages) => {
                     const { id, language, rating } = myLanguages;
                     return (
-                        <li key={id} className={classes.languagesListItem}>
+                        <li key={id} className={classes.languagesListItem} onClick={handleOpenUpdate}>
                             <span className={classes.languagesListName}>{language.name}</span>
                             <Stack spacing={1}>
                                 <Rating name="half-rating" defaultValue={0} value={rating} readOnly />
@@ -96,6 +93,18 @@ const ProfilLanguages = () => {
                         </li>
                     )
                 })}
+                <Modal
+                    open={openUpdate}
+                    onClose={handleCloseUpdate}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    className={classes.modal}
+                >
+                    <ProfilModalUpdateLanguage
+                        openUpdateLanguage={openUpdate}
+                        toggleUpdateLanguageModal={handleCloseUpdate}
+                    />
+                </Modal>
             </ul>
             <Button className={classes.languagesMenu}>
                 <AddIcon  onClick={handleOpenAdd} className={classes.languagesMenu} />

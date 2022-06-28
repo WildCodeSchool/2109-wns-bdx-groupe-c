@@ -2,17 +2,8 @@ import { useCallback, useState } from 'react';
 import { useQuery } from "@apollo/client"
 import { useHistory } from 'react-router-dom';
 
-import {
-  CircularProgress,
-  Chip,
-  Stack,
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  Paper,
-  Typography,
-} from '@mui/material';
+import  { Box, Card, CardActionArea, CardContent, Paper, Typography, CircularProgress, Chip, Stack }  from "@mui/material"
+import  LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import  PersonIcon from '@mui/icons-material/Person';
 import { makeStyles } from "@mui/styles"
 
@@ -29,39 +20,55 @@ const useStyles = makeStyles({
       display: 'flex',
       flexWrap: 'wrap',
     },
+    cardsAll: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridGap: '2rem',
+      width: '100%',
+      marginTop: '1rem',
+      '@media screen and (max-width: 1440px)': {
+        gridTemplateColumns: 'repeat(3, 1fr)',
+      },
+      '@media screen and (max-width: 840px)': {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+      },
+      '@media screen and (max-width: 640px)': {
+        gridTemplateColumns: 'repeat(1, 1fr)',
+      }
+    },
     card: {
-      marginTop: '25px',
+      margin: '3rem 0 0',
     },
     projectPaper: {
-      borderRadius: '30px',
-      maxWidth: '430px',
-      marginRight: '2rem',
-      marginBottom: '2rem',
+      borderRadius: '14px',
     },
     projectActionArea: {
-      maxWidth: '430px',
-      minWidth: '430px',
-      minHeight: '175px',
-      borderRadius: '30px',
-      padding: '1rem 1rem 1rem 2rem',
+      minWidth: '200px',
+      minHeight: '125px',
+      borderRadius: '14px',
+      padding: '1rem',
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     },
     projectCardName: {
       fontSize: '17px !important',
+      marginBottom: '1rem',
     },
     boxTitle: {
       width: '100%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
+      marginTop: '1rem',
     },
     projectUserElements: {
       display: 'flex',
       alignItems: 'center',
+      marginTop: '1rem',
     },
     projectLanguagesElement: {
       display: 'flex',
       alignItems: 'center',
+      marginTop: '1rem',
     },
     chipLanguage: {
       color: 'white',
@@ -69,7 +76,6 @@ const useStyles = makeStyles({
       borderColor: 'white',
   },
 })
-
 
 const DashboardProjectsCard = () => {
     const { loading, data, error } = useQuery(GET_ALL_PROJECTS)
@@ -89,6 +95,7 @@ const DashboardProjectsCard = () => {
                 </Typography>
                 <MoreMenu options={['Add a Project']} onClick={toggleModal}/>
               </Box>
+              <Box>
                 {loading && (
                    <CircularProgress />
                 )}
@@ -118,7 +125,7 @@ const DashboardProjectsCard = () => {
                             {/* {languages.map((language: Language) => {
                                 return (
                                 <>
-                                    <Typography sx={{marginRight: '5px'}} key={language.id} component='p'>{language.name}</Typography>
+                                    <Typography sx={{marginLeft: '.5rem'}} key={language.id} component='p'>{language.name}</Typography>
                                 </>
                                 )
                             })} */}
@@ -128,6 +135,7 @@ const DashboardProjectsCard = () => {
                     </Paper>
                 )
                 })}
+              </Box>
             </CardContent>
             <ModalAddProject
               openModal={openModal}
