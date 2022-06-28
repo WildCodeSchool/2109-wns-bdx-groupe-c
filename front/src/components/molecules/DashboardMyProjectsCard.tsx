@@ -20,40 +20,45 @@ import { Language } from "../../entities/language"
 import { MyProject } from "../../entities/project"
 
 const useStyles = makeStyles({
-    card: {
-        maxHeight: '275px',
-        backgroundColor: '#7273FF',
-        marginTop: '25px',
-    },
-    projectPaper: {
-      borderRadius: '30px',
-      maxWidth: '430px',
-    },
-    projectActionArea: {
-      maxWidth: '430px',
-      minHeight: '175px',
-      margin: '10px 0',
-      borderRadius: '30px',
-      padding: '1rem 1rem 1rem 2rem',
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-    },
-    projectCardName: {
-      fontSize: '17px !important',
-    },
-    boxTitle: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    projectUserElements: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    projectLanguagesElement: {
-      display: 'flex',
-      alignItems: 'center',
-    }
+  cardContainer: {
+    backgroundColor: '#0F4473',
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  card: {
+    marginTop: '25px',
+  },
+  projectPaper: {
+    borderRadius: '30px',
+    maxWidth: '430px',
+    marginRight: '2rem',
+    marginBottom: '2rem',
+  },
+  projectActionArea: {
+    maxWidth: '430px',
+    minWidth: '430px',
+    minHeight: '175px',
+    borderRadius: '30px',
+    padding: '1rem 1rem 1rem 2rem',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+  },
+  projectCardName: {
+    fontSize: '17px !important',
+  },
+  boxTitle: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  projectUserElements: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  projectLanguagesElement: {
+    display: 'flex',
+    alignItems: 'center',
+  }
 })
 
 
@@ -64,7 +69,7 @@ const DashboardMyProjectsCard = () => {
 
     return (
         <Card className={classes.card} sx={{borderRadius: '20px'}}>
-            <CardContent sx={{ backgroundColor: '#0F4473'}}>
+            <CardContent className={classes.cardContainer}>
               <Box className={classes.boxTitle} >
                 <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
                   My Projects

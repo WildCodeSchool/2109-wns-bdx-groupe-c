@@ -23,7 +23,6 @@ const useStyles = makeStyles({
 
 const Dashboard = () => {
   const classes = useStyles()
-  
   const { data } = useQuery(MY_PROFILE)
 
   return (

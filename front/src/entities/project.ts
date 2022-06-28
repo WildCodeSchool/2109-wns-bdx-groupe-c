@@ -28,3 +28,10 @@ export interface ProjectRole {
   id: number
   name: string
 }
+
+export interface createProjectType {
+  name: string
+  description: string
+  initialTimeSpent: number
+  shortText: string
+}

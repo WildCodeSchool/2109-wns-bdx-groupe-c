@@ -99,9 +99,14 @@ const ProjectDashboardTask = () => {
 
     const { data: dataAllStatus, loading: loadingAllStatus } = useQuery(GET_ALL_STATUS)
 
-    const { loading, data } = useQuery(GET_TASKS_BY_STATUS_BY_PROJECTID, {
+    const { loading, data, refetch } = useQuery(GET_TASKS_BY_STATUS_BY_PROJECTID, {
         variables: {projectId: id ? parseInt(id, 10) : 0}
     })
+
+    useEffect(() => {
+        refetch()
+    }, [refetch, id]);
+
 
     const [openAddTask, setOpenAddTask] = useState(false);
 

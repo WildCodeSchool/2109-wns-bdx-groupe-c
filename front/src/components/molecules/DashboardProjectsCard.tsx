@@ -1,6 +1,8 @@
+import { useCallback, useState } from 'react';
 import { useQuery } from "@apollo/client"
 import { useHistory } from 'react-router-dom';
 
+import { CircularProgress } from '@mui/material'
 import  Box  from "@mui/material/Box"
 import  Card  from "@mui/material/Card"
 import  CardActionArea from "@mui/material/CardActionArea"
@@ -18,6 +20,7 @@ import MoreMenu from "../atoms/MoreMenu"
 import { GET_ALL_PROJECTS }  from "../../queries/project"
 import { Language } from "../../entities/language"
 import { Project } from "../../entities/project"
+import ModalAddProject from './Project/ModalAddProject';
 
 const useStyles = makeStyles({
     cardContainer: {
@@ -64,6 +67,10 @@ const useStyles = makeStyles({
 
 const DashboardProjectsCard = () => {
     const { loading, data, error } = useQuery(GET_ALL_PROJECTS)
+    const [ openModal, setOpenModal ] = useState<boolean>(false);
+    const toggleModal = useCallback(() => {
+      setOpenModal(!openModal);
+    }, [openModal, setOpenModal]);
     const history = useHistory();
     const classes = useStyles()
 
@@ -74,12 +81,15 @@ const DashboardProjectsCard = () => {
                 <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
                   All Projects
                 </Typography>
-                <MoreMenu options={['Add a Task']} onClick={()=>console.log("click")}/>
+                <MoreMenu options={['Add a Project']} onClick={toggleModal}/>
               </Box>
+                {loading && (
+                   <CircularProgress />
+                )}
                 {data?.projects.map((project: Project) => {
                 const {id, name, shortText, languages, countAssignee} = project
                 return (
-                    <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/infos`)}>
+                    <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/Tasks`)}>
                         <CardActionArea sx={{ borderRadius: '30px' }} className={classes.projectActionArea}>
                         <Box padding="15px">
                             <Typography fontWeight="bold" className={classes.projectCardName}>
@@ -88,7 +98,7 @@ const DashboardProjectsCard = () => {
                             <Typography>{shortText}</Typography>
                             <Box className={classes.projectUserElements}>
                             <PersonIcon />
-                            <Typography>{countAssignee <= 1 ? countAssignee + ' utilisateur' : countAssignee + ' utilisateurs'}</Typography>
+                            <Typography>{countAssignee <= 1 ? countAssignee + ' user' : countAssignee + ' users'}</Typography>
                             </Box>
                             <Box className={classes.projectLanguagesElement}>
                             <LibraryBooksIcon />
@@ -106,6 +116,10 @@ const DashboardProjectsCard = () => {
                 )
                 })}
             </CardContent>
+            <ModalAddProject
+              openModal={openModal}
+              toggleModal={toggleModal}
+            />
         </Card>
     )
 }
