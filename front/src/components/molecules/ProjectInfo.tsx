@@ -1,19 +1,17 @@
-import { useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client"
+import { useMutation, ApolloError, useQuery } from "@apollo/client";
 
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { TextField, Box, Button, Card, CardContent, CircularProgress, Chip, Stack } from '@mui/material'
 import makeStyles from "@mui/styles/makeStyles";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-import { GET_ONE_PROJECT } from "../../queries/project"
-import { Language } from "../../entities/language";
-import { Project } from "../../entities/project";
+import { GET_ONE_PROJECT, MUTATION_UPDATE_PROJECT_INFORMATIONS } from "../../queries/project"
+import { Project } from "../../entities/project";
+import { ExceptionGraphQL } from '../../entities/error';
+import useToast from '../../contexts/useToast';
+import ModalUpdateProjectLanguages from './Project/ModalUpdateLanguages';
 
 const useStyles = makeStyles({
     mainContainer: {
@@ -24,21 +22,86 @@ const useStyles = makeStyles({
       },
     card: {
         minHeight: '275px',
-        backgroundColor: '#7273FF',
+        backgroundColor: '#0f4473',
         marginTop: '25px',
         height: 'auto',
+    },
+    containerField: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginBottom: '1rem',
+        maxWidth: '40%',
+        "& .MuiInput-root": {
+            color: 'white',
+        },
+        "& .MuiInput-root::before": {
+            borderColor: 'white',
+        },
+        "& .MuiInput-root:hover::before": {
+            borderColor: '#1F84E1',
+        },
+        "& .MuiFormLabel-root": {
+            color: "white",
+            fontWeight: '700',
+        },
+        "& .MuiTextField-root": {
+            marginBottom: '1rem',
+        }
     },
     boxTitle: {
         width: 'auto',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        marginBottom: '2rem',
+    },
+    boxsubTitle: {
+        width: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '2rem',
+        marginTop: '2rem',
     },
     taskPaper: {
         maxWidth: '100%',
         minHeight: '70px',
         padding: '0',
         margin: '10px 0',
+    },
+    textField: {
+      paddingBottom: '1rem',
+    },
+    texFieldError: {
+      "& .MuiInput-root::before": {
+        borderColor: 'red',
+      },
+    },
+    fieldError: {
+      color: 'red',
+      fontSize: '0.8rem',
+    },
+    buttonValidation: {
+      backgroundColor: '#1F84E1',
+      color: 'white',
+      '&:hover': {
+        backgroundColor: '#145591',
+      },
+    },
+    buttonContainer: {
+      display: 'flex',
+      maxWidth: '40%',
+      justifyContent: 'center',
+    },
+    chipLanguage: {
+        color: 'white',
+        fontWeight: '700',
+        borderColor: 'white',
+    },
+    addLanguage: {
+        color: 'green',
+        borderColor: 'green',
+
     }
 })
 
@@ -48,6 +111,20 @@ interface UseParamProps {
 
 const ProjectInfo = () => {
     const { id } = useParams<UseParamProps>();
+    const { showToast } = useToast();
+    const [name, setName] = useState<string>('');
+    const [shortText, setShortText] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [initialTimeSpent, setInitialTimeSpent] = useState<number>(0);
+    const [error, setError] = useState<ApolloError | null>(null)
+
+    const [showModalLanguage, setShowModalLanguage] = useState<boolean>(false);
+    const toggleModalLanguage = useCallback(() => {
+        setShowModalLanguage(!showModalLanguage)
+    }, [showModalLanguage, setShowModalLanguage])
+
+    const [updateProjectInformations] = useMutation(MUTATION_UPDATE_PROJECT_INFORMATIONS);
+
     const { data, loading } = useQuery(GET_ONE_PROJECT, {
         variables: {
             projectId: parseInt(id, 10)
@@ -55,88 +132,174 @@ const ProjectInfo = () => {
     })
     const classes = useStyles()
 
-    const project: Project | undefined = useMemo(() => {
+    const project: Project | null = useMemo(() => {
         if (data) return data.project;
+        return null
     }, [data])
+
+    useEffect(() => {
+        if (project) {
+            setName(project.name)
+            setShortText(project.shortText)
+            setDescription(project.description)
+            setInitialTimeSpent(project.initialTimeSpent)
+        }
+    }, [
+        project,
+        setName,
+        setShortText,
+        setDescription,
+        setInitialTimeSpent,
+    ]);
+
+    const handleUpdateInformation = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
+        e.preventDefault()
+        if (project) {
+            try {
+              await updateProjectInformations({
+                variables: {
+                  updateProjectId: parseInt(id, 10),
+                  name,
+                  shortText,
+                  description,
+                  initialTimeSpent,
+                },
+                refetchQueries: [{
+                  query: GET_ONE_PROJECT,
+                  variables: {
+                      projectId: parseInt(id, 10)
+                  }
+                }]
+              });
+              showToast('success', 'Informations of the project updated !');
+            } catch (error) {
+              setError(error as ApolloError)
+            }
+        }
+        }, [shortText, name, description, initialTimeSpent, updateProjectInformations, setError]);
+    const errorProps = useMemo(() => {
+        const errorFormatted: {[key:string]: string} = {};
+        if (error) {
+          if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+            const graphQLErrors = error.graphQLErrors;
+            const extentions = graphQLErrors[0].extensions;
+            const exceptions = extentions.exception as ExceptionGraphQL;
+            const validationErrors = exceptions.validationErrors;
+            validationErrors.forEach((validationError) => {
+              const property: string = validationError.property;
+              const message: string = validationError.constraints[Object.keys(validationError.constraints)[0]];
+              errorFormatted[property] = message;
+            });
+            return errorFormatted;
+          }
+          return errorFormatted
+        } else {
+          return errorFormatted
+        }
+      }, [error])
 
     return (
         <>
             { loading && (
-                 <p>Loading...</p> 
-            )} 
+                 <CircularProgress />
+            )}
             { !loading && project && (
-                <Card className={classes.card} sx={{
-                    borderRadius: '20px'
-                    }}>
-                    <CardContent sx={{ backgroundColor: '#0F4473'}}>
-                        <Box className={classes.boxTitle} >
-                            <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
-                                Informations
-                            </Typography>
-                        </Box>
-                        <Box sx={{ 
-                            display: 'grid', 
-                            gridTemplateColumns: 'repeat(4, 1fr)',
-                            gap: 1
-                            }}>
-                            <Paper className={classes.taskPaper}>
-                                <Box padding="15px">
-                                    <Typography fontWeight="bold">Nom du projet :</Typography>
-                                    <Typography>{ project.name }</Typography>
-                                </Box>
-                            </Paper>
-                            <Paper className={classes.taskPaper}>
-                                <Box padding="15px">
-                                    <Typography fontWeight="bold">Date de début :</Typography>
-                                    <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                        <AccessTimeIcon sx={{marginRight: '5px'}} />
-                                        <Typography> { project.createdAt }</Typography>
-                                    </Box>
-                                </Box>
-                            </Paper>
-                            <Paper className={classes.taskPaper}>
-                                <Box padding="15px">
-                                    <Typography fontWeight="bold">Progression :</Typography>
-                                    <Typography>{ project.initialTimeSpent }</Typography>
-                                </Box>
-                            </Paper>
-                        </Box>
-                        <Box sx={{ 
-                            display: 'grid', 
-                            gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: 1
-                            }}>
-                            <Box>
-                                <Paper className={classes.taskPaper}>
-                                    <Box padding="15px">
-                                        <Typography fontWeight="bold">Description :</Typography>
-                                        <Typography>{ project.shortText }</Typography>
-                                    </Box>
-                                </Paper>
-                                <Paper className={classes.taskPaper}>
-                                    <Box padding="15px">
-                                        <LibraryBooksIcon />
-                                        <Box padding="15px" sx={{display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)'}}>
-                                            {project.languages.map((language: Language) => {
-                                                return (
-                                                    <Typography key={language.id}>{language.name}</Typography>
-                                                    )
-                                                })}
-                                        </Box>
-                                    </Box>
-                                </Paper>
+                <>
+                    <Card className={classes.card} sx={{
+                        borderRadius: '20px'
+                        }}>
+                        <CardContent sx={{ backgroundColor: '#0f4473'}}>
+                            <Box className={classes.boxTitle} >
+                                <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
+                                    Update the project
+                                </Typography>
                             </Box>
-                            <Paper className={classes.taskPaper}>
-                                <Box padding="15px">
-                                    <Typography fontWeight="bold">Description longue :</Typography>
-                                    <Typography>{ project.description } Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt autem, laudantium repellat quibusdam quo perferendis consequuntur maiores architecto inventore aperiam deserunt reprehenderit, ea, voluptatibus quia velit vel fugit culpa doloremque.
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reprehenderit enim rem illo dicta aperiam, ea reiciendis officiis est nostrum molestiae corrupti magnam possimus tempore id totam ad facere dolor? Deleniti!
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni labore ipsum nisi nobis corrupti incidunt dolore, unde fugit, sequi, dolor nulla? Exercitationem maiores quo culpa sapiente perspiciatis error quisquam dolor.  </Typography>
-                                </Box>
-                            </Paper>
-                        </Box>
-                    </CardContent>
-                </Card>
+                            <Box className={classes.boxTitle} >
+                                <Typography variant="h3" sx={{ fontSize: '20px', color: 'white', fontWeight: 'bold'}}>
+                                    Update the information of the project
+                                </Typography>
+                            </Box>
+                            <Box className={classes.containerField}>
+                                <TextField
+                                    id="name"
+                                    type="text"
+                                    label="Name of the project"
+                                    variant="standard"
+                                    value={name}
+                                    className={errorProps?.name ? classes.texFieldError : classes.textField}
+                                    onChange={(event) => setName(event.target.value)}
+                                />
+                                {errorProps?.name && <Box className={classes.fieldError}>{errorProps.name}</Box>}
+                                <TextField
+                                    id="shortText"
+                                    type="text"
+                                    label="Short Text"
+                                    variant="standard"
+                                    value={shortText}
+                                    className={errorProps?.shortText ? classes.texFieldError : classes.textField}
+                                    onChange={(event) => setShortText(event.target.value)}
+                                />
+                                {errorProps?.shortText && <Box className={classes.fieldError}>{errorProps.shortText}</Box>}
+                                <TextField
+                                    id="description"
+                                    type="text"
+                                    label="Description"
+                                    variant="standard"
+                                    value={description}
+                                    className={errorProps?.description ? classes.texFieldError : classes.textField}
+                                    onChange={(event) => setDescription(event.target.value)}
+                                />
+                                {errorProps?.description && <Box className={classes.fieldError}>{errorProps.description}</Box>}
+                                <TextField
+                                    id="initialTimeSpent"
+                                    type="number"
+                                    label="Expected Duration in hours"
+                                    variant="standard"
+                                    value={initialTimeSpent}
+                                    className={errorProps?.initialTimeSpent ? classes.texFieldError : classes.textField}
+                                    onChange={(event) => setInitialTimeSpent(parseFloat(event.target.value))}
+                                />
+                                {errorProps?.initialTimeSpent && <Box className={classes.fieldError}>{errorProps.initialTimeSpent}</Box>}
+                            </Box>
+                            <Box className={classes.buttonContainer}>
+                                <Button
+                                    onClick={(e) => handleUpdateInformation(e)}
+                                    className={classes.buttonValidation}
+                                >
+                                    Save the modifications
+                                </Button>
+                            </Box>
+                            <Box className={classes.boxsubTitle} >
+                                <Typography variant="h3" sx={{ fontSize: '20px', color: 'white', fontWeight: 'bold'}}>
+                                    Update Languages associated to the project
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Stack direction="row" spacing={1}>
+                                {project.languages.map((language) => {
+                                    const {name} = language;
+                                    return (
+                                        <Chip label={name} color="primary" variant="outlined" className={classes.chipLanguage}/>
+                                    )
+                                })}
+                                <Chip
+                                    onClick={toggleModalLanguage}
+                                    icon={<AddCircleIcon/>}
+                                    label="Update languages"
+                                    color="primary"
+                                    variant="outlined"
+                                    className={classes.chipLanguage}
+                                />
+                                </Stack>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                    <ModalUpdateProjectLanguages
+                        project={project}
+                        showModal={showModalLanguage}
+                        toggleModal={toggleModalLanguage}
+                    />
+                </>
                 )
             }
         </>
