@@ -5,7 +5,6 @@ import { MY_PROFILE } from '../queries/user'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 
-import DashboardMyProjectsCard from '../components/molecules/DashboardMyProjectsCard'
 import DashboardMyTasksCard from '../components/molecules/DashboardMyTasksCard'
 import DashboardProjectsCard from '../components/molecules/DashboardProjectsCard';
 
@@ -29,7 +28,6 @@ const Dashboard = () => {
     <>
       <Box className={classes.mainContainer}>
           <DashboardMyTasksCard projectId={1} />
-          <DashboardMyProjectsCard />
           <DashboardProjectsCard />
       </Box>
       {!data && (

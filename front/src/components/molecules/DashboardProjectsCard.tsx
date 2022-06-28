@@ -2,17 +2,18 @@ import { useCallback, useState } from 'react';
 import { useQuery } from "@apollo/client"
 import { useHistory } from 'react-router-dom';
 
-import { CircularProgress } from '@mui/material'
-import  Box  from "@mui/material/Box"
-import  Card  from "@mui/material/Card"
-import  CardActionArea from "@mui/material/CardActionArea"
-import  CardContent  from "@mui/material/CardContent"
-import  Paper  from "@mui/material/Paper"
-import  Typography  from "@mui/material/Typography"
-
-import  LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import {
+  CircularProgress,
+  Chip,
+  Stack,
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Paper,
+  Typography,
+} from '@mui/material';
 import  PersonIcon from '@mui/icons-material/Person';
-
 import { makeStyles } from "@mui/styles"
 
 import MoreMenu from "../atoms/MoreMenu"
@@ -61,7 +62,12 @@ const useStyles = makeStyles({
     projectLanguagesElement: {
       display: 'flex',
       alignItems: 'center',
-    }
+    },
+    chipLanguage: {
+      color: 'white',
+      fontWeight: '700',
+      borderColor: 'white',
+  },
 })
 
 
@@ -101,14 +107,21 @@ const DashboardProjectsCard = () => {
                             <Typography>{countAssignee <= 1 ? countAssignee + ' user' : countAssignee + ' users'}</Typography>
                             </Box>
                             <Box className={classes.projectLanguagesElement}>
-                            <LibraryBooksIcon />
-                            {languages.map((language: Language) => {
+                            <Stack direction="row" spacing={1}>
+                                {languages.map((language) => {
+                                    const {name} = language;
+                                    return (
+                                        <Chip label={name} color="primary" variant="outlined" className={classes.chipLanguage}/>
+                                    )
+                                })}
+                                </Stack>
+                            {/* {languages.map((language: Language) => {
                                 return (
                                 <>
                                     <Typography sx={{marginRight: '5px'}} key={language.id} component='p'>{language.name}</Typography>
                                 </>
                                 )
-                            })}
+                            })} */}
                             </Box>
                         </Box>
                         </CardActionArea>
