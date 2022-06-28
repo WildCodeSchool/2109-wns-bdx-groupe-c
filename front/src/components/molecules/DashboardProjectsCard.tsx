@@ -38,6 +38,7 @@ const useStyles = makeStyles({
     },
     card: {
       margin: '3rem 0 0',
+      borderRadius: '20px'
     },
     projectPaper: {
       borderRadius: '14px',
@@ -52,6 +53,7 @@ const useStyles = makeStyles({
     projectCardName: {
       fontSize: '17px !important',
       marginBottom: '1rem',
+      fontWeight: 'bold',
     },
     boxTitle: {
       width: '100%',
@@ -59,6 +61,11 @@ const useStyles = makeStyles({
       alignItems: 'center',
       justifyContent: 'space-between',
       marginTop: '1rem',
+    },
+    projectContainerTitle: {
+      fontSize: '28px',
+      color: 'white',
+      fontWeight: 'bold',
     },
     projectUserElements: {
       display: 'flex',
@@ -74,7 +81,10 @@ const useStyles = makeStyles({
       color: 'white',
       fontWeight: '700',
       borderColor: 'white',
-  },
+    },
+    languageName: {
+      marginLeft: '.5rem'
+    },
 })
 
 const DashboardProjectsCard = () => {
@@ -87,61 +97,52 @@ const DashboardProjectsCard = () => {
     const classes = useStyles()
 
     return (
-        <Card className={classes.card} sx={{borderRadius: '20px'}}>
-            <CardContent className={classes.cardContainer}>
-              <Box className={classes.boxTitle} >
-                <Typography variant="h2" sx={{ fontSize: '28px', color: 'white', fontWeight: 'bold'}}>
-                  All Projects
-                </Typography>
-                <MoreMenu options={['Add a Project']} onClick={toggleModal}/>
-              </Box>
-              <Box>
-                {loading && (
-                   <CircularProgress />
-                )}
-                {data?.projects.map((project: Project) => {
-                const {id, name, shortText, languages, countAssignee} = project
-                return (
-                    <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/Tasks`)}>
-                        <CardActionArea sx={{ borderRadius: '30px' }} className={classes.projectActionArea}>
-                        <Box padding="15px">
-                            <Typography fontWeight="bold" className={classes.projectCardName}>
-                            {name}
-                            </Typography>
-                            <Typography>{shortText}</Typography>
-                            <Box className={classes.projectUserElements}>
-                            <PersonIcon />
-                            <Typography>{countAssignee <= 1 ? countAssignee + ' user' : countAssignee + ' users'}</Typography>
-                            </Box>
-                            <Box className={classes.projectLanguagesElement}>
-                            <Stack direction="row" spacing={1}>
-                                {languages.map((language) => {
-                                    const {name} = language;
-                                    return (
-                                        <Chip label={name} color="primary" variant="outlined" className={classes.chipLanguage}/>
-                                    )
-                                })}
-                                </Stack>
-                            {/* {languages.map((language: Language) => {
-                                return (
-                                <>
-                                    <Typography sx={{marginLeft: '.5rem'}} key={language.id} component='p'>{language.name}</Typography>
-                                </>
-                                )
-                            })} */}
-                            </Box>
+      <Card className={classes.card}>
+        <CardContent className={classes.cardContainer}>
+          <Box className={classes.boxTitle} >
+            <Typography variant="h2" className={classes.projectContainerTitle}>
+              All Projects
+            </Typography>
+            <MoreMenu options={['Add a Project']} onClick={toggleModal}/>
+          </Box>
+          <Box className={classes.cardsAll}>
+            {loading && (
+                <CircularProgress />
+            )}
+            {data?.projects.map((project: Project) => {
+            const {id, name, shortText, languages, countAssignee} = project
+            return (
+                <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/Tasks`)}>
+                    <CardActionArea className={classes.projectActionArea}>
+                    <Box>
+                        <Typography className={classes.projectCardName}>{name}</Typography>
+                        <Typography>{shortText}</Typography>
+                        <Box className={classes.projectUserElements}>
+                          <PersonIcon />
+                          <Typography className={classes.languageName}>{countAssignee <= 1 ? countAssignee + ' user' : countAssignee + ' users'}</Typography>
                         </Box>
-                        </CardActionArea>
-                    </Paper>
-                )
-                })}
-              </Box>
-            </CardContent>
-            <ModalAddProject
-              openModal={openModal}
-              toggleModal={toggleModal}
-            />
-        </Card>
+                        <Box className={classes.projectLanguagesElement}>
+                          <LibraryBooksIcon />
+                          {languages.map((language: Language) => {
+                              return (
+                              <>
+                                  <Typography className={classes.languageName} key={language.id} component={'p'}>{language.name}</Typography>
+                              </>
+                              )
+                          })}
+                        </Box>
+                    </Box>
+                    </CardActionArea>
+                </Paper>
+            )
+            })}
+          </Box>
+        </CardContent>
+        <ModalAddProject
+          openModal={openModal}
+          toggleModal={toggleModal}
+        />
+      </Card>
     )
 }
 

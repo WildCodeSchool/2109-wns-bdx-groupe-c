@@ -42,27 +42,6 @@ query Users {
 }
 `;
 
-export const MY_LANGUAGES = gql`
-  query MyLanguages {
-    myLanguages {
-      id
-      rating
-      language {
-        name
-      }
-      user {
-        firstName
-        lastName
-        email
-        createdAt
-        projectsCreated {
-          id
-        }
-      }
-    }
-  }
-`;
-
 export const USER_MY_PROJECTS = gql`
   query MyProjects($statusName: String) {
     myProjects(statusName: $statusName) {
@@ -89,24 +68,6 @@ query MyTasks($statusName: String) {
       name
       id
     }
-  }
-}
-`;
-
-export const CREATE_LANGUAGE = gql`
-  mutation CreateLanguage($name: String!) {
-    createLanguage(name: $name) {
-      id
-      name
-    }
-  }
-`;
-
-export const ADD_LANGUAGE_TO_ME = gql`
-mutation Mutation($languageId: Int!, $rating: Float!) {
-  addLanguageToMe(languageId: $languageId, rating: $rating) {
-    rating
-    id
   }
 }
 `;

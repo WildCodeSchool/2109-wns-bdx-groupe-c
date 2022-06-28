@@ -4,9 +4,7 @@ import { Theme } from '@mui/material/styles'
 import { TextField, Button, Box, Typography } from '@mui/material'
 import { useMutation, ApolloError, useQuery } from "@apollo/client";
 
-import { createLanguageHelper, addLanguageToMeHelper } from '../../../helpers/LanguageHelper';
-import { CREATE_LANGUAGE, ADD_LANGUAGE_TO_ME, MY_LANGUAGES } from '../../../queries/user';
-import { ALL_LANGUAGES } from '../../../queries/language';
+import { ALL_LANGUAGES, ADD_LANGUAGE_TO_ME, MY_LANGUAGES } from '../../../queries/language';
 import { AddLanguageToMe } from '../../../entities/language';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,50 +37,49 @@ interface Props {
 export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpdateLanguageModal}: Props) {
   const classes = useStyles();
 
-  const [name, setName] = useState<string>(createLanguageHelper.name);
+  const [name, setName] = useState<string>('');
   const [rating, setRating] = useState<number>(0);
   const [languageId, setLanguageId] = useState<number>(1);
 
   const [error, setError] = useState<ApolloError | null>(null)
-  const [createLanguage] = useMutation(CREATE_LANGUAGE);
   const [addLanguage] = useMutation(ADD_LANGUAGE_TO_ME);
   const {loading, data} = useQuery(ALL_LANGUAGES);
 
   const handleCreation = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
     e.preventDefault()
     
-    createLanguage({
-      variables: { name },
-      refetchQueries: [{
-        query: ALL_LANGUAGES,
-      }]
-    })
-    .then((res: any) => {
-      let allLanguages = Object.entries<any>(data);
+    // createLanguage({
+    //   variables: { name },
+    //   refetchQueries: [{
+    //     query: ALL_LANGUAGES,
+    //   }]
+    // })
+    // .then((res: any) => {
+    //   let allLanguages = Object.entries<any>(data);
       
-      if (res) {
-        allLanguages[0][1].forEach((item: AddLanguageToMe) => {
-          console.log('item ==>', item)
-          if (item.id == languageId) {
-            console.log('==> try to add')
-            console.log('languageId ==>', typeof languageId)
-            console.log('rating ==>', typeof rating)
-            return addLanguage({
-              variables: {languageId, rating },
-              refetchQueries: [{
-                query: MY_LANGUAGES,
-              }]
-            });
-          } else {
-            return false
-          }
-        })
-      }
-    })
-    .catch((error: any) => {
-      console.log('==> ERROR !')
-      setError(error as ApolloError)
-    })
+    //   if (res) {
+    //     allLanguages[0][1].forEach((item: AddLanguageToMe) => {
+    //       console.log('item ==>', item)
+    //       if (item.id == languageId) {
+    //         console.log('==> try to add')
+    //         console.log('languageId ==>', typeof languageId)
+    //         console.log('rating ==>', typeof rating)
+    //         return addLanguage({
+    //           variables: {languageId, rating },
+    //           refetchQueries: [{
+    //             query: MY_LANGUAGES,
+    //           }]
+    //         });
+    //       } else {
+    //         return false
+    //       }
+    //     })
+    //   }
+    // })
+    // .catch((error: any) => {
+    //   console.log('==> ERROR !')
+    //   setError(error as ApolloError)
+    // })
 
   }, [rating, name]);
 

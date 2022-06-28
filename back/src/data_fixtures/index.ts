@@ -53,6 +53,10 @@ const dataFixtures = async () => {
   const languageTS = await languageGenerator('TS');
   const languageCSS = await languageGenerator('CSS');
   const languageHTML = await languageGenerator('HTML');
+  const languageRUBY = await languageGenerator('RUBY');
+  const languageJAVA = await languageGenerator('JAVA');
+  const languagePYTHON = await languageGenerator('PYTHON');
+  const languageC = await languageGenerator('C#');
 
   console.log(' --------------    STEP 6/11 : Generate Project  ------------------');
   const project1 = await projectGenerator('Redlion', 'Application to manage ticket in a team, change the status of a task ...', 'Manage ticket', 600, [languagePHP, languageJS, languageHTML], alexis, statusInProgress);

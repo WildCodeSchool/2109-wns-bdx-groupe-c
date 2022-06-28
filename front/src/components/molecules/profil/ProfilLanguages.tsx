@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 
-import { MY_LANGUAGES } from '../../../queries/user';
+import { MY_LANGUAGES } from '../../../queries/language';
 import { MyLanguages } from "../../../entities/language"
 import ProfilModalAddLanguage from './ProfilModalAddLanguage';
 import ProfilModalUpdateLanguage from './ProfilModalUpdateLanguage';
@@ -88,7 +88,7 @@ const ProfilLanguages = () => {
                         <li key={id} className={classes.languagesListItem} onClick={handleOpenUpdate}>
                             <span className={classes.languagesListName}>{language.name}</span>
                             <Stack spacing={1}>
-                                <Rating name="half-rating" defaultValue={0} value={rating} readOnly />
+                                <Rating name="half-rating" defaultValue={0} value={rating} />
                             </Stack>
                         </li>
                     )

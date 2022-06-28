@@ -3,16 +3,40 @@ export interface Language {
   name: string
 }
 
-export interface MyLanguages {
+export interface Languages {
   id: number
+  rating: number
   language: {
     name: string
   }
-  rating: number
 }
 
-export interface CreateLanguage {
-  name: string
+export interface Languages_languages {
+  languages: {
+    id: number
+    rating: number
+    language: {
+      name: string
+    }
+  }
+}
+
+export interface MyLanguages {
+  id: number
+  rating: number
+  language: {
+    name: string
+  }
+}
+
+export interface MyLanguages_MyLanguages {
+  myLanguages: {
+    id: number
+    rating: number
+    language: {
+      name: string
+    }
+  }
 }
 
 export interface AddLanguageToMe {

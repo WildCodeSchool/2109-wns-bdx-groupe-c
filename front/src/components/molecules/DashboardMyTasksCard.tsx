@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '400px',
     marginRight: '2rem',
     backgroundColor: '#7273FF',
-    borderRadius: '20px',
+    borderRadius: '14px',
   },
   cardContent: {
     position: 'relative',
