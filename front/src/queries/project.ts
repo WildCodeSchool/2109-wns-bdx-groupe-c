@@ -56,3 +56,13 @@ export const GET_MY_PROJECTS = gql`
     }
   }
 `
+
+export const MUTATION_CREATE_PROJECT = gql`
+mutation CreateProject($name: String!, $shortText: String!, $description: String!, $initialTimeSpent: Float!) {
+  createProject(name: $name, shortText: $shortText, description: $description, initialTimeSpent: $initialTimeSpent) {
+    name
+    shortText
+    description
+  }
+}
+`

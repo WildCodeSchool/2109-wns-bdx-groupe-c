@@ -29,8 +29,8 @@ const iconLabel = [
     {icon: <HomeIcon />, label: 'Home'},
     {icon: <InfoIcon />, label: 'Infos'},
     {icon: <FormatListBulletedIcon />, label: 'Tasks'},
-    {icon: <ChatIcon />, label: 'Comments'},
-    {icon: <PersonOutlineIcon />, label: 'Users'},
+    // {icon: <ChatIcon />, label: 'Comments'},
+    // {icon: <PersonOutlineIcon />, label: 'Users'},
     {icon: <SettingsIcon />, label: 'Settings'},
 ]
 
@@ -138,7 +138,7 @@ const Sidenav = () => {
   }
 
   return (
-    
+
     <>
       { loading && (
                   <p>Loading...</p>

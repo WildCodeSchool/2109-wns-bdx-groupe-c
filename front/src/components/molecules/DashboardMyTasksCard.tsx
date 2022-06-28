@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client'
 
+import { CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
@@ -77,6 +78,9 @@ const DashboardMyTasksCard = ({ projectId = 1 }: Props) => {
           </Typography>
           <MoreMenu options={['Ajouter une tâche']} onClick={()=>console.log('click')}/>
         </Box>
+        {loading && (
+            <CircularProgress />
+        )}
         {data?.tasks.map((task: Task) => {
           return (
             <Paper key={task.id} className={classes.taskPaper}>

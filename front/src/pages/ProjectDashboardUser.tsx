@@ -22,7 +22,7 @@ const ProjectDashboardUser = () => {
     return (
         <Box className={classes.mainContainer}>
             <Sidenav />
-            <h1>Hello Project Dashboard User</h1>
+            <h1>Manage User Assigned to the Project</h1>
         </Box>
     )
 }
