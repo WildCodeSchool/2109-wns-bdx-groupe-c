@@ -1,31 +1,43 @@
-import * as React from 'react';
+import { useMemo, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { styled, Theme, CSSObject } from '@mui/material/styles';
 import {makeStyles} from "@mui/styles"
-import Box from '@mui/material/Box';
+
+import {
+  Box,
+  List,
+  CssBaseline,
+  Divider,
+  IconButton,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ChatIcon from '@mui/icons-material/Chat';
+import InfoIcon from '@mui/icons-material/Info';
+import SettingsIcon from '@mui/icons-material/Settings';
+import HomeIcon from '@mui/icons-material/Home';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import InfoIcon from '@mui/icons-material/Info';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import SettingsIcon from '@mui/icons-material/Settings';
-import HomeIcon from '@mui/icons-material/Home';
-import { useHistory, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { GET_ONE_PROJECT } from '../../queries/project';
+import { MY_PROFILE } from '../../queries/user';
 import { Project } from '../../entities/project';
+import { ROLE_ADMIN } from '../constants';
 
 const drawerWidth = 240;
 
 const iconLabel = [
+    {icon: <HomeIcon />, label: 'Home'},
+    {icon: <InfoIcon />, label: 'Infos'},
+    {icon: <FormatListBulletedIcon />, label: 'Tasks'},
+    // {icon: <ChatIcon />, label: 'Comments'},
+    // {icon: <PersonOutlineIcon />, label: 'Users'},
+    // {icon: <SettingsIcon />, label: 'Settings'},
+]
+
+const iconAdminLabel = [
     {icon: <HomeIcon />, label: 'Home'},
     {icon: <InfoIcon />, label: 'Infos'},
     {icon: <FormatListBulletedIcon />, label: 'Tasks'},
@@ -107,7 +119,9 @@ interface UseParamProps {
 
 const Sidenav = () => {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const { data: dataMyProfile } = useQuery(MY_PROFILE)
+
   const history = useHistory();
   const { id } = useParams<UseParamProps>();
     const { data, loading } = useQuery(GET_ONE_PROJECT, {
@@ -116,7 +130,14 @@ const Sidenav = () => {
         }
     })
 
-    const project: Project | undefined = React.useMemo(() => {
+    const isAdmin = useMemo(() => {
+      if (dataMyProfile) {
+        return dataMyProfile.myProfile.role.identifier === ROLE_ADMIN;
+      }
+      return false;
+    }, [dataMyProfile])
+
+    const project: Project | undefined = useMemo(() => {
         if (data) return data.project;
     }, [data])
 
@@ -172,7 +193,9 @@ const Sidenav = () => {
 
             <Divider />
             <List>
-                {iconLabel.map((item) => (
+              {isAdmin
+              ? <>
+                  {iconAdminLabel.map((item) => (
                     <ListItemButton
                     key={item.label}
                     sx={{
@@ -193,7 +216,35 @@ const Sidenav = () => {
                         </ListItemIcon>
                         <ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
-                ))}
+                  ))}
+                </>
+              :
+                <>
+                  {iconLabel.map((item) => (
+                    <ListItemButton
+                    key={item.label}
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                    onClick={() => handleIconClick(item.label)}
+                    >
+                        <ListItemIcon
+                        sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                        }}
+                        >
+                        <Box color='#fff'>{item.icon}</Box>
+                        </ListItemIcon>
+                        <ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                  ))}
+                </>
+              }
+
             </List>
             <Divider />
           </Drawer>

@@ -87,3 +87,11 @@ mutation UpdateProjectLanguages($updateProjectLanguagesId: Int!, $languagesId: [
   }
 }
 `
+export const MUTATION_DELETE_PROJECT = gql`
+mutation UpdateProjectLanguages($deleteProjectId: Float!) {
+  deleteProject(id: $deleteProjectId) {
+    name
+    shortText
+  }
+}
+`

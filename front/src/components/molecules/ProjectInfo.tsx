@@ -25,12 +25,12 @@ const useStyles = makeStyles({
         backgroundColor: '#0f4473',
         marginTop: '25px',
         height: 'auto',
+        maxWidth: '40%',
     },
     containerField: {
         display: 'flex',
         flexDirection: 'column',
         marginBottom: '1rem',
-        maxWidth: '40%',
         "& .MuiInput-root": {
             color: 'white',
         },
@@ -90,7 +90,6 @@ const useStyles = makeStyles({
     },
     buttonContainer: {
       display: 'flex',
-      maxWidth: '40%',
       justifyContent: 'center',
     },
     chipLanguage: {
