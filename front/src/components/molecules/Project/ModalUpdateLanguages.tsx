@@ -85,12 +85,6 @@ export interface Option {
   value: string,
 }
 
-export interface LanguageProject {
-  id: number,
-  name: string,
-  inProject: boolean,
-}
-
 const ModalUpdateProjectLanguages = ({showModal, toggleModal, project}: Props) => {
   const classes = useStyles()
   const { showToast } = useToast();

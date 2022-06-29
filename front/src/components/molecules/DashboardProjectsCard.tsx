@@ -3,7 +3,6 @@ import { useQuery } from "@apollo/client"
 import { useHistory } from 'react-router-dom';
 
 import  { Box, Card, CardActionArea, CardContent, Paper, Typography, CircularProgress, Chip, Stack }  from "@mui/material"
-import  LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import  PersonIcon from '@mui/icons-material/Person';
 import { makeStyles } from "@mui/styles"
 
@@ -122,14 +121,14 @@ const DashboardProjectsCard = () => {
                           <Typography className={classes.languageName}>{countAssignee <= 1 ? countAssignee + ' user' : countAssignee + ' users'}</Typography>
                         </Box>
                         <Box className={classes.projectLanguagesElement}>
-                          <LibraryBooksIcon />
-                          {languages.map((language: Language) => {
-                              return (
-                              <>
-                                  <Typography className={classes.languageName} key={language.id} component={'p'}>{language.name}</Typography>
-                              </>
-                              )
-                          })}
+                          <Stack direction="row" spacing={1}>
+                            {languages.map((language) => {
+                                const {name} = language;
+                                return (
+                                    <Chip key={language.id} label={name} color="primary" variant="outlined" className={classes.chipLanguage}/>
+                                )
+                            })}
+                          </Stack>
                         </Box>
                     </Box>
                     </CardActionArea>
