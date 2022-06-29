@@ -28,7 +28,10 @@ class UserProjectRepository extends UserProject {
       where: {
         user: user,
         project: { status: status }
-      }
+      },
+      order: {
+        id: 'DESC'
+      },
     })
   }
 
