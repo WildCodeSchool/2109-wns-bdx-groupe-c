@@ -43,10 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     languages: {
-        gridColumn: '1 / 4',
-        '@media screen and (max-width: 960px)': {
-            gridColumn: '1 / 3',
-        },
+        gridColumn: '1 / 3',
         '@media screen and (max-width: 640px)': {
             gridColumn: '1',
         },

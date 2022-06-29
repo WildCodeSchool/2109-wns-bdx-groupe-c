@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import {makeStyles} from "@mui/styles"
-import { Theme } from '@mui/material/styles'
-import { TextField, Button, Box, Typography, Rating, Stack } from '@mui/material'
+import { Theme, TextField, Button, Box, Typography, Rating, Stack } from '@mui/material'
 import { useMutation, ApolloError, useQuery } from "@apollo/client";
 import Select, {SingleValue, ActionMeta} from 'react-select'
 
 import { ALL_LANGUAGES, MY_LANGUAGES, ADD_LANGUAGE_TO_ME  } from '../../../queries/language';
-import { Language } from '../../../entities/language';
+import { Language, Languages } from '../../../entities/language';
+import useToast from '../../../contexts/useToast';
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
@@ -53,15 +53,16 @@ interface Option {
 export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLanguageModal}: Props) {
 
   const classes = useStyles();
+  const { showToast } = useToast();
 
-  const [name, setName] = useState<string>('');
-  const [rating, setRating] = useState<string>('0');
+  const [name] = useState<string>('');
+  const [rating, setRating] = useState<string | null>('0');
   const [error, setError] = useState<ApolloError | null>(null)
 
-  const [addLanguage] = useMutation<Language[]>(ADD_LANGUAGE_TO_ME);
+  const [addLanguage] = useMutation<Languages>(ADD_LANGUAGE_TO_ME);
 
-  const { loading: allLanguagesLoading, data: allLanguagesData } = useQuery<Language[]>(ALL_LANGUAGES);
-  const { loading: myLanguagesLoading, data: myLanguagesData } = useQuery(MY_LANGUAGES);
+  const { data: allLanguagesData } = useQuery<Language[]>(ALL_LANGUAGES);
+  const { data: myLanguagesData } = useQuery(MY_LANGUAGES);
 
   const [ optionSelected, setOptionSelected ] = useState<Option | null>(null)
   const [ options, setOptions ] = useState<Option[]>([])
@@ -69,19 +70,18 @@ export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLangua
   const handleChange = (newValue: SingleValue<Option>, actionMeta: ActionMeta<Option>) : void => {
     setOptionSelected(newValue)
   }
-
+  
   useEffect(() => {
-    if (allLanguagesData && options.length === 0) {
 
-      const filteredLanguages = Object.values<any>(allLanguagesData);
-      const filteredMyLanguages = Object.values<any>(myLanguagesData);
+    if (allLanguagesData && myLanguagesData && options.length === 0) {
+      
+      let filteredLanguages = Object.values<any>(allLanguagesData);
+      let filteredMyLanguages = Object.values<any>(myLanguagesData);
 
-      filteredLanguages[0].forEach((allLanguage: any) => {
-        filteredMyLanguages[0].forEach((myLanguage: any) => {
-          if (myLanguage.language.name == allLanguage.name ) {
-            filteredLanguages.splice(allLanguage.id -1, 1);
-          }
-        })
+      let yFilter = filteredMyLanguages[0].map((itemY: any) => { return itemY.language.name; });
+      filteredLanguages = filteredLanguages[0].filter((itemX: any) => !yFilter.includes(itemX.name));
+
+      filteredLanguages.map((allLanguage: any) => {
         options.push({
           value: String(allLanguage.id),
           label: allLanguage.name,
@@ -89,26 +89,33 @@ export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLangua
       });
       setOptions(options);
     }
+
   }, [openAddLanguage, allLanguagesData, options, setOptions])
 
   const handleCreation = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
     e.preventDefault()
 
-    const languageId = 1; 
-
-    try {
-      console.log('==> TRY')
-      addLanguage({
-        variables: {languageId, rating },
-        refetchQueries: [{
-          query: MY_LANGUAGES,
-        }]
-      });
-    } catch {
-      console.log('==> CATCH ERROR !')
-      setError(error as ApolloError)
+    if (rating && optionSelected) {
+      try {
+        addLanguage({
+          variables: {
+            languageId: parseInt(optionSelected.value),
+            rating: parseFloat(rating),
+          },
+          refetchQueries: [{
+            query: MY_LANGUAGES,
+          }]
+        });
+        toggleAddLanguageModal();
+        showToast('success', 'Language updated with success !');
+      } catch {
+        setError(error as ApolloError)
+      }
     }
+
   }, [rating, name]);
+
+  if ( !rating ) return null;
 
   return (
     <Box className={classes.container}>
