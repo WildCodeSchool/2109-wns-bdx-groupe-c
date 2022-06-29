@@ -45,13 +45,15 @@ const useStyles = makeStyles({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-
+    paddingLeft: '.5rem'
   },
   iconTrash: {
     cursor: 'pointer',
+    marginBottom: '.5rem',
   },
   iconEdit: {
     cursor: 'pointer',
+    marginBottom: '.5rem',
   },
   iconUser: {
     cursor: 'pointer',

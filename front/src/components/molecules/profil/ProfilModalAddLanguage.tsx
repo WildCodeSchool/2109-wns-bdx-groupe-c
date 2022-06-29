@@ -1,15 +1,16 @@
 import { useState, useCallback, useEffect } from 'react';
 import {makeStyles} from "@mui/styles"
 import { Theme } from '@mui/material/styles'
-import { TextField, Button, Box, Typography } from '@mui/material'
+import { TextField, Button, Box, Typography, Rating, Stack } from '@mui/material'
 import { useMutation, ApolloError, useQuery } from "@apollo/client";
 import Select, {SingleValue, ActionMeta} from 'react-select'
 
 import { ALL_LANGUAGES, MY_LANGUAGES, ADD_LANGUAGE_TO_ME  } from '../../../queries/language';
-import { AddLanguageToMe, MyLanguages, Language, Languages, Languages_languages, MyLanguages_MyLanguages } from '../../../entities/language';
+import { Language } from '../../../entities/language';
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
+        minWidth: '250px',
         maxWidth: '800px',
         padding: '1rem',
         backgroundColor: '#0c355b',
@@ -26,10 +27,16 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: 'column'
     },
     input: {
-        marginBottom: '2rem'
+      display: 'none',
+      marginBottom: '2rem'
+    },
+    rating: {
+      margin: '0 auto 2rem',
     },
     formSelect: {
-
+      marginBottom: '2rem',
+      zIndex: '10',
+      position: 'relative'
     },
 }))
 
@@ -51,7 +58,7 @@ export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLangua
   const [rating, setRating] = useState<string>('0');
   const [error, setError] = useState<ApolloError | null>(null)
 
-  const [addLanguage] = useMutation(ADD_LANGUAGE_TO_ME);
+  const [addLanguage] = useMutation<Language[]>(ADD_LANGUAGE_TO_ME);
 
   const { loading: allLanguagesLoading, data: allLanguagesData } = useQuery<Language[]>(ALL_LANGUAGES);
   const { loading: myLanguagesLoading, data: myLanguagesData } = useQuery(MY_LANGUAGES);
@@ -105,30 +112,29 @@ export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLangua
 
   return (
     <Box className={classes.container}>
-        <Typography className={classes.title} variant="h6" component="h2">
-        Add language
-        </Typography>
+        <Typography className={classes.title} variant="h6" component="h2">Add language</Typography>
         <Box className={classes.form}>
           <Box className={classes.formSelect}>
             <Select options={options} onChange={handleChange} value={optionSelected}/>
           </Box>
-            {/* <TextField
-                id="Language"
-                className={classes.input}
-                type="text"
-                label="Language"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                /> */}
-            <TextField
-                id="Rating"
-                className={classes.input}
-                type="number"
-                label="Rating"
-                value={rating}
-                onChange={(event: any) => setRating(event.target.value)}
+          <TextField
+            id="Rating"
+            className={classes.input}
+            type="number"
+            label="Rating"
+            value={parseFloat(rating)}
+          />
+          <Stack spacing={1}>
+            <Rating
+              name="add-language-rating"
+              className={classes.rating}
+              defaultValue={parseFloat(rating)}
+              precision={1}
+              size="large"
+              onChange={(event: any) => setRating(event.target.value)}
             />
-            <Button onClick={(e) => handleCreation(e)}>Add</Button>
+          </Stack>
+          <Button onClick={(e) => handleCreation(e)}>Add</Button>
         </Box>
     </Box>
   );

@@ -11,7 +11,7 @@ import DashboardProjectsCard from '../components/molecules/DashboardProjectsCard
 const useStyles = makeStyles({
   mainContainer: {
     backgroundColor: '#061B2E',
-    minHeight: '150vh',
+    minHeight: '100vh',
     padding: '25px',
     margin: '64px 0 0',
     '@media screen and (max-width: 600px)': {
@@ -22,8 +22,22 @@ const useStyles = makeStyles({
     display: 'inline-flex',
     width: '100%',
     '@media screen and (max-width: 1200px)': {
-      overflowX: 'scroll',
       paddingBottom: '1rem',
+      overflowX: 'scroll',
+      '&::-webkit-scrollbar': {
+        width: '9px',
+      },
+      '&::-webkit-scrollbar-track': {
+        background: '#f1f1f1',
+        borderRadius: '14px'
+      },
+      '&::-webkit-scrollbar-thumb': {
+        background: '#0F4473',
+        borderRadius: '14px'
+      },
+      '&::-webkit-scrollbar-thumb:hover': {
+        background: '#555'
+      },
     },
   },
 })

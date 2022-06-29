@@ -12,11 +12,13 @@ import { statusColors } from '../../constants';
 
 const useStyles = makeStyles({
   cardTitle: {
-      minHeight: '275px',
+      height: 'fit-content',
+      minHeight: '150px',
+      maxHeight: '800px',
+      width: '350px',
       backgroundColor: '#0F4473',
       marginTop: '25px',
-      height: 'auto',
-      border: '1px solid white'
+      marginRight: '2rem',
   },
   tagCard: {
     position: 'relative',
@@ -35,7 +37,6 @@ const useStyles = makeStyles({
     backgroundColor: '#0F4473',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '500px'
   }
 })
 

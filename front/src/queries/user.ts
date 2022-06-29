@@ -60,14 +60,3 @@ export const USER_MY_PROJECTS = gql`
     }
   }
 `;
-
-export const ADD_LANGUAGE = gql`
-  mutation Mutation($languageId: Int!, $rating: Float!) {
-    addLanguageToMe(languageId: $languageId, rating: $rating) {
-      rating
-      language {
-        name
-      }
-    }
-  }
-`;

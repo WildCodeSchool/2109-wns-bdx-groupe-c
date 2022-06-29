@@ -1,17 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
-import Box from "@mui/material/Box"
+import { useState, useCallback } from 'react'
+import { Box, Theme, Rating, Stack, Typography, Button, Modal } from '@mui/material';
 import {makeStyles} from "@mui/styles"
-import { Theme } from '@mui/material/styles'
-import { useQuery } from "@apollo/client"
-import Rating from '@mui/material/Rating';
-import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
+import { useQuery } from "@apollo/client"
 
 import { MY_LANGUAGES } from '../../../queries/language';
-import { MyLanguages } from "../../../entities/language"
+import { Languages } from "../../../entities/language"
 import ProfilModalAddLanguage from './ProfilModalAddLanguage';
 import ProfilModalUpdateLanguage from './ProfilModalUpdateLanguage';
 
@@ -63,10 +57,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const ProfilLanguages = () => {
     const classes = useStyles();
-
+    const [ languageSelected, setLanguageSelected ] = useState<Languages | null>(null);
     // update language modal
     const [openUpdate, setOpenUpdate] = useState(false);
-    const handleOpenUpdate = () => setOpenUpdate(true);
+    const handleOpenUpdate = useCallback((language: Languages)=> {
+        setLanguageSelected(language);
+        setOpenUpdate(true);
+    }, [setOpenUpdate, setLanguageSelected]);
     const handleCloseUpdate = () => setOpenUpdate(false);
 
     // add language modal
@@ -81,29 +78,17 @@ const ProfilLanguages = () => {
             <Typography className={classes.languagesTitle}>Languages :</Typography>
             <ul className={classes.languagesList}>
                 {loading}
-                {data?.myLanguages.map((myLanguages: MyLanguages) => {
+                {data?.myLanguages.map((myLanguages: Languages) => {
                     const { id, language, rating } = myLanguages;
                     return (
-                        <li key={id} className={classes.languagesListItem} onClick={handleOpenUpdate}>
+                        <li key={id} className={classes.languagesListItem} onClick={() => handleOpenUpdate(myLanguages)}>
                             <span className={classes.languagesListName}>{language.name}</span>
                             <Stack spacing={1}>
-                                <Rating name="half-rating" defaultValue={0} value={rating} />
+                                <Rating name="half-rating" defaultValue={0} value={parseFloat(rating)} readOnly  />
                             </Stack>
                         </li>
                     )
                 })}
-                <Modal
-                    open={openUpdate}
-                    onClose={handleCloseUpdate}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                    className={classes.modal}
-                >
-                    <ProfilModalUpdateLanguage
-                        openUpdateLanguage={openUpdate}
-                        toggleUpdateLanguageModal={handleCloseUpdate}
-                    />
-                </Modal>
             </ul>
             <Button className={classes.languagesMenu}>
                 <AddIcon  onClick={handleOpenAdd} className={classes.languagesMenu} />
@@ -118,6 +103,19 @@ const ProfilLanguages = () => {
                             openAddLanguage={openAdd}
                             toggleAddLanguageModal={handleCloseAdd}
                         />
+                </Modal>
+                <Modal
+                    open={openUpdate}
+                    onClose={handleCloseUpdate}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    className={classes.modal}
+                >
+                    <ProfilModalUpdateLanguage
+                        openUpdateLanguage={openUpdate}
+                        toggleUpdateLanguageModal={handleCloseUpdate}
+                        userLanguage={languageSelected}
+                    />
                 </Modal>
             </Button>
         </Box>

@@ -25,35 +25,49 @@ const useStyles = makeStyles((theme: Theme) => ({
     masterContainer: {
         backgroundColor: '#061B2E',
         margin: '0',
-        minHeight: '100vh',
-        padding: '25px',
+        padding: '25px 0 5px 25px',
         marginLeft: '65px',
         color: '#fff',
         marginTop: '64px',
+        marginBottom: '2rem',
+        '@media screen and (max-width: 1700px)': {
+            overflowX: 'scroll',
+        },
+        '&::-webkit-scrollbar': {
+            width: '9px',
+        },
+        '&::-webkit-scrollbar-track': {
+            marginRight: '50px',
+            background: '#f1f1f1',
+            borderRadius: '14px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#0F4473',
+            borderRadius: '14px',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: '#555'
+          },
         '@media screen and (max-width: 600px)': {
           marginTop: '54px',
         },
       },
     containerWrapper: {
         backgroundColor: '#061B2E',
-        minHeight: '100vh',
     },
     mainContainer: {
         backgroundColor: theme.palette.secondary.main,
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr 1fr',
-        margin: '24px auto',
-        width: '80%',
-        gap: '15px',
-        marginTop: '64px',
+        display: 'inline-flex',
+        margin: '1.5rem 0 1rem 5%',
+        paddingBottom: '2rem',
+        width: 'auto',
         '@media screen and (max-width: 600px)': {
           marginTop: '54px',
         },
     },
     buttonContainer: {
         display: 'flex',
-        justifyContent: 'center',
-        marginTop: '2rem',
+        margin: '2rem 0 0 5%',
     },
     addTaskButton: {
         backgroundColor: '#1F84E1',
@@ -207,6 +221,18 @@ const ProjectDashboardTask = () => {
         <Box className={classes.masterContainer}>
             <Sidenav />
             <Box className={classes.containerWrapper}>
+                <Box className={classes.buttonContainer}>
+                    <Button
+                        className={classes.addTaskButton}
+                        onClick={toggleAddTaskModal}
+                    >
+                    Add a Task
+                    </Button>
+                </Box>
+                <ModalAddTask
+                    openAddTask={openAddTask}
+                    toggleAddTaskModal={toggleAddTaskModal}
+                />
                 <DragDropContext onDragEnd={onDragEnd}>
                     {loading && <h1>Loading...</h1>}
                     {!loading && statusColumns && (
@@ -220,18 +246,6 @@ const ProjectDashboardTask = () => {
                         </Box>
                     )}
                 </DragDropContext>
-                <Box className={classes.buttonContainer}>
-                    <Button
-                        className={classes.addTaskButton}
-                        onClick={toggleAddTaskModal}
-                    >
-                    Add a Task
-                    </Button>
-                </Box>
-                <ModalAddTask
-                    openAddTask={openAddTask}
-                    toggleAddTaskModal={toggleAddTaskModal}
-                />
             </Box>
         </Box>
     )

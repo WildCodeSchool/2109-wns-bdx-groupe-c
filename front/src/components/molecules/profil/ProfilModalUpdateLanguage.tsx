@@ -1,14 +1,15 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {makeStyles} from "@mui/styles"
-import { Theme } from '@mui/material/styles'
-import { TextField, Button, Box, Typography } from '@mui/material'
-import { useMutation, ApolloError, useQuery } from "@apollo/client";
+import { Theme, TextField, Button, Box, Typography, Rating, Stack } from '@mui/material'
+import { useMutation, ApolloError } from "@apollo/client";
 
-import { ALL_LANGUAGES, ADD_LANGUAGE_TO_ME, MY_LANGUAGES } from '../../../queries/language';
-import { AddLanguageToMe } from '../../../entities/language';
+import { MY_LANGUAGES_LIGHT, UPDATE_USER_LANGUAGE_RATING } from '../../../queries/language';
+import { Languages } from '../../../entities/language';
+import useToast from '../../../contexts/useToast';
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
+        minWidth: '250px',
         maxWidth: '800px',
         padding: '1rem',
         backgroundColor: '#0c355b',
@@ -25,87 +26,88 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: 'column'
     },
     input: {
-        marginBottom: '2rem'
+        display: 'none'
+    },
+    rating: {
+        margin: '0 auto 2rem',
     },
 }))
 
 interface Props {
   openUpdateLanguage: boolean,
   toggleUpdateLanguageModal: () => void,
+  userLanguage: Languages | null
 }
 
-export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpdateLanguageModal}: Props) {
+export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpdateLanguageModal, userLanguage}: Props) {
+
   const classes = useStyles();
-
-  const [name, setName] = useState<string>('');
-  const [rating, setRating] = useState<number>(0);
-  const [languageId, setLanguageId] = useState<number>(1);
-
+  const { showToast } = useToast();
+//   const [rating, setRating] = useState<string>(language.rating);
+  const [rating, setRating] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  const [updateRating] = useMutation<Languages>(UPDATE_USER_LANGUAGE_RATING);
   const [error, setError] = useState<ApolloError | null>(null)
-  const [addLanguage] = useMutation(ADD_LANGUAGE_TO_ME);
-  const {loading, data} = useQuery(ALL_LANGUAGES);
+
+  useEffect(() => {
+    if (openUpdateLanguage && userLanguage) {
+        console.log('-----userLanguage------>', userLanguage);
+        setName(userLanguage.language.name)
+        setRating(userLanguage.rating)
+    }
+  }, [openUpdateLanguage, userLanguage]);
 
   const handleCreation = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
-    e.preventDefault()
-    
-    // createLanguage({
-    //   variables: { name },
-    //   refetchQueries: [{
-    //     query: ALL_LANGUAGES,
-    //   }]
-    // })
-    // .then((res: any) => {
-    //   let allLanguages = Object.entries<any>(data);
-      
-    //   if (res) {
-    //     allLanguages[0][1].forEach((item: AddLanguageToMe) => {
-    //       console.log('item ==>', item)
-    //       if (item.id == languageId) {
-    //         console.log('==> try to add')
-    //         console.log('languageId ==>', typeof languageId)
-    //         console.log('rating ==>', typeof rating)
-    //         return addLanguage({
-    //           variables: {languageId, rating },
-    //           refetchQueries: [{
-    //             query: MY_LANGUAGES,
-    //           }]
-    //         });
-    //       } else {
-    //         return false
-    //       }
-    //     })
-    //   }
-    // })
-    // .catch((error: any) => {
-    //   console.log('==> ERROR !')
-    //   setError(error as ApolloError)
-    // })
+    e.preventDefault();
+    if (userLanguage && rating) {
+        try {
+            updateRating({
+                variables: {
+                    userLanguageId: parseInt(String(userLanguage.id), 10),
+                    rating: parseFloat(rating),
+                },
+                refetchQueries: [{
+                  query: MY_LANGUAGES_LIGHT,
+                }]
+            })
+            showToast('success', 'Language updated with success !');
+            toggleUpdateLanguageModal();
+        } catch {
+            setError(error as ApolloError)
+        }
+    }
 
-  }, [rating, name]);
+  }, [userLanguage, rating]);
+
+  if ( !userLanguage ) return null;
 
   return (
     <Box className={classes.container}>
-        <Typography className={classes.title} variant="h6" component="h2">
-        Add language
-        </Typography>
+        <Typography className={classes.title} variant="h6" component="h2">{userLanguage.language.name}</Typography>
         <Box className={classes.form}>
-            <TextField
-                id="Language"
-                className={classes.input}
-                type="text"
-                label="Language"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                />
-            <TextField
-                id="Rating"
-                className={classes.input}
-                type="number"
-                label="Rating"
-                value={rating}
-                onChange={(event: any) => setRating(event.target.value)}
-            />
-            <Button onClick={(e) => handleCreation(e)}>Add</Button>
+            {rating && name && (
+                <>
+                    <TextField
+                        id="Rating"
+                        className={classes.input}
+                        type="number"
+                        label="Rating"
+                        value={parseFloat(rating)}
+                    />
+                    <Stack spacing={1}>
+                        <Rating
+                            name="language-update-rating"
+                            className={classes.rating}
+                            defaultValue={parseFloat(rating)}
+                            precision={1}
+                            size="large"
+                            onChange={(event: any) => setRating(event.target.value)}
+                        />
+                    </Stack>
+                </>
+
+            )}
+            <Button onClick={(e) => handleCreation(e)}>Update</Button>
         </Box>
     </Box>
   );

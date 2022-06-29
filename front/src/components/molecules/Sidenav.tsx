@@ -26,7 +26,7 @@ import { MY_PROFILE } from '../../queries/user';
 import { Project } from '../../entities/project';
 import { ROLE_ADMIN } from '../constants';
 
-const drawerWidth = 240;
+const drawerWidth = 145;
 
 const iconLabel = [
     {icon: <HomeIcon />, label: 'Home'},
@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     height: 0,
     '& .MuiPaper-elevation': {
-      zIndex: '0',
+      zIndex: '10',
     },
   },
 }))
