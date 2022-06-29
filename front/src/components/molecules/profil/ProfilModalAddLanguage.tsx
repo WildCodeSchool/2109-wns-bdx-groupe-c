@@ -38,6 +38,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       zIndex: '10',
       position: 'relative'
     },
+    addButton: {
+      marginBottom: '1rem',
+      backgroundColor: '#1976d2',
+      color: '#fff',
+      tranistion: 'all .3s ease',
+      '&:hover': {
+          backgroundColor: '#1976d2',
+          opacity: '.8',
+      }
+      
+  },
 }))
 
 interface Props {
@@ -141,7 +152,7 @@ export default function ProfilModalAddLanguage({openAddLanguage, toggleAddLangua
               onChange={(event: any) => setRating(event.target.value)}
             />
           </Stack>
-          <Button onClick={(e) => handleCreation(e)}>Add</Button>
+          <Button onClick={(e) => handleCreation(e)} className={classes.addButton}>Add</Button>
         </Box>
     </Box>
   );

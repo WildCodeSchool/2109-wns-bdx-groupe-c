@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import { useMutation, ApolloError, useQuery } from "@apollo/client";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { TextField, Box, Button, Card, CardContent, CircularProgress, Chip, Stack } from '@mui/material'
+import { TextField, Box, Button, Card, CardContent, CircularProgress, Chip, Stack, TextareaAutosize } from '@mui/material'
 import makeStyles from "@mui/styles/makeStyles";
-import Typography from "@mui/material/Typography";
+import { Typography, InputLabel } from "@mui/material";
 
 import { GET_ONE_PROJECT, MUTATION_UPDATE_PROJECT_INFORMATIONS } from "../../queries/project"
 import { Project } from "../../entities/project";
@@ -24,6 +24,7 @@ const useStyles = makeStyles({
         minHeight: '275px',
         backgroundColor: '#0f4473',
         marginTop: '25px',
+        marginLeft: '100px',
         height: 'auto',
         maxWidth: '40%',
     },
@@ -101,6 +102,18 @@ const useStyles = makeStyles({
         color: 'green',
         borderColor: 'green',
 
+    },
+    textareaLabel: {
+        marginBottom: '.5rem',
+        fontWeight: '700',
+        fontSize: '.8rem',
+        lineHeight: '1.4375em'
+    },
+    textarea: {
+        width: '100%',
+        marginBottom: '2rem',
+        borderRadius: '8px',
+        padding: '.5rem',
     }
 })
 
@@ -227,6 +240,7 @@ const ProjectInfo = () => {
                                     value={name}
                                     className={errorProps?.name ? classes.texFieldError : classes.textField}
                                     onChange={(event) => setName(event.target.value)}
+                                    sx={{ width: 'fit-content' }}
                                 />
                                 {errorProps?.name && <Box className={classes.fieldError}>{errorProps.name}</Box>}
                                 <TextField
@@ -237,15 +251,17 @@ const ProjectInfo = () => {
                                     value={shortText}
                                     className={errorProps?.shortText ? classes.texFieldError : classes.textField}
                                     onChange={(event) => setShortText(event.target.value)}
+                                    sx={{ width: 'fit-content' }}
                                 />
                                 {errorProps?.shortText && <Box className={classes.fieldError}>{errorProps.shortText}</Box>}
-                                <TextField
+                                <Typography className={classes.textareaLabel}>Description</Typography>
+                                <TextareaAutosize
                                     id="description"
-                                    type="text"
-                                    label="Description"
-                                    variant="standard"
+                                    aria-label="empty textarea"
+                                    placeholder="Empty"
+                                    minRows={9}
                                     value={description}
-                                    className={errorProps?.description ? classes.texFieldError : classes.textField}
+                                    className={classes.textarea}
                                     onChange={(event) => setDescription(event.target.value)}
                                 />
                                 {errorProps?.description && <Box className={classes.fieldError}>{errorProps.description}</Box>}
@@ -257,6 +273,7 @@ const ProjectInfo = () => {
                                     value={initialTimeSpent}
                                     className={errorProps?.initialTimeSpent ? classes.texFieldError : classes.textField}
                                     onChange={(event) => setInitialTimeSpent(parseFloat(event.target.value))}
+                                    sx={{ width: 'fit-content',}}
                                 />
                                 {errorProps?.initialTimeSpent && <Box className={classes.fieldError}>{errorProps.initialTimeSpent}</Box>}
                             </Box>

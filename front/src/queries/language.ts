@@ -59,3 +59,11 @@ export const ADD_LANGUAGE_TO_ME = gql`
     }
   }
 `
+
+export const DELETE_USER_LANGUAGE = gql `
+  mutation Mutation($userLanguageId: Int!) {
+    deleteLanguageFromUser(userLanguageId: $userLanguageId) {
+      id
+    }
+  }
+`;
