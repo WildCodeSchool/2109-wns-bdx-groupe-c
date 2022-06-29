@@ -95,3 +95,12 @@ mutation UpdateProjectLanguages($deleteProjectId: Float!) {
   }
 }
 `
+
+export const MUTATION_RESET_TASKS_PROJECT = gql`
+mutation ResetAllTasks($resetAllTasksId: Float!) {
+  resetAllTasks(id: $resetAllTasksId) {
+    name
+    shortText
+  }
+}
+`

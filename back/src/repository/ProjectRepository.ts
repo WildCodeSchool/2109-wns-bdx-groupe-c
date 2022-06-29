@@ -3,6 +3,7 @@ import Status from '../models/Status';
 import User from '../models/AppUser';
 import Language from "../models/Language";
 import ObjectHelpers from "../helpers/ObjectHelper";
+import Task from '../models/Task';
 
 class ProjectRepository extends Project {
     static async findAll() {
@@ -50,6 +51,15 @@ class ProjectRepository extends Project {
       const languages = await Language.findByIds(languagesId)
       project.languages = languages;
       await project.save();
+      return await Project.findOneOrFail({ id }, { relations: ['languages','createdBy', 'tasks', 'status'] });
+    }
+
+    static async resetAllTasks(id: number) {
+      const project = await Project.findOneOrFail({ id }, { relations: ['languages','createdBy', 'tasks', 'status'] })
+      if (project.tasks) {
+        await Task.remove(project.tasks)
+      }
+
       return await Project.findOneOrFail({ id }, { relations: ['languages','createdBy', 'tasks', 'status'] });
     }
 

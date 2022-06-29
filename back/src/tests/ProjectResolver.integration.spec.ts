@@ -712,4 +712,58 @@ describe('ProjectResolver', () => {
       `)
     })
   })
+  describe('Mutation reset all tasks of a project', () => {
+    it('can reset all tasks of a project', async () => {
+      const ROLE_ADMIN = await roleGenerator('admin', 'ADMIN')
+      const userTest = await userGenerator(
+        'Test',
+        'Test',
+        'nouveau@mail.com',
+        'password',
+        ROLE_ADMIN
+      )
+      const sessionAdmin = await AppUserSessionRepository.createSession(userTest)
+      const languagePHP = await languageGenerator('PHP')
+      const languageJS = await languageGenerator('JS')
+      const toDO = await statusGenerator('To Do')
+      const projectTest = await projectGenerator(
+        'name',
+        'description',
+        'shortText',
+        1,
+        [languagePHP, languageJS],
+        userTest,
+        toDO
+      )
+      await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0, toDO, userTest)
+      await taskGenerator('Task Text', 'Short Text', 'Test', projectTest.id, 100, 0, toDO, userTest)
+
+      const result = await testClient
+        .post('/graphql')
+        .set('Cookie', `sessionId=${sessionAdmin.id}`)
+        .send({
+          query: `mutation {
+            resetAllTasks(
+            id: ${projectTest.id}
+        ) {
+          name
+          shortText
+          description
+          tasks {
+            subject
+          }
+        }
+      }`,
+        })
+      expect(JSON.parse(result.text).errors).toBeUndefined()
+      expect(JSON.parse(result.text).data.resetAllTasks).toMatchInlineSnapshot(`
+        Object {
+          "description": "description",
+          "name": "name",
+          "shortText": "shortText",
+          "tasks": Array [],
+        }
+      `)
+    })
+  })
 })

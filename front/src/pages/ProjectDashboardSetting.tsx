@@ -5,6 +5,7 @@ import { Box, Typography, Button } from "@mui/material"
 import BoxColored from '../components/atoms/BoxColored'
 import Sidenav from "../components/molecules/Sidenav"
 import ModalDeleteProject from '../components/molecules/Project/ModalDeleteProject'
+import ModalResetTasks from '../components/molecules/Project/ModalResetTasks'
 
 const useStyles = makeStyles({
     mainContainer: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles({
     boxColored: {
       maxWidth: "80%",
       marginLeft: '1rem',
+      marginTop: '1rem',
     },
     buttonContainer: {
       marginTop: '1rem',
@@ -47,7 +49,15 @@ const useStyles = makeStyles({
       '&:hover': {
         backgroundColor: '#881e10',
       },
-    }
+    },
+    buttonValidationTasks: {
+      backgroundColor: '#a5a6f6',
+      color: 'white',
+      fontWeight: '700',
+      '&:hover': {
+        backgroundColor: '#6b6ba1',
+      },
+    },
   })
 
 interface UseParamProps {
@@ -61,12 +71,30 @@ const ProjectDashboardSetting = () => {
       setShowModalDelete(!showModalDelete);
     }, [showModalDelete, setShowModalDelete]);
 
+    const [ showModalResetTasks, setShowModalResetTasks ] = useState<boolean>(false);
+    const toggleModalResetTasks = useCallback(() => {
+      setShowModalResetTasks(!showModalResetTasks);
+    }, [showModalResetTasks, setShowModalResetTasks]);
+
     const { id } = useParams<UseParamProps>();
 
     return (
         <Box className={classes.mainContainer}>
             <Sidenav />
             <h1>Administration settings of the project</h1>
+            <BoxColored color='#a5a6f6' className={classes.boxColored}>
+              <Typography id="title" variant="h6" component="h2">
+                Reset all tasks from the project
+              </Typography>
+              <Box className={classes.buttonContainer}>
+                <Button
+                  onClick={toggleModalResetTasks}
+                  className={classes.buttonValidationTasks}
+                >
+                    Reset tasks
+                </Button>
+              </Box>
+            </BoxColored>
             <BoxColored color='#f2381e' className={classes.boxColored}>
               <Typography id="title" variant="h6" component="h2">
                 Highway to the danger zone
@@ -83,6 +111,11 @@ const ProjectDashboardSetting = () => {
             <ModalDeleteProject
               showModal={showModalDelete}
               toggleModal={toggleModalDelete}
+              projectId={parseInt(id, 10)}
+            />
+            <ModalResetTasks
+              showModal={showModalResetTasks}
+              toggleModal={toggleModalResetTasks}
               projectId={parseInt(id, 10)}
             />
         </Box>

@@ -150,6 +150,12 @@ class ProjectResolver {
   }
 
   @Mutation(() => Project)
+  @Authorized([ROLE_ADMIN])
+  async resetAllTasks(@Arg('id') id: number) {
+    return ProjectRepository.resetAllTasks(id);
+  }
+
+  @Mutation(() => Project)
   async updateProjectStatus(
     @Args() { id, statusId }: UpdateProjectStatusInput
   ) {
