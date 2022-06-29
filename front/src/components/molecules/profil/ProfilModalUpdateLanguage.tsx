@@ -43,7 +43,6 @@ export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpd
 
   const classes = useStyles();
   const { showToast } = useToast();
-//   const [rating, setRating] = useState<string>(language.rating);
   const [rating, setRating] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [updateRating] = useMutation<Languages>(UPDATE_USER_LANGUAGE_RATING);
@@ -51,7 +50,6 @@ export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpd
 
   useEffect(() => {
     if (openUpdateLanguage && userLanguage) {
-        console.log('-----userLanguage------>', userLanguage);
         setName(userLanguage.language.name)
         setRating(userLanguage.rating)
     }
