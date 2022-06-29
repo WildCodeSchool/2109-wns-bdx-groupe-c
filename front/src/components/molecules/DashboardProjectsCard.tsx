@@ -2,14 +2,12 @@ import { useCallback, useState } from 'react';
 import { useQuery } from "@apollo/client"
 import { useHistory } from 'react-router-dom';
 
-import  { Box, Card, CardActionArea, CardContent, Paper, Typography, CircularProgress, Chip, Stack }  from "@mui/material"
+import  { Box, Card, CardActionArea, CardContent, Paper, Typography, CircularProgress, Chip, Stack, Menu, MenuItem, IconButton } from "@mui/material"
 import  PersonIcon from '@mui/icons-material/Person';
 import { makeStyles } from "@mui/styles"
-
-import MoreMenu from "../atoms/MoreMenu"
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { GET_ALL_PROJECTS }  from "../../queries/project"
-import { Language } from "../../entities/language"
 import { Project } from "../../entities/project"
 import ModalAddProject from './Project/ModalAddProject';
 
@@ -84,6 +82,10 @@ const useStyles = makeStyles({
     languageName: {
       marginLeft: '.5rem'
     },
+    iconMore: {
+      color:'#fff',
+      fontSize: '40px',
+    },
 })
 
 const DashboardProjectsCard = () => {
@@ -91,9 +93,20 @@ const DashboardProjectsCard = () => {
     const [ openModal, setOpenModal ] = useState<boolean>(false);
     const toggleModal = useCallback(() => {
       setOpenModal(!openModal);
+      handleClose();
     }, [openModal, setOpenModal]);
     const history = useHistory();
     const classes = useStyles()
+
+    const [anchorEl, setAnchorEl] = useState(null);
+  
+    const handleMenu = (event: any) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
     return (
       <Card className={classes.card}>
@@ -102,7 +115,35 @@ const DashboardProjectsCard = () => {
             <Typography variant="h2" className={classes.projectContainerTitle}>
               All Projects
             </Typography>
-            <MoreMenu options={['Add a Project']} onClick={toggleModal}/>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="primary"
+            >
+              <MoreHorizIcon className={classes.iconMore} />
+            </IconButton>
+            <Menu
+              id="menu-projects"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+          >
+              <MenuItem onClick={() => history.push('/profil')}>See all</MenuItem>
+              <MenuItem onClick={toggleModal}>Add a project</MenuItem>
+          </Menu>
+
           </Box>
           <Box className={classes.cardsAll}>
             {loading && (

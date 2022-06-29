@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import {makeStyles} from "@mui/styles"
-import { Theme, TextField, Button, Box, Typography, Rating, Stack } from '@mui/material'
+import { Theme, TextField, Button, Box, Typography, Rating, Stack, Divider } from '@mui/material'
 import { useMutation, ApolloError } from "@apollo/client";
 
-import { MY_LANGUAGES_LIGHT, UPDATE_USER_LANGUAGE_RATING } from '../../../queries/language';
-import { Languages } from '../../../entities/language';
+import { MY_LANGUAGES_LIGHT, UPDATE_USER_LANGUAGE_RATING, DELETE_USER_LANGUAGE } from '../../../queries/language';
+import { Language, Languages } from '../../../entities/language';
 import useToast from '../../../contexts/useToast';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,6 +31,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     rating: {
         margin: '0 auto 2rem',
     },
+    updateButton: {
+        marginBottom: '1rem',
+        backgroundColor: '#1976d2',
+        color: '#fff',
+        tranistion: 'all .3s ease',
+        '&:hover': {
+            backgroundColor: '#1976d2',
+            opacity: '.8',
+        }
+        
+    },
+    deleteButton: {
+        marginTop: '1rem',
+        backgroundColor: 'red',
+        color: '#fff',
+        tranistion: 'all .3s ease',
+        '&:hover': {
+            backgroundColor: 'red',
+            opacity: '.8',
+        }
+    },
 }))
 
 interface Props {
@@ -47,6 +68,9 @@ export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpd
   const [name, setName] = useState<string | null>(null);
   const [updateRating] = useMutation<Languages>(UPDATE_USER_LANGUAGE_RATING);
   const [error, setError] = useState<ApolloError | null>(null)
+
+  const [deleteLanguage] = useMutation<Language>(DELETE_USER_LANGUAGE);
+
 
   useEffect(() => {
     if (openUpdateLanguage && userLanguage) {
@@ -77,6 +101,26 @@ export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpd
 
   }, [userLanguage, rating]);
 
+  const handleDelete = useCallback(async (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
+    e.preventDefault();
+
+    if (userLanguage) {
+        try {
+            deleteLanguage({
+                variables: {userLanguageId: parseInt(String(userLanguage.id))},
+                refetchQueries: [{
+                    query: MY_LANGUAGES_LIGHT,
+                }]
+            })
+            showToast('success', 'Language deleted with success !');
+            toggleUpdateLanguageModal();
+        } catch {
+            setError(error as ApolloError)
+        }
+    }
+
+  }, [userLanguage]);
+
   if ( !userLanguage ) return null;
 
   return (
@@ -105,7 +149,9 @@ export default function ProfilModalUpdateLanguage({openUpdateLanguage, toggleUpd
                 </>
 
             )}
-            <Button onClick={(e) => handleCreation(e)}>Update</Button>
+            <Button onClick={(e) => handleCreation(e)} className={classes.updateButton}>Update</Button>
+            <Divider />
+            <Button onClick={(e) => handleDelete(e)} className={classes.deleteButton}>Delete</Button>
         </Box>
     </Box>
   );
