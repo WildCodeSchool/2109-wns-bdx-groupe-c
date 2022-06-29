@@ -15,7 +15,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         border: '1px solid #1F84E1',
         borderRadius: '18px',
         padding: '2rem',
-        marginBottom: '4rem',
+        marginBottom: '3rem',
+        '@media screen and (max-width: 640px)': {
+            padding: '1rem',
+        },
     },
     profilTitle: {
         margin: 0,

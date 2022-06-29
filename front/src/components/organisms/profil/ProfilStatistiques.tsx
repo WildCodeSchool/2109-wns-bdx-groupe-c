@@ -14,9 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         border: '1px solid #1F84E1',
         borderRadius: '18px',
         padding: '2rem',
-        marginBottom: '4rem',
         '@media screen and (max-width: 640px)': {
-            marginBottom: '2rem',
+            padding: '1rem',
         },
     },
     statsTitle: {
