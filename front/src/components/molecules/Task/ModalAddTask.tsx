@@ -15,6 +15,7 @@ import {MUTATION_CREATE_TASK} from "../../../queries/task"
 import {GET_TASKS_BY_STATUS_BY_PROJECTID} from "../../../queries/status"
 
 import { ExceptionGraphQL } from '../../../entities/error';
+import useToast from '../../../contexts/useToast';
 
 interface Props {
   openAddTask: boolean,
@@ -83,6 +84,7 @@ interface UseParamProps {
 const ModalAddTask = ({openAddTask, toggleAddTaskModal}: Props) => {
   const classes = useStyles()
   const { id } = useParams<UseParamProps>();
+  const { showToast } = useToast();
 
   const [shortText, setShortText] = useState<string>(emptyTask.shortText);
   const [subject, setSubject] = useState<string>(emptyTask.subject);
@@ -123,6 +125,7 @@ const ModalAddTask = ({openAddTask, toggleAddTaskModal}: Props) => {
           }]
         });
         toggleAddTaskModal();
+        showToast('success', 'Task added with success !');
       } catch (error) {
         setError(error as ApolloError)
       }

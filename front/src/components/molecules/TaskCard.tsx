@@ -18,6 +18,7 @@ import {MUTATION_DELETE_TASK} from "../../queries/task"
 import {GET_TASKS_BY_STATUS_BY_PROJECTID } from "../../queries/status"
 import ModalAttributeUserToTask from './Task/ModalAttributeUserToTask';
 import useToast from '../../contexts/useToast';
+import ModalEditTask from './Task/ModalEditTask';
 
 
 interface TaskCardProps {
@@ -72,10 +73,17 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index } ) => {
   const [ deleteTask ] = useMutation(MUTATION_DELETE_TASK);
   const [ error, setError ] = useState<ApolloError | null>(null)
   const [ showModal, setShowModal ] = useState<boolean>(false)
+  const [ showEditModal, setShowEditModal ] = useState<boolean>(false)
 
   const toggleModal = useCallback(() => {
     setShowModal(!showModal)
   }, [showModal, setShowModal])
+
+  const toggleEditTaskModal = useCallback(() => {
+    setShowEditModal(!showEditModal)
+  }, [showEditModal, setShowEditModal])
+
+
 
   const handleDeleteTask = useCallback(async(taskId: string) => {
     if (projectId) {
@@ -123,7 +131,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index } ) => {
                 <Box className={classes.iconContainer}>
                   <FontAwesomeIcon
                       icon={faPencil}
-                      onClick={() => console.log('test')}
+                      onClick={toggleEditTaskModal}
                       className={classes.iconEdit}
                       color="#00bcd4"
                     />
@@ -149,6 +157,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index } ) => {
         toggleModal={toggleModal}
         taskId={taskId}
         projectId={projectId}
+        key={`attribute-user-${taskId}`}
+      />
+      <ModalEditTask
+        openEditTask={showEditModal}
+        toggleEditTaskModal={toggleEditTaskModal}
+        task={task}
+        key={`edit-task-${taskId}`}
       />
     </>
   )
