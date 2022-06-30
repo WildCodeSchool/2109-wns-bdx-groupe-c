@@ -140,7 +140,7 @@ const DashboardProjectsCard = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
           >
-              <MenuItem onClick={() => history.push('/profil')}>See all</MenuItem>
+              <MenuItem onClick={() => history.push('/projects')}>See all</MenuItem>
               <MenuItem onClick={toggleModal}>Add a project</MenuItem>
           </Menu>
 
@@ -150,7 +150,7 @@ const DashboardProjectsCard = () => {
                 <CircularProgress />
             )}
             {data?.projects.map((project: Project) => {
-            const {id, name, shortText, languages, countAssignee} = project
+          const {id, name, shortText, languages, countAssignee} = project
             return (
                 <Paper key={id} className={classes.projectPaper} onClick={() => history.push(`/project/${id}/Tasks`)}>
                     <CardActionArea className={classes.projectActionArea}>

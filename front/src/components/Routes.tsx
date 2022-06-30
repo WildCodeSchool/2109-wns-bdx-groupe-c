@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard'
 import ProjectDashboardTask from '../pages/ProjectDashboardTask'
 
 import { MY_PROFILE } from '../queries/user'
+import Projects from '../pages/Projects'
 import ProjectDashboardInfo from '../pages/ProjectDashboardInfo'
 import ProjectDashboardUser from '../pages/ProjectDashboardUser'
 import ProjectDashboardComment from '../pages/ProjectDashboardComment'
@@ -32,6 +33,9 @@ const Routes = () => {
         {isAuthenticated && (
           <>
             <MenuAppBar />
+            <Route path="/projects">
+              <Projects />
+            </Route>
             <Route path="/project/:id/tasks">
               <ProjectDashboardTask />
             </Route>
