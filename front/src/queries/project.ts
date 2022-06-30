@@ -29,6 +29,7 @@ export const GET_ALL_PROJECTS = gql`
       createdAt
       countAssignee
       languages {
+        id
         name
       }
     }
@@ -57,6 +58,36 @@ export const GET_MY_PROJECTS = gql`
     }
   }
 `
+export const GET_PROJECT_ALL = gql`
+    query Project($projectId: Float!) {
+        project(id: $projectId) {
+            id
+            name
+            shortText
+            description
+            initialTimeSpent
+            createdAt
+            updatedAt
+            createdBy {
+                firstName
+                lastName
+            }
+            languages {
+                id
+                name
+            }
+            tasks {
+                id
+                subject
+                shortText
+                description
+            }
+            status {
+                name
+            }
+        }
+    }
+`;
 
 export const MUTATION_CREATE_PROJECT = gql`
 mutation CreateProject($name: String!, $shortText: String!, $description: String!, $initialTimeSpent: Float!) {
