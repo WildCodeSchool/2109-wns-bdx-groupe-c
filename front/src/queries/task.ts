@@ -109,3 +109,12 @@ mutation AssignUserToTask($assignUserToTaskId: Int!, $userId: Int!) {
   }
 }
 `
+export const MUTATION_UPDATE_TASK = gql`
+mutation UpdateTask($updateTaskId: Int!, $description: String, $shortText: String, $subject: String, $expectedDuration: Float, $dueDate: DateTime) {
+  updateTask(id: $updateTaskId, description: $description, shortText: $shortText, subject: $subject, expectedDuration: $expectedDuration, dueDate: $dueDate) {
+    subject
+    shortText
+    description
+  }
+}
+`

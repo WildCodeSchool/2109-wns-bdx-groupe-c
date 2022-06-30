@@ -14,8 +14,8 @@ import {makeStyles} from "@mui/styles"
 import { Button } from '@mui/material'
 import { GET_ALL_USERS } from '../../../queries/user';
 import { ASSIGN_USER_TO_TASK } from '../../../queries/task';
-import {GET_TASKS_BY_STATUS_BY_PROJECTID } from "../../../queries/status"
-
+import { GET_TASKS_BY_STATUS_BY_PROJECTID } from "../../../queries/status"
+import { GET_ALL_PROJECTS } from '../../../queries/project';
 import { User } from '../../../entities/user';
 import useToast from '../../../contexts/useToast';
 
@@ -121,6 +121,8 @@ const ModalAttributeUserToTask = ({showModal, toggleModal, taskId, projectId}: P
             variables: {
               projectId: parseInt(projectId, 10),
             }
+          }, {
+            query: GET_ALL_PROJECTS,
           }]
         })
         toggleModal();

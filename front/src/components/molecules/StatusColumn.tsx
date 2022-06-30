@@ -81,7 +81,7 @@ const StatusColumn: React.FC<StatusColumnProps> =  ({ column: {id, name, tasks}}
             ref={provided.innerRef}
           >
             {tasks.map((task, index) => (
-              <TaskCard key={task.shortText} task={task} index={index} />
+              <TaskCard key={task.id} task={task} index={index} />
             ))}
             {provided.placeholder}
           </Box>
