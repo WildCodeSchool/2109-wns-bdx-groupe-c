@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard'
 import ProjectDashboardTask from '../pages/ProjectDashboardTask'
 
 import { MY_PROFILE } from '../queries/user'
+import Tasks from '../pages/Tasks'
 import Projects from '../pages/Projects'
 import ProjectDashboardInfo from '../pages/ProjectDashboardInfo'
 import ProjectDashboardUser from '../pages/ProjectDashboardUser'
@@ -19,7 +20,7 @@ import MenuAppBar from './molecules/all/Header'
 const Routes = () => {
   const history = useHistory()
 
-  const { loading, data, error } = useQuery(MY_PROFILE)
+  const { loading, data } = useQuery(MY_PROFILE)
 
   const isAuthenticated = data && data.myProfile
 
@@ -33,6 +34,9 @@ const Routes = () => {
         {isAuthenticated && (
           <>
             <MenuAppBar />
+            <Route path="/tasks">
+              <Tasks />
+            </Route>
             <Route path="/projects">
               <Projects />
             </Route>

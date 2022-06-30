@@ -28,16 +28,12 @@ const useStyles = makeStyles({
         maxWidth: '150px',
         position: 'fixed',
         left: '2rem',
+        marginLeft: '4rem',
         cursor: 'pointer',
         '@media screen and (max-width: 840px)': {
             position: 'relative',
             left: 'unset',
-        }
-    },
-    menuButton: {
-        display:'none',
-        '@media screen and (max-width: 840px)': {
-            display: 'flex',
+            marginLeft: '0',
         }
     },
     profilItem: {
@@ -57,35 +53,21 @@ const useStyles = makeStyles({
 })
 
 export default function MenuAppBar() {
+  const history = useHistory();
+  const classes = useStyles();
+
   const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isOpen, setIsOpen] = React.useState(false);
   const [logOut] = useMutation(LOG_OUT, {refetchQueries: [{query: MY_PROFILE}]});
 
-  const handleMenu = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleMenu = (event: any) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    logOut();
-  };
-
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const openMenu = () => {
-      setIsOpen(true);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
-
-  const history = useHistory();
-
-  const classes = useStyles();
+  const openMenu = () => setIsOpen(true);
+  const closeMenu = () => setIsOpen(false);
+  
+  const handleLogout = () => logOut();
 
     const list = () => (
         <Box
@@ -98,7 +80,10 @@ export default function MenuAppBar() {
                     <span onClick={() => history.push('/')}>Dashboard</span>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <span onClick={() => history.push('/profil')}>Profil</span>
+                    <span onClick={() => history.push('/projects')}>Projects</span>
+                </ListItem>
+                <ListItem className={classes.listItem}>
+                    <span onClick={() => history.push('/tasks')}>Tasks</span>
                 </ListItem>
             </List>
 
@@ -106,7 +91,7 @@ export default function MenuAppBar() {
 
             <List>
                 <ListItem className={classes.listItem}>
-                    <span onClick={handleLogout}>Logout</span>
+                    <span onClick={() => history.push('/profil')}>Profil</span>
                 </ListItem>
             </List>
         </Box>
@@ -123,7 +108,7 @@ export default function MenuAppBar() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon onClick={openMenu} className={classes.menuButton}/>
+            <MenuIcon onClick={openMenu}/>
             <Drawer
                 open={isOpen}
                 onClose={closeMenu}
@@ -160,7 +145,7 @@ export default function MenuAppBar() {
                         onClose={handleClose}
                     >
                         <MenuItem onClick={() => history.push('/profil')} className={classes.profilItem}>Profil</MenuItem>
-                        <MenuItem onClick={() => history.push('/')} className={classes.profilItem}>Dashboard</MenuItem>
+                        <Divider />
                         <MenuItem onClick={handleLogout} className={classes.profilItem}>Logout</MenuItem>
                     </Menu>
                 </div>

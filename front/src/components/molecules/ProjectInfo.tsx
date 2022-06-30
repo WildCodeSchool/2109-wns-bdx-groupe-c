@@ -113,7 +113,11 @@ const useStyles = makeStyles({
         width: '100%',
         marginBottom: '2rem',
         borderRadius: '8px',
+        borderColor: '#fff',
         padding: '.5rem',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        color: '#fff',
+        lineHeight: '1.4'
     }
 })
 
@@ -259,7 +263,7 @@ const ProjectInfo = () => {
                                     id="description"
                                     aria-label="empty textarea"
                                     placeholder="Empty"
-                                    minRows={9}
+                                    minRows={5}
                                     value={description}
                                     className={classes.textarea}
                                     onChange={(event) => setDescription(event.target.value)}

@@ -13,7 +13,7 @@ export interface Task {
   expectedDuration: number
   spentTime: number
   status: Status
-  project: Project
+  project: Project[]
   assignee?: User
   comments: Comment[]
 }
@@ -25,4 +25,24 @@ export interface createTaskType {
   projectId: number | null
   dueDate: string
   expectedDuration: string
+}
+
+export interface TaskFromApi {
+  id: string
+  subject: string
+  shortText: string
+  description: string
+  createdAt: Date
+  updatedAt: Date
+  dueDate: Date
+  expectedDuration: number
+  spentTime: number
+  status: Status
+  project: Project[]
+  assignee?: User
+  comments: Comment[]
+}
+
+export interface Tasks {
+  allTasks: Task[];
 }
