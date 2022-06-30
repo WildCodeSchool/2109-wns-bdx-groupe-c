@@ -9,6 +9,10 @@ export const GET_ALL_TASKS = gql`
       status {
         name
       }
+      project {
+        id
+        name
+      }
     }
   }
 `

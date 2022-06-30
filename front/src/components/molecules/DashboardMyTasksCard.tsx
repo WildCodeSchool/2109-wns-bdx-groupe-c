@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import { useHistory } from 'react-router-dom';
 
 import { makeStyles } from '@mui/styles'
 import { Box, Paper, Typography, Theme, Card, CardContent,CardActionArea, CircularProgress } from '@mui/material'
@@ -89,7 +90,9 @@ interface Props {
 
 const DashboardMyTasksCard = ({ statusName, color }: Props) => {
 
+  const history = useHistory();
   const classes = useStyles();
+
 
   const { loading, data } = useQuery(GET_TASKS_BY_STATUS_MORE, { variables: { statusName, color } })
 
@@ -100,7 +103,7 @@ const DashboardMyTasksCard = ({ statusName, color }: Props) => {
         <Box className={classes.tagCard} sx={{ backgroundColor: color}} />
           <Box className={classes.boxTitle}>
             <Typography variant="h2"  className={classes.cardTitle}>Tasks : {statusName}</Typography>
-            <MoreMenu options={['See all tasks']} onClick={()=>console.log('click')}/>
+            <MoreMenu options={['See all tasks']} onClick={() => history.push('/tasks')}/>
           </Box>
           <Box className={classes.cardTasksList}>
             {loading && (
@@ -109,9 +112,11 @@ const DashboardMyTasksCard = ({ statusName, color }: Props) => {
             {data?.tasksByStatus.map((task: Task) => {
               let createdAt = new Date(task.createdAt);
               let inscriptionDate = createdAt.toLocaleDateString();
+              const {id, project} = task;
+              console.log('task ==>',task.project)
               return (
                 <Paper key={task.id} className={classes.taskPaper}>
-                  <CardActionArea className={classes.cardPaper}>
+                  <CardActionArea className={classes.cardPaper} onClick={() => history.push('/projects')}>
                     <Box>
                       <Typography variant="h4" className={classes.taskCardName}>{task.subject}</Typography>
                       <Typography className={classes.description}>{task.description}</Typography>
