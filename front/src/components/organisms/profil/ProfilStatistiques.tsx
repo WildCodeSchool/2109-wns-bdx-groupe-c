@@ -2,7 +2,7 @@ import Box from "@mui/material/Box"
 import {makeStyles} from "@mui/styles"
 import { Theme } from '@mui/material/styles'
 import { useQuery } from "@apollo/client"
-
+import { CircularProgress } from '@mui/material'
 import { USER_MY_PROJECTS, USER_MY_TASKS } from "../../../queries/user"
 
 import BasicBox from "../../atoms/all/BasicBox"
@@ -53,37 +53,45 @@ const ProfilStatistiques = () => {
         <Box className={classes.container}>
             <h2 className={classes.statsTitle}>Statistiques :</h2>
             <Box className={classes.statistiquesContianer}>
-                {loadingProjectsDone}
+                {loadingProjectsDone && (
+                    <CircularProgress />
+                )}
                 {dataProjectsDone &&
                     <Box>
-                        <BasicBox 
+                        <BasicBox
                             label={'Projects completed :'}
                             value={dataProjectsDone.myProjects.length}
                         />
                     </Box>
                 }
-                {loadingProjectsInProgress}
+                {loadingProjectsInProgress && (
+                    <CircularProgress />
+                )}
                 {dataProjectsInProgress &&
                     <Box>
-                        <BasicBox 
+                        <BasicBox
                             label={'Projects in progress :'}
                             value={dataProjectsInProgress.myProjects.length}
                         />
                     </Box>
                 }
-                {loadingTasksDone}
+                {loadingTasksDone && (
+                    <CircularProgress />
+                )}
                 {dataTasksDone &&
                     <Box>
-                        <BasicBox 
+                        <BasicBox
                             label={'Tasks Completed :'}
                             value={dataTasksDone.myTasks.length}
                         />
                     </Box>
                 }
-                {loadingTasksInProgress}
+                {loadingTasksInProgress && (
+                    <CircularProgress />
+                )}
                 {dataTasksInProgress &&
                     <Box>
-                        <BasicBox 
+                        <BasicBox
                             label={'Tasks in progress :'}
                             value={dataTasksInProgress.myTasks.length}
                         />

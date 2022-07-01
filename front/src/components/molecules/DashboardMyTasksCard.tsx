@@ -113,10 +113,9 @@ const DashboardMyTasksCard = ({ statusName, color }: Props) => {
               let createdAt = new Date(task.createdAt);
               let inscriptionDate = createdAt.toLocaleDateString();
               const {id, project} = task;
-              console.log('task ==>',task.project)
               return (
                 <Paper key={task.id} className={classes.taskPaper}>
-                  <CardActionArea className={classes.cardPaper} onClick={() => history.push('/projects')}>
+                  <CardActionArea className={classes.cardPaper} onClick={() => history.push(`/project/${task.project.id}/Tasks`)}>
                     <Box>
                       <Typography variant="h4" className={classes.taskCardName}>{task.subject}</Typography>
                       <Typography className={classes.description}>{task.description}</Typography>

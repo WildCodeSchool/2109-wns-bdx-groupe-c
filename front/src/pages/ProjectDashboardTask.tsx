@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useQuery, useMutation } from "@apollo/client"
 import { useParams } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
-import Box from "@mui/material/Box"
+import { CircularProgress, Box } from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import ObjectHelpers from '../helpers/ObjectHelper';
 import { Task } from '../entities/task';
@@ -234,7 +234,9 @@ const ProjectDashboardTask = () => {
                     toggleAddTaskModal={toggleAddTaskModal}
                 />
                 <DragDropContext onDragEnd={onDragEnd}>
-                    {loading && <h1>Loading...</h1>}
+                    {loading  && (
+                    <CircularProgress />
+                    )}
                     {!loading && statusColumns && (
                         <Box className={classes.mainContainer}>
                             {Object.values(statusColumns).map(status => {

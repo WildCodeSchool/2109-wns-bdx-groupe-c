@@ -3,6 +3,7 @@ import { Box, Theme, Rating, Stack, Typography, Button, Modal } from '@mui/mater
 import {makeStyles} from "@mui/styles"
 import AddIcon from '@mui/icons-material/Add';
 import { useQuery } from "@apollo/client"
+import { CircularProgress } from '@mui/material'
 
 import { MY_LANGUAGES } from '../../../queries/language';
 import { Languages } from "../../../entities/language"
@@ -77,7 +78,9 @@ const ProfilLanguages = () => {
         <Box className={classes.languagesBox}>
             <Typography className={classes.languagesTitle}>Languages :</Typography>
             <ul className={classes.languagesList}>
-                {loading}
+                {loading && (
+                    <CircularProgress />
+                )}
                 {data?.myLanguages.map((myLanguages: Languages) => {
                     const { id, language, rating } = myLanguages;
                     return (

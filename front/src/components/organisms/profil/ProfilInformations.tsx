@@ -2,7 +2,7 @@ import Box from "@mui/material/Box"
 import {makeStyles} from "@mui/styles"
 import { Theme } from '@mui/material/styles'
 import { useQuery, useMutation } from "@apollo/client"
-
+import { CircularProgress } from '@mui/material'
 import { MY_PROFILE } from "../../../queries/user"
 
 import BasicBox from "../../atoms/all/BasicBox"
@@ -62,29 +62,24 @@ const ProfilInformations = () => {
         <Box className={classes.container}>
             <h1 className={classes.profilTitle}>Profil</h1>
             <Box className={classes.informationsContainer}>
-                {loadingProfil}
+                {loadingProfil && (
+                    <CircularProgress />
+                )}
                 {dataProfil &&
-                    <Box>
-                        <BasicBox label={'Firstname :'} value={dataProfil.myProfile.firstName}/>
-                    </Box>
-                }
-                {loadingProfil}
-                {dataProfil &&
-                    <Box>
-                        <BasicBox label={'Lastname :'} value={dataProfil.myProfile.lastName}/>
-                    </Box>
-                }
-                {loadingProfil}
-                {dataProfil &&
-                    <Box>
-                        <BasicBox label={'Mail :'} value={dataProfil.myProfile.email}/>
-                    </Box>
-                }
-                {loadingProfil}
-                {dataProfil &&
-                    <Box>
-                        <BasicBox label={'Registered since :'} value={inscriptionDate}/>
-                    </Box>
+                    <>
+                        <Box>
+                            <BasicBox label={'Firstname :'} value={dataProfil.myProfile.firstName}/>
+                        </Box>
+                        <Box>
+                            <BasicBox label={'Lastname :'} value={dataProfil.myProfile.lastName}/>
+                        </Box>
+                        <Box>
+                            <BasicBox label={'Mail :'} value={dataProfil.myProfile.email}/>
+                        </Box>
+                        <Box>
+                            <BasicBox label={'Registered since :'} value={inscriptionDate}/>
+                        </Box>
+                    </>
                 }
                 <Box className={classes.languages}>
                     <ProfilLanguages />
