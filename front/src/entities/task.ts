@@ -13,7 +13,7 @@ export interface Task {
   expectedDuration: number
   spentTime: number
   status: Status
-  project: Project[]
+  project: Project
   assignee?: User
   comments: Comment[]
 }
@@ -38,7 +38,7 @@ export interface TaskFromApi {
   expectedDuration: number
   spentTime: number
   status: Status
-  project: Project[]
+  project: Project
   assignee?: User
   comments: Comment[]
 }

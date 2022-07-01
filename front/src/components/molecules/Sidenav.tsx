@@ -13,6 +13,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  CircularProgress,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import InfoIcon from '@mui/icons-material/Info';
@@ -159,10 +160,10 @@ const Sidenav = () => {
   }
 
   return (
-    
+
     <>
       { loading && (
-                  <p>Loading...</p>
+                <CircularProgress />
               )}
               { !loading && project && (
         <Box className={classes.mainContainer}>
